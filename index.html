@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-black">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Kulix — No Clout. No Cap.</title>
+    
+    <!-- Edge Framework CDNs (100% Free Tiers) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Custom Brutalist Neo-Dark Theme Token Definitions
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kulix: {
+                            neon: '#9333ea',
+                            darkBg: '#09090b',
+                            cardBg: '#050505',
+                            border: '#18181b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { -webkit-tap-highlight-color: transparent; font-feature-settings: "cv02", "cv03", "cv04", "cv11"; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="h-full bg-black text-zinc-100 antialiased selection:bg-purple-600 selection:text-black">
+
+    <!-- DEMOGRAPHIC ENTRY ACCESS GATE -->
+    <div id="auth-screen" class="min-h-screen flex flex-col justify-center items-center px-4">
+        <div class="w-full max-w-md border-2 border-purple-600 bg-kulix-darkBg p-8 rounded-none shadow-[6px_6px_0px_0px_rgba(147,51,234,1)]">
+            <header class="mb-6">
+                <h1 class="text-4xl font-black uppercase tracking-tighter text-purple-500">KULIX</h1>
+                <p class="text-xs text-zinc-500 font-mono mt-1">No Algorithmic Feeds. No Parents. Just Real Teen Life.</p>
+            </header>
+            
+            <form id="auth-form" class="space-y-5" autocomplete="off">
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-purple-400 font-mono font-bold mb-1.5">Create Nickname</label>
+                    <input type="text" id="input-nickname" maxlength="25" required
+                        class="w-full bg-black border border-zinc-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 p-3 text-white outline-none rounded-none text-base transition-all font-mono"
+                        placeholder="e.g., ghost_driver">
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-purple-400 font-mono font-bold mb-1.5">Verify Teen Age (13 - 19)</label>
+                    <input type="number" id="input-age" min="13" max="19" required
+                        class="w-full bg-black border border-zinc-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 p-3 text-white outline-none rounded-none text-base transition-all font-mono"
+                        placeholder="Your real age (System keeps it hidden)">
+                </div>
+
+                <div id="auth-error" class="hidden text-red-400 font-mono text-xs border border-red-900/50 bg-red-950/20 p-3 text-left"></div>
+
+                <button type="submit"
+                    class="w-full bg-purple-600 hover:bg-purple-700 active:translate-y-0.5 text-black font-black uppercase tracking-wider py-4 border border-black shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all text-sm">
+                    Enter Ecosystem
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN INTERFACE DESK FRAMEWORK -->
+    <div id="app-screen" class="hidden min-h-screen max-w-md mx-auto border-x border-zinc-900 flex flex-col relative bg-black">
+        
+        <!-- Identity Node Ribbon -->
+        <header class="sticky top-0 bg-kulix-darkBg/95 backdrop-blur-md border-b border-zinc-800 p-4 flex justify-between items-center z-50">
+            <div class="flex items-center space-x-3">
+                <img id="user-avatar" src="" alt="Session Token Avatar" class="w-9 h-9 border border-purple-500 bg-black p-0.5" />
+                <div>
+                    <h2 id="user-display-name" class="text-sm font-black text-purple-400 leading-none"></h2>
+                    <span class="text-[9px] font-mono text-zinc-500 mt-1 block tracking-wider">TEEN PROTOCOL ACCREDITED</span>
+                </div>
+            </div>
+            <button id="btn-logout" class="text-[10px] font-mono uppercase bg-zinc-900 hover:bg-zinc-800 text-zinc-400 px-3 py-1.5 border border-zinc-800 transition-colors">
+                Log Out
+            </button>
+        </header>
+
+        <!-- Segment Router Switch -->
+        <nav class="flex bg-kulix-darkBg border-b border-zinc-900 sticky top-[69px] z-40">
+            <button id="tab-vents" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black border-b-2 border-purple-500 text-white bg-zinc-900/30 transition-all">
+                Chrono-Stream
+            </button>
+            <button id="tab-mood" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all">
+                Volatile Room
+            </button>
+        </nav>
+
+        <!-- Application Dynamic Streams Viewport -->
+        <main class="flex-1 p-4 overflow-y-auto pb-28 no-scrollbar">
+            
+            <!-- CONTROLLER VIEW A: CHRONO-STREAM PIPELINE -->
+            <div id="panel-vents" class="space-y-6">
+                <form id="vent-form" class="bg-kulix-cardBg border border-zinc-800 p-4">
+                    <textarea id="textarea-vent" maxlength="200" required
+                        class="w-full bg-black border border-zinc-900 focus:border-purple-900 p-3 text-sm text-white placeholder-zinc-600 outline-none resize-none h-24 font-mono transition-colors"
+                        placeholder="Say what you need to say. Max 200 characters..."></textarea>
+                    <div class="flex justify-between items-center mt-3">
+                        <span id="vent-chars-left" class="text-xs font-mono text-zinc-500">200 left</span>
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-black font-black text-xs uppercase px-5 py-2.5 transition-colors">
+                            Broadcast Vent
+                        </button>
+                    </div>
+                </form>
+                <div id="vents-feed-container" class="space-y-4"></div>
+            </div>
+
+            <!-- CONTROLLER VIEW B: VOLATILE MOOD CHAMBER -->
+            <div id="panel-mood" class="hidden flex flex-col h-[calc(100vh-220px)] relative">
+                <div class="bg-purple-950/20 border border-purple-900/30 p-2.5 mb-4 text-center">
+                    <span class="text-[10px] uppercase font-mono tracking-widest text-purple-400 font-bold block">
+                        ⚡ Chamber: School Stress (Flushes Every 24 Hours) ⚡
+                    </span>
+                </div>
+                
+                <div id="chat-messages-container" class="flex-1 overflow-y-auto space-y-4 pr-1 pb-20 no-scrollbar"></div>
+
+                <form id="chat-form" class="absolute bottom-0 left-0 right-0 p-4 bg-black border-t border-zinc-900 flex space-x-2 z-30">
+                    <input type="text" id="input-message" required max="500" autocomplete="off"
+                        class="flex-1 bg-kulix-darkBg border border-zinc-800 focus:border-purple-600 px-4 py-3 text-xs text-white outline-none font-mono"
+                        placeholder="Type a completely untraceable message...">
+                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-black uppercase font-black text-xs px-5 tracking-wider transition-colors">
+                        Send
+                    </button>
+                </form>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // =========================================================================
+        // CONFIGURATION AND LINKAGE CONFIG ENGINE
+        // =========================================================================
+        const CONFIG = {
+            supabaseUrl: "YOUR_SUPABASE_URL",
+            supabaseAnonKey: "YOUR_SUPABASE_ANON_KEY"
+        };
+
+        const _db = supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
+
+        // System Level Localized Humor Dictionary Array (20 elements)
+        const ROAST_MANIFEST = [
+            "Bro, this post screams 'I sit alone at lunch'.",
+            "This isn't your private diary, but fine, go off.",
+            "Dating in 2026 is an absolute circus, you aren't special.",
+            "Have you tried sleeping instead of typing paragraphs at midnight?",
+            "Sending you structural reinforcement, because you sound unstable.",
+            "On a scale of 1 to dramatic, this is a solid 11.",
+            "Your GPA just dropped 3 points from writing this.",
+            "Imagine letting simple school tasks ruin your psychological rhythm.",
+            "NPC behavior detected. Please change your path scripts.",
+            "Go drink a glass of water and stop looking at your screen.",
+            "They haven't texted back because they're simply chilling. Reset yourself.",
+            "This post contains zero valid mathematics or logic.",
+            "You are projecting so hard the wall is shaking.",
+            "This sounds like a self-inflicted issue, honestly.",
+            "If crying built character, you'd be a historic monument.",
+            "Main character energy score: 0.1/10.",
+            "Even your data connection is trying to ignore this drama.",
+            "Did we ask, or did you just run out of outlets?",
+            "Delete this mental draft immediately for your own safety.",
+            "Hoping your cognitive system gets an update tomorrow morning."
+        ];
+
+        let sessionUser = null;
+        let activeTabContext = 'vents';
+        let chatRealtimeSyncLink = null;
+
+        const domAuthScreen = document.getElementById('auth-screen');
+        const domAppScreen = document.getElementById('app-screen');
+        const domAuthForm = document.getElementById('auth-form');
+        const domAuthError = document.getElementById('auth-error');
+        const domVentsFeed = document.getElementById('vents-feed-container');
+        const domChatFeed = document.getElementById('chat-messages-container');
+        const domVentTextarea = document.getElementById('textarea-vent');
+        const domVentCharsLeft = document.getElementById('vent-chars-left');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('kulix_session_user');
+            if (token) {
+                sessionUser = JSON.parse(token);
+                openApplicationDashboard();
+            }
+            trackTextAreaMetrics();
+        });
+
+        function openApplicationDashboard() {
+            domAuthScreen.classList.add('hidden');
+            domAppScreen.classList.remove('hidden');
+            document.getElementById('user-avatar').src = sessionUser.avatar_url;
+            document.getElementById('user-display-name').innerText = `@${sessionUser.nickname}`;
+            routeApplicationPanel('vents');
+        }
+
+        // --- AUTH SYSTEM LAYER AND VALIDATION ---
+        domAuthForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            domAuthError.classList.add('hidden');
+            domAuthError.innerText = '';
+
+            const nickname = document.getElementById('input-nickname').value.trim();
+            const age = parseInt(document.getElementById('input-age').value, 10);
+
+            if (isNaN(age) || age < 13 || age > 19) {
+                domAuthError.innerText = 'Access Denied: Kulix is structurally reserved for users aged 13-19.';
+                domAuthError.classList.remove('hidden');
+                return;
+            }
+
+            // Using modern open source DiceBear engine path mapping
+            const avatarSeed = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(nickname)}`;
+
+            const { data, error } = await _db
+                .from('users')
+                .insert([{ nickname, age, avatar_url: avatarSeed }])
+                .select().single();
+
+            if (error) {
+                domAuthError.innerText = error.code === '23505' ? 'Name Taken: Try adding a unique combination.' : error.message;
+                domAuthError.classList.remove('hidden');
+                return;
+            }
+
+            sessionUser = data;
+            localStorage.setItem('kulix_session_user', JSON.stringify(data));
+            openApplicationDashboard();
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            localStorage.removeItem('kulix_session_user');
+            if (chatRealtimeSyncLink) _db.removeChannel(chatRealtimeSyncLink);
+            location.reload();
+        });
+
+        // --- INTERFACE TAB NAVIGATION CONTROL ROUTER ---
+        const tabVentsBtn = document.getElementById('tab-vents');
+        const tabMoodBtn = document.getElementById('tab-mood');
+        const panelVentsView = document.getElementById('panel-vents');
+        const panelMoodView = document.getElementById('panel-mood');
+
+        tabVentsBtn.addEventListener('click', () => routeApplicationPanel('vents'));
+        tabMoodBtn.addEventListener('click', () => routeApplicationPanel('mood'));
+
+        function routeApplicationPanel(target) {
+            activeTabContext = target;
+            if (target === 'vents') {
+                tabVentsBtn.className = "flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black border-b-2 border-purple-500 text-white bg-zinc-900/30 transition-all";
+                tabMoodBtn.className = "flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all";
+                panelVentsView.classList.remove('hidden');
+                panelMoodView.classList.add('hidden');
+                if (chatRealtimeSyncLink) _db.removeChannel(chatRealtimeSyncLink);
+                syncVentsChronologicalStream();
+            } else {
+                tabMoodBtn.className = "flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black border-b-2 border-purple-500 text-white bg-zinc-900/30 transition-all";
+                tabVentsBtn.className = "flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all";
+                panelMoodView.classList.remove('hidden');
+                panelVentsView.classList.add('hidden');
+                syncMoodRoomMessages();
+                activateRealtimeWebSocket();
+            }
+        }
+
+        // --- VENT TIMELINE ACTION PIPELINE ---
+        function trackTextAreaMetrics() {
+            const available = 200 - domVentTextarea.value.length;
+            domVentCharsLeft.innerText = `${available} characters left`;
+        }
+        domVentTextarea.addEventListener('input', trackTextAreaMetrics);
+
+        document.getElementById('vent-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = domVentTextarea.value.trim();
+            if (!text || text.length > 200) return;
+
+            const { error } = await _db
+                .from('vents')
+                .insert([{ user_id: sessionUser.id, text }]);
+
+            if (!error) {
+                domVentTextarea.value = '';
+                trackTextAreaMetrics();
+                syncVentsChronologicalStream();
+            }
+        });
+
+        async function syncVentsChronologicalStream() {
+            const { data, error } = await _db
+                .from('vents')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) return;
+            domVentsFeed.innerHTML = data.length === 0 
+                ? `<p class="text-zinc-600 font-mono text-center py-12 text-xs">The stream is dead silent. Type something above.</p>` 
+                : data.map(vent => `
+                    <div class="bg-kulix-cardBg border border-zinc-900 p-5 flex flex-col space-y-4 shadow-sm" id="vent-card-${vent.id}">
+                        <p class="text-zinc-300 text-sm whitespace-pre-wrap break-words leading-relaxed font-mono">${escapeSanitizedOutput(vent.text)}</p>
+                        <div class="hidden bg-purple-950/20 border-l border-purple-500 p-3 text-xs text-purple-300 font-mono italic roast-field"></div>
+                        <div class="flex space-x-2 pt-1">
+                            <button onclick="incrementEmpathyCount('${vent.id}', ${vent.same_count}, this)" class="flex-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 py-2.5 px-3 text-xs font-mono flex items-center justify-center space-x-2 transition-all active:scale-95">
+                                <span>🤝 Same</span>
+                                <span class="bg-purple-950 text-purple-400 px-2 py-0.5 text-[10px] font-bold metric-counter">${vent.same_count}</span>
+                            </button>
+                            <button onclick="triggerAutomatedSystemRoast('${vent.id}')" class="flex-1 bg-zinc-900/30 hover:bg-zinc-900 border border-zinc-800/40 text-zinc-500 hover:text-purple-400 py-2.5 px-3 text-xs font-mono transition-all active:scale-95">
+                                💀 Roast Me
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        async function incrementEmpathyCount(id, current, el) {
+            const { error } = await _db.from('vents').update({ same_count: current + 1 }).eq('id', id);
+            if (!error) {
+                const targetCountSpan = el.querySelector('.metric-counter');
+                targetCountSpan.innerText = parseInt(targetCountSpan.innerText, 10) + 1;
+                el.disabled = true;
+                el.classList.add('opacity-40');
+            }
+        }
+
+        // --- MOOD ROOM LIVE REALTIME CHAT STRAT ---
+        async function syncMoodRoomMessages() {
+            const { data, error } = await _db
+                .from('messages')
+                .select('*')
+                .eq('room', 'School Stress')
+                .order('created_at', { ascending: true });
+
+            if (error) return;
+            domChatFeed.innerHTML = data.length === 0 
+                ? `<p class="text-zinc-600 font-mono text-center py-12 text-xs">Chamber empty. Say it here, vanish it later.</p>`
+                : data.map(msg => compileChatBlockTemplate(msg)).join('');
+            forceChatViewportScroll();
+        }
+
+        document.getElementById('chat-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const inputField = document.getElementById('input-message');
+            const text = inputField.value.trim();
+            if (!text) return;
+
+            const { error } = await _db.from('messages').insert([{
+                room: 'School Stress',
+                user_id: sessionUser.id,
+                user_nickname: sessionUser.nickname,
+                user_avatar: sessionUser.avatar_url,
+                text
+            }]);
+
+            if (!error) inputField.value = '';
+        });
+
+        function activateRealtimeWebSocket() {
+            chatRealtimeSyncLink = _db
+                .channel('public:messages')
+                .on('postgres_changes', { event: 'INSERT', table: 'messages', filter: "room=eq.School Stress" }, (payload) => {
+                    const fallbackEl = domChatFeed.querySelector('.text-zinc-600');
+                    if (fallbackEl) domChatFeed.innerHTML = '';
+                    domChatFeed.insertAdjacentHTML('beforeend', compileChatBlockTemplate(payload.new));
+                    forceChatViewportScroll();
+                })
+                .subscribe();
+        }
+
+        function compileChatBlockTemplate(msg) {
+            const timeFormatted = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            return `
+                <div class="flex items-start space-x-3">
+                    <img src="${msg.user_avatar}" alt="" class="w-7 h-7 border border-zinc-800 bg-black mt-0.5 p-0.5" />
+                    <div class="bg-kulix-cardBg border border-zinc-900 p-3 flex-1 max-w-[85%]">
+                        <div class="flex justify-between items-baseline space-x-4 mb-1">
+                            <span class="text-xs font-black text-purple-400">@${escapeSanitizedOutput(msg.user_nickname)}</span>
+                            <span class="text-[9px] font-mono text-zinc-600">${timeFormatted}</span>
+                        </div>
+                        <p class="text-xs text-zinc-300 break-words font-mono leading-relaxed">${escapeSanitizedOutput(msg.text)}</p>
+                    </div>
+                </div>`;
+        }
+
+        function forceChatViewportScroll() {
+            domChatFeed.scrollTop = domChatFeed.scrollHeight;
+        }
+
+        // --- BUILT-IN SYSTEM ROAST CALCULATOR MECHANISM ---
+        function triggerAutomatedSystemRoast(ventId) {
+            const card = document.getElementById(`vent-card-${ventId}`);
+            if (!card) return;
+            const targetBlock = card.querySelector('.roast-field');
+            const selection = ROAST_MANIFEST[Math.floor(Math.random() * ROAST_MANIFEST.length)];
+            
+            targetBlock.innerText = `🔥 System Engine: "${selection}"`;
+            targetBlock.classList.remove('hidden');
+        }
+
+        // Input Sanitizer to block Cross-Site Scripting (XSS Inject Breaks)
+        function escapeSanitizedOutput(string) {
+            return string.replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            }[tag] || tag));
+        }
+    </script>
+</body>
+</html>
