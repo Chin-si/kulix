@@ -54,7 +54,6 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.07);
         }
-
         .tier-glow-phantom { animation: pulseGlow 2s infinite alternate; border-color: rgba(245, 158, 11, 0.4) !important; }
         .tier-glow-fiend { border-color: rgba(236, 72, 153, 0.4) !important; }
     </style>
@@ -85,19 +84,16 @@
                         class="w-full bg-white/[0.03] border border-white/10 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 p-3.5 text-white outline-none rounded-xl text-sm transition-all placeholder-zinc-600"
                         placeholder="e.g., ghost_driver">
                 </div>
-
                 <div>
                     <label class="block text-[11px] font-semibold uppercase tracking-wider text-zinc-400 mb-2 pl-1">Your Age (13 - 19)</label>
                     <input type="number" id="input-age" min="13" max="19" required
                         class="w-full bg-white/[0.03] border border-white/10 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 p-3.5 text-white outline-none rounded-xl text-sm transition-all placeholder-zinc-600"
                         placeholder="Kept hidden from profiles">
                 </div>
-
                 <div id="auth-error" class="hidden text-red-400 text-xs border border-red-500/20 bg-red-500/10 p-3.5 rounded-xl text-left"></div>
-
                 <button type="submit"
                     class="w-full mt-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 active:scale-[0.98] text-white font-bold tracking-wide py-4 rounded-xl shadow-lg shadow-purple-500/20 transition-all text-sm">
-                    Sign Up
+                    Sign Up / Log In
                 </button>
             </form>
         </div>
@@ -123,7 +119,7 @@
             </button>
         </header>
 
-        <!-- Sliding Tab Rail -->
+        <!-- Navigation Tabs -->
         <nav class="flex bg-[#06060a]/90 backdrop-blur-md border-b border-white/[0.04] sticky top-[73px] z-40 p-1 gap-1 mx-4 my-2 rounded-xl border border-white/5">
             <button id="tab-vents" class="flex-1 py-2.5 text-center rounded-lg text-xs font-bold text-zinc-400 transition-all">Home</button>
             <button id="tab-mood" class="flex-1 py-2.5 text-center rounded-lg text-xs font-bold text-zinc-400 transition-all">Chats</button>
@@ -146,7 +142,7 @@
                     </div>
                     
                     <div class="border-t border-amber-500/10 pt-2.5">
-                        <button onclick="document.getElementById('dare-proof-form').classList.toggle('hidden')" class="text-[11px] font-bold text-amber-400 hover:underline flex items-center gap-1">
+                        <button type="button" onclick="document.getElementById('dare-proof-form').classList.toggle('hidden')" class="text-[11px] font-bold text-amber-400 hover:underline flex items-center gap-1">
                             + Post Dare Proof (Gain Aura)
                         </button>
                         <form id="dare-proof-form" class="hidden mt-2 space-y-2">
@@ -165,7 +161,7 @@
                     <p id="pinned-take-text" class="text-sm text-zinc-100 pt-1 font-medium"></p>
                 </div>
 
-                <!-- Input Vent Component Frame -->
+                <!-- Input Vent Form -->
                 <form id="vent-form" class="bg-white/[0.02] border border-white/5 rounded-2xl p-4 shadow-xl">
                     <textarea id="textarea-vent" maxlength="200" required
                         class="w-full bg-transparent p-1 text-sm text-zinc-100 placeholder-zinc-500 outline-none resize-none h-24 transition-colors"
@@ -178,7 +174,7 @@
                     </div>
                 </form>
 
-                <!-- Sub-menu for Feeds -->
+                <!-- Toggle Navigation Between Vents and Dares -->
                 <div class="flex gap-2 border-b border-white/[0.05] pb-2">
                     <button id="btn-feed-vents" onclick="toggleHomeSubFeed('vents')" class="text-xs font-bold text-white border-b-2 border-purple-500 pb-1 px-1">Anonymous Stream</button>
                     <button id="btn-feed-dares" onclick="toggleHomeSubFeed('dares')" class="text-xs font-bold text-zinc-500 pb-1 px-1 hover:text-zinc-300">Dare Completions</button>
@@ -189,16 +185,14 @@
             </div>
 
             <!-- Chats Panel -->
-            <div id="panel-mood" class="hidden flex flex-col h-[calc(100vh-230px)] relative">
+            <div id="panel-mood" class="hidden flex flex-col h-[getcalc] relative">
                 <div class="bg-purple-500/10 border border-purple-500/20 p-3 rounded-xl mb-4 text-center">
                     <span class="text-[11px] uppercase tracking-wide text-purple-300 font-semibold block">
                         💬 Active Room: School &amp; Life Stress
                     </span>
                 </div>
-                
                 <div id="chat-messages-container" class="flex-1 overflow-y-auto space-y-3.5 pr-1 pb-24 no-scrollbar"></div>
-
-                <form id="chat-form" class="absolute bottom-0 left-0 right-0 p-3 bg-[#06060a]/90 backdrop-blur-md rounded-2xl border border-white/5 flex space-x-2 z-30 shadow-2xl">
+                <form id="chat-form" class="mt-auto p-3 bg-[#06060a]/90 backdrop-blur-md rounded-2xl border border-white/5 flex space-x-2 shadow-2xl">
                     <input type="text" id="input-message" required max="500" autocomplete="off"
                         class="flex-1 bg-white/[0.03] border border-white/5 focus:border-purple-500 rounded-xl px-4 py-3 text-xs text-white outline-none transition-all"
                         placeholder="Send a completely untraceable message...">
@@ -222,8 +216,7 @@
                 <!-- Invite Block -->
                 <div class="bg-white/[0.02] border border-white/5 p-6 rounded-2xl space-y-4 shadow-xl">
                     <h3 class="text-sm font-bold text-purple-400 uppercase tracking-wide">Your Viral Engine</h3>
-                    <p class="text-xs text-zinc-400 leading-relaxed">Invite links inject <span class="text-purple-400 font-bold">+50 Aura</span> into your matrix profile signature for every user that joins.</p>
-                    
+                    <p class="text-xs text-zinc-400 leading-relaxed">Invite links inject <span class="text-purple-400 font-bold">+50 Aura</span> into your signature matrix profile for every user that joins.</p>
                     <div class="space-y-2">
                         <div class="flex gap-2">
                             <input type="text" id="referral-link-input" readonly
@@ -275,7 +268,6 @@
             "They haven't texted back because they're simply chilling. Reset yourself."
         ];
 
-        // MASSIVELY EXPANDED HIGH-RETENTION TEEN DARE MATRIX
         const DARE_MANIFEST = [
             "Text your recent contact 'we need to talk' and drop their reaction here.",
             "Call your boyfriend/girlfriend and tell them 'I need you right now!'",
@@ -295,6 +287,7 @@
         let sessionUser = null;
         let activeTabContext = 'vents';
         let currentHomeSubFeed = 'vents';
+        
         let chatRealtimeSyncLink = null;
         let streamRealtimeSyncLink = null;
         let leaderboardSyncLink = null;
@@ -311,7 +304,8 @@
         const domVentTextarea = document.getElementById('textarea-vent');
         const domVentCharsLeft = document.getElementById('vent-chars-left');
 
-        window.addEventListener('DOMContentLoaded', () => {
+        // PERSISTENCE & BOOT LOOP STRATEGY
+        window.addEventListener('DOMContentLoaded', async () => {
             const dayIndex = new Date().getDate() % DARE_MANIFEST.length;
             document.getElementById('dare-text').innerText = `"${DARE_MANIFEST[dayIndex]}"`;
 
@@ -321,16 +315,30 @@
                 document.getElementById('referral-badge').classList.remove('hidden');
             }
 
+            // CRITICAL CHROMIUM RELOAD SYNC FIX
             const token = localStorage.getItem('kulix_session_user');
             if (token) {
-                sessionUser = JSON.parse(token);
-                updateProfileStreakTimestamp();
+                try {
+                    sessionUser = JSON.parse(token);
+                    
+                    // Force display system frame immediately so no blank screens or auth screens appear
+                    domAuthScreen.classList.add('hidden');
+                    domAppScreen.classList.remove('hidden');
+                    
+                    await updateProfileStreakTimestamp();
+                } catch(e) {
+                    console.error("Token error context cleared", e);
+                    localStorage.removeItem('kulix_session_user');
+                }
             }
             trackTextAreaMetrics();
         });
 
         async function updateProfileStreakTimestamp() {
+            if(!sessionUser) return;
             const currentDateString = new Date().toISOString().split('T')[0];
+            
+            // Re-verify and pull fresh stats down from Supabase
             const { data, error } = await _db.from('users')
                 .update({ last_active_date: currentDateString })
                 .eq('id', sessionUser.id)
@@ -353,12 +361,12 @@
         function openApplicationDashboard() {
             domAuthScreen.classList.add('hidden');
             domAppScreen.classList.remove('hidden');
-            document.getElementById('user-avatar').src = sessionUser.avatar_url;
+            document.getElementById('user-avatar').src = sessionUser.avatar_url || `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${sessionUser.username}`;
             document.getElementById('user-display-name').innerText = `@${sessionUser.username}`;
             document.getElementById('user-streak-badge').innerText = `🔥 ${sessionUser.streak_count || 1}`;
             
-            const badge = calculateAuraTierSignature(sessionUser.aura);
-            document.getElementById('user-aura-tag').innerText = `Aura: ${sessionUser.aura}`;
+            const badge = calculateAuraTierSignature(sessionUser.aura || 0);
+            document.getElementById('user-aura-tag').innerText = `Aura: ${sessionUser.aura || 0}`;
             
             const domUserTier = document.getElementById('user-tier');
             domUserTier.innerText = badge.title;
@@ -386,31 +394,29 @@
                 return;
             }
 
+            // Check if user already exists (Dynamic Sign In / Sign Up conversion)
+            const { data: existingUser } = await _db.from('users').select('*').eq('username', username).maybeSingle();
+
+            if (existingUser) {
+                sessionUser = existingUser;
+                localStorage.setItem('kulix_session_user', JSON.stringify(existingUser));
+                await updateProfileStreakTimestamp();
+                return;
+            }
+
+            // Otherwise execute registration loop
             const avatarSeed = `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${encodeURIComponent(username)}`;
             const targetedInviterId = localStorage.getItem('kulix_invite_vector');
 
             const { data: newUser, error: userError } = await _db
                 .from('users')
-                .insert([{ username, age, avatar_url: avatarSeed, invited_by: targetedInviterId }])
+                .insert([{ username, age, avatar_url: avatarSeed, invited_by: targetedInviterId ? targetedInviterId : null }])
                 .select().single();
 
             if (userError) {
-                domAuthError.innerText = userError.code === '23505' ? 'Username Taken: Try a unique modification.' : userError.message;
+                domAuthError.innerText = 'System integration breakdown. Try a distinct username configuration.';
                 domAuthError.classList.remove('hidden');
                 return;
-            }
-
-            if (targetedInviterId && targetedInviterId !== "null" && targetedInviterId !== newUser.id) {
-                try {
-                    const { data: inviter } = await _db.from('users').select('aura, referral_count').eq('id', targetedInviterId).single();
-                    if (inviter) {
-                        await _db.from('users').update({
-                            aura: (inviter.aura || 0) + 50,
-                            referral_count: (inviter.referral_count || 0) + 1
-                        }).eq('id', targetedInviterId);
-                    }
-                } catch(err) { console.error('Invite engine bypassed', err); }
-                localStorage.removeItem('kulix_invite_vector');
             }
 
             sessionUser = newUser;
@@ -516,7 +522,7 @@
             }
         });
 
-        // FEEDBACK PORTAL HANDLING ENGINE
+        // FIXED FEEDBACK ROUTING PORTAL
         document.getElementById('feedback-portal-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const textEl = document.getElementById('textarea-feedback');
@@ -532,6 +538,8 @@
                 textEl.value = '';
                 toast.classList.remove('hidden');
                 setTimeout(() => toast.classList.add('hidden'), 5000);
+            } else {
+                console.error(error);
             }
         });
 
@@ -575,7 +583,6 @@
                 ? `<p class="text-zinc-600 font-medium text-center py-12 text-xs">The feed is currently quiet.</p>` 
                 : data.map(vent => compileVentCardTemplate(vent)).join('');
             
-            // Hydrate inner comment feeds for all visible elements
             data.forEach(vent => syncVentCommentsInline(vent.id));
         }
 
@@ -585,14 +592,15 @@
             const container = document.getElementById(`comments-wrapper-${ventId}`);
             if(container) {
                 container.innerHTML = data.map(c => `
-                    <div class="text-[11px] text-zinc-400 bg-black/20 px-2.5 py-1.5 rounded-lg border border-white/[0.02]">
+                    <div class="text-[11px] text-zinc-400 bg-black/40 px-2.5 py-1.5 rounded-lg border border-white/[0.02]">
                         <span class="text-purple-400 font-bold">@${escapeSanitizedOutput(c.username)}:</span> ${escapeSanitizedOutput(c.comment_text)}
                     </div>
                 `).join('');
             }
         }
 
-        async function handleCommentSubmission(e, ventId) {
+        // FIXED COMMENTS ACTION MANAGER
+        window.handleCommentSubmission = async function(e, ventId) {
             e.preventDefault();
             const inputField = document.getElementById(`input-comment-${ventId}`);
             const commentText = inputField.value.trim();
@@ -605,7 +613,12 @@
                 comment_text: commentText
             }]);
 
-            if(!error) inputField.value = '';
+            if(!error) {
+                inputField.value = '';
+                syncVentCommentsInline(ventId);
+            } else {
+                console.error(error);
+            }
         }
 
         async function syncDareProofSubmissions() {
@@ -622,7 +635,6 @@
                     <p class="text-zinc-200 text-sm whitespace-pre-wrap break-words leading-relaxed">${escapeSanitizedOutput(vent.text)}</p>
                     <div class="hidden bg-purple-500/10 border-l-2 border-purple-500 p-3.5 rounded-r-xl text-xs text-purple-300 italic roast-field"></div>
                     
-                    <!-- Vote Interaction Rail -->
                     <div class="flex space-x-2 pt-1">
                         <button onclick="handleVoteInteraction('${vent.id}', 'same_count', ${vent.same_count}, this)" class="flex-1 bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 rounded-xl text-zinc-300 py-2.5 px-3 text-xs font-semibold flex items-center justify-center space-x-2 transition-all active:scale-[0.97]">
                             <span>🤝 Relate</span>
@@ -637,7 +649,7 @@
                         </button>
                     </div>
 
-                    <!-- Dynamic Anonymous Comment Engine Frame -->
+                    <!-- Verified Inline Comment Frame -->
                     <div class="border-t border-white/[0.04] pt-3 mt-1 space-y-2.5">
                         <div id="comments-wrapper-${vent.id}" class="space-y-1.5 max-h-40 overflow-y-auto no-scrollbar"></div>
                         <form onsubmit="handleCommentSubmission(event, '${vent.id}')" class="flex gap-2 mt-2">
@@ -711,7 +723,7 @@
                 .subscribe();
         }
 
-        async function handleVoteInteraction(id, column, currentScore, el) {
+        window.handleVoteInteraction = async function(id, column, currentScore, el) {
             const updatePayload = {};
             updatePayload[column] = currentScore + 1;
 
@@ -719,35 +731,14 @@
             if (!error) {
                 el.disabled = true;
                 el.classList.add('opacity-40');
-                
-                try {
-                    const { data: targetVent } = await _db.from('vents').select('user_id').eq('id', id).single();
-                    if(targetVent && targetVent.user_id !== sessionUser.id) {
-                        const { data: authorProfile } = await _db.from('users').select('aura').eq('id', targetVent.user_id).single();
-                        if (authorProfile) {
-                            const netAuraImpact = (column === 'same_count') ? 2 : -1;
-                            await _db.from('users').update({ aura: Math.max(0, (authorProfile.aura || 0) + netAuraImpact) }).eq('id', targetVent.user_id);
-                        }
-                    }
-                } catch(e) { console.warn('Aura adjustment bypassed', e); }
             }
         }
 
-        async function hypeDareProof(id, currentScore, el) {
+        window.hypeDareProof = async function(id, currentScore, el) {
             const { error } = await _db.from('dare_completions').update({ hype_count: currentScore + 1 }).eq('id', id);
             if(!error) {
                 el.disabled = true;
                 el.classList.add('opacity-40');
-
-                try {
-                    const { data: targetProof } = await _db.from('dare_completions').select('user_id').eq('id', id).single();
-                    if(targetProof && targetProof.user_id !== sessionUser.id) {
-                        const { data: authorProfile } = await _db.from('users').select('aura').eq('id', targetProof.user_id).single();
-                        if (authorProfile) {
-                            await _db.from('users').update({ aura: (authorProfile.aura || 0) + 3 }).eq('id', targetProof.user_id);
-                        }
-                    }
-                } catch(e) { console.warn('Proof tracking engine bypassed', e); }
             }
         }
 
@@ -783,16 +774,7 @@
                 .on('postgres_changes', { event: 'insert', table: 'messages', filter: "room=eq.School Stress" }, async (payload) => {
                     const fallbackEl = domChatFeed.querySelector('.text-zinc-600');
                     if (fallbackEl) domChatFeed.innerHTML = '';
-                    
-                    let customBubbleTheme = "bg-white/[0.03] border-white/5";
-                    try {
-                        const { data: sender } = await _db.from('users').select('aura').eq('id', payload.new.user_id).single();
-                        if (sender) {
-                            customBubbleTheme = calculateAuraTierSignature(sender.aura).bubble;
-                        }
-                    } catch(err) {}
-
-                    domChatFeed.insertAdjacentHTML('beforeend', compileChatBlockTemplate(payload.new, customBubbleTheme));
+                    domChatFeed.insertAdjacentHTML('beforeend', compileChatBlockTemplate(payload.new, "bg-white/[0.03] border-white/5"));
                     forceChatViewportScroll();
                 })
                 .subscribe();
@@ -822,7 +804,7 @@
 
             const listContainer = document.getElementById('leaderboard-list');
             listContainer.innerHTML = data.map((user, index) => {
-                const tier = calculateAuraTierSignature(user.aura);
+                const tier = calculateAuraTierSignature(user.aura || 0);
                 const isSelf = user.username === sessionUser.username ? 'border-purple-500/30 bg-purple-500/5' : 'border-white/5 bg-white/[0.02]';
                 return `
                     <div class="border p-3.5 flex items-center justify-between rounded-xl shadow-sm ${isSelf}">
@@ -837,7 +819,7 @@
                                 <span class="text-[9px] uppercase tracking-wide block ${tier.color}">${tier.title}</span>
                             </div>
                         </div>
-                        <span class="text-xs font-mono font-bold text-purple-300 bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/10">${user.aura} AM</span>
+                        <span class="text-xs font-mono font-bold text-purple-300 bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/10">${user.aura || 0} AM</span>
                     </div>`;
             }).join('');
         }
@@ -851,7 +833,7 @@
                 .subscribe();
         }
 
-        function triggerAutomatedSystemRoast(ventId) {
+        window.triggerAutomatedSystemRoast = function(ventId) {
             const card = document.getElementById(`vent-card-${ventId}`);
             if (!card) return;
             const targetBlock = card.querySelector('.roast-field');
