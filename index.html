@@ -129,7 +129,7 @@
 
         <main class="flex-1 p-4 overflow-y-auto pb-28 no-scrollbar animate-fade-in">
             
-            <!-- Home Panel (Vents, Comments, & Dares) -->
+            <!-- Home Panel -->
             <div id="panel-vents" class="space-y-5">
                 <!-- Dare Engine Panel -->
                 <div class="border border-amber-500/20 bg-gradient-to-r from-amber-500/10 to-transparent p-4 rounded-2xl flex flex-col space-y-3 relative overflow-hidden">
@@ -174,7 +174,7 @@
                     </div>
                 </form>
 
-                <!-- Toggle Navigation Between Vents and Dares -->
+                <!-- Sub-Feed Navigation Toggle -->
                 <div class="flex gap-2 border-b border-white/[0.05] pb-2">
                     <button id="btn-feed-vents" onclick="toggleHomeSubFeed('vents')" class="text-xs font-bold text-white border-b-2 border-purple-500 pb-1 px-1">Anonymous Stream</button>
                     <button id="btn-feed-dares" onclick="toggleHomeSubFeed('dares')" class="text-xs font-bold text-zinc-500 pb-1 px-1 hover:text-zinc-300">Dare Completions</button>
@@ -195,7 +195,7 @@
                 <form id="chat-form" class="mt-auto p-3 bg-[#06060a]/90 backdrop-blur-md rounded-2xl border border-white/5 flex space-x-2 shadow-2xl">
                     <input type="text" id="input-message" required max="500" autocomplete="off"
                         class="flex-1 bg-white/[0.03] border border-white/5 focus:border-purple-500 rounded-xl px-4 py-3 text-xs text-white outline-none transition-all"
-                        placeholder="Send a completely untraceable message...">
+                        placeholder="Send a message as your verified username...">
                     <button type="submit" class="bg-purple-500 hover:bg-purple-600 text-white font-bold text-xs px-5 rounded-xl transition-all shadow-md">
                         Send
                     </button>
@@ -205,15 +205,14 @@
             <!-- Leaderboard Panel -->
             <div id="panel-leaderboard" class="hidden space-y-4">
                 <div class="border border-white/5 bg-white/[0.01] p-5 rounded-2xl text-center">
-                    <h3 class="text-xs uppercase tracking-widest font-bold text-purple-400">Server Aura Leaderboard</h3>
-                    <p class="text-[11px] text-zinc-400 mt-1">Real-time status standing updates across your network.</p>
+                    <h3 class="text-xs uppercase tracking-widest font-bold text-purple-400">🔥 Engagement &amp; Aura Hall of Fame</h3>
+                    <p class="text-[11px] text-zinc-400 mt-1">Ranked dynamically by raw Aura status combined with interactive tracking points.</p>
                 </div>
                 <div id="leaderboard-list" class="space-y-2.5"></div>
             </div>
 
-            <!-- Hub Panel (Invite + App Feedback Portal) -->
+            <!-- Hub Panel -->
             <div id="panel-profile" class="hidden space-y-5">
-                <!-- Invite Block -->
                 <div class="bg-white/[0.02] border border-white/5 p-6 rounded-2xl space-y-4 shadow-xl">
                     <h3 class="text-sm font-bold text-purple-400 uppercase tracking-wide">Your Viral Engine</h3>
                     <p class="text-xs text-zinc-400 leading-relaxed">Invite links inject <span class="text-purple-400 font-bold">+50 Aura</span> into your signature matrix profile for every user that joins.</p>
@@ -232,14 +231,13 @@
                     </div>
                 </div>
 
-                <!-- Feedback Portal Block -->
                 <div class="bg-white/[0.02] border border-white/5 p-6 rounded-2xl space-y-3 shadow-xl">
                     <h3 class="text-sm font-bold text-pink-400 uppercase tracking-wide">📥 App Feedback Portal</h3>
-                    <p class="text-xs text-zinc-400 leading-relaxed">Have custom feature requests, UI bugs, or crazy layout ideas? Drop them below. Submissions directly target dev routing at <span class="text-pink-400 font-mono">schin8361@gmail.com</span>.</p>
+                    <p class="text-xs text-zinc-400 leading-relaxed">Have custom feature requests, UI bugs, or crazy layout ideas? Drop them below.</p>
                     <form id="feedback-portal-form" class="space-y-2.5">
                         <textarea id="textarea-feedback" required maxlength="500" rows="3"
                             class="w-full bg-white/[0.03] border border-white/10 focus:border-pink-500 rounded-xl p-3 text-xs text-white outline-none resize-none transition-colors"
-                            placeholder="Type what should change, be removed, or get built next..."></textarea>
+                            placeholder="Type what should change next..."></textarea>
                         <button type="submit" class="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:opacity-90 text-white font-bold text-xs py-3 rounded-xl transition-all shadow-md">
                             Submit Engineering Request
                         </button>
@@ -264,24 +262,14 @@
             "This isn't your private diary, but fine, go off.",
             "Dating in 2026 is an absolute circus, you aren't special.",
             "Have you tried sleeping instead of typing paragraphs at midnight?",
-            "NPC behavior detected. Please change your path scripts.",
-            "They haven't texted back because they're simply chilling. Reset yourself."
+            "NPC behavior detected. Please change your path scripts."
         ];
 
         const DARE_MANIFEST = [
             "Text your recent contact 'we need to talk' and drop their reaction here.",
-            "Call your boyfriend/girlfriend and tell them 'I need you right now!'",
-            "Tell your ex: 'Baby, I miss you.'",
             "Approach your CRUSH and tell them 'I love you.'",
             "What is the most high-key criminal lie you told your parents this week?",
-            "Unfollow your most recent follower on Instagram and post what happens.",
-            "Send your group chat: 'I have some insane gossip' then turn off your phone for 30 minutes.",
-            "Text your third contact 'I know what you did' with no context.",
-            "Post a completely pitch-black slide to your story with only the timestamp.",
-            "Go leave an aggressively confusing comment on a random classmate's older post.",
-            "Change your profile picture to an obscure meme template for 24 hours.",
-            "Text your parents: 'Can you pick me up from the station?' when you're literally in your bedroom.",
-            "Confess to the last person you screenshotted without mentioning why."
+            "Send your group chat: 'I have some insane gossip' then turn off your phone for 30 minutes."
         ];
 
         let sessionUser = null;
@@ -304,7 +292,7 @@
         const domVentTextarea = document.getElementById('textarea-vent');
         const domVentCharsLeft = document.getElementById('vent-chars-left');
 
-        // PERSISTENCE & BOOT LOOP STRATEGY
+        // FORCE REGISTRATION ON NEW DEVICES
         window.addEventListener('DOMContentLoaded', async () => {
             const dayIndex = new Date().getDate() % DARE_MANIFEST.length;
             document.getElementById('dare-text').innerText = `"${DARE_MANIFEST[dayIndex]}"`;
@@ -315,30 +303,32 @@
                 document.getElementById('referral-badge').classList.remove('hidden');
             }
 
-            // CRITICAL CHROMIUM RELOAD SYNC FIX
             const token = localStorage.getItem('kulix_session_user');
             if (token) {
                 try {
                     sessionUser = JSON.parse(token);
-                    
-                    // Force display system frame immediately so no blank screens or auth screens appear
                     domAuthScreen.classList.add('hidden');
                     domAppScreen.classList.remove('hidden');
-                    
                     await updateProfileStreakTimestamp();
                 } catch(e) {
-                    console.error("Token error context cleared", e);
                     localStorage.removeItem('kulix_session_user');
+                    showAuthGate();
                 }
+            } else {
+                showAuthGate();
             }
             trackTextAreaMetrics();
         });
+
+        function showAuthGate() {
+            domAuthScreen.classList.remove('hidden');
+            domAppScreen.classList.add('hidden');
+        }
 
         async function updateProfileStreakTimestamp() {
             if(!sessionUser) return;
             const currentDateString = new Date().toISOString().split('T')[0];
             
-            // Re-verify and pull fresh stats down from Supabase
             const { data, error } = await _db.from('users')
                 .update({ last_active_date: currentDateString })
                 .eq('id', sessionUser.id)
@@ -351,11 +341,25 @@
             openApplicationDashboard();
         }
 
+        async function incrementUserInteractionPoints() {
+            if (!sessionUser) return;
+            const currentPoints = sessionUser.interaction_count || 0;
+            const { data } = await _db.from('users')
+                .update({ interaction_count: currentPoints + 1, aura: (sessionUser.aura || 0) + 2 })
+                .eq('id', sessionUser.id)
+                .select().single();
+            if (data) {
+                sessionUser = data;
+                localStorage.setItem('kulix_session_user', JSON.stringify(data));
+                document.getElementById('user-aura-tag').innerText = `Aura: ${sessionUser.aura || 0}`;
+            }
+        }
+
         function calculateAuraTierSignature(score) {
-            if (score >= 500) return { title: "⚡ Phantom", color: "text-amber-400 font-bold", class: "tier-glow-phantom", bubble: "bg-gradient-to-r from-amber-500/10 via-yellow-600/5 to-transparent border-amber-500/30" };
-            if (score >= 200) return { title: "Clout Fiend", color: "text-pink-400 font-bold", class: "tier-glow-fiend", bubble: "bg-gradient-to-r from-pink-500/10 via-purple-600/5 to-transparent border-pink-500/30" };
-            if (score >= 50) return { title: "Protocol Agent", color: "text-purple-400 font-semibold", class: "", bubble: "bg-purple-950/20 border-purple-500/20" };
-            return { title: "NPC Default", color: "text-zinc-500", class: "", bubble: "bg-white/[0.03] border-white/5" };
+            if (score >= 500) return { title: "⚡ Phantom", color: "text-amber-400 font-bold", class: "tier-glow-phantom" };
+            if (score >= 200) return { title: "Clout Fiend", color: "text-pink-400 font-bold", class: "tier-glow-fiend" };
+            if (score >= 50) return { title: "Protocol Agent", color: "text-purple-400 font-semibold", class: "" };
+            return { title: "NPC Default", color: "text-zinc-500", class: "" };
         }
 
         function openApplicationDashboard() {
@@ -372,9 +376,7 @@
             domUserTier.innerText = badge.title;
             domUserTier.className = `text-[10px] font-medium mt-1 block tracking-wide uppercase ${badge.color}`;
 
-            const appFrame = document.getElementById('app-screen');
-            appFrame.className = `min-h-screen max-w-md mx-auto border-x border-white/5 flex flex-col relative bg-[#06060a] ${badge.class}`;
-
+            document.getElementById('app-screen').className = `min-h-screen max-w-md mx-auto border-x border-white/5 flex flex-col relative bg-[#06060a] ${badge.class}`;
             document.getElementById('referral-link-input').value = `${window.location.origin}${window.location.pathname}?ref=${sessionUser.id}`;
             document.getElementById('metric-referrals').innerText = sessionUser.referral_count || 0;
 
@@ -389,12 +391,11 @@
             const age = parseInt(document.getElementById('input-age').value, 10);
 
             if (isNaN(age) || age < 13 || age > 19) {
-                domAuthError.innerText = 'Access Denied: Kulix is reserved for real teens aged 13-19.';
+                domAuthError.innerText = 'Access Denied: Kulix is reserved for teens aged 13-19.';
                 domAuthError.classList.remove('hidden');
                 return;
             }
 
-            // Check if user already exists (Dynamic Sign In / Sign Up conversion)
             const { data: existingUser } = await _db.from('users').select('*').eq('username', username).maybeSingle();
 
             if (existingUser) {
@@ -404,7 +405,6 @@
                 return;
             }
 
-            // Otherwise execute registration loop
             const avatarSeed = `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${encodeURIComponent(username)}`;
             const targetedInviterId = localStorage.getItem('kulix_invite_vector');
 
@@ -414,7 +414,7 @@
                 .select().single();
 
             if (userError) {
-                domAuthError.innerText = 'System integration breakdown. Try a distinct username configuration.';
+                domAuthError.innerText = 'Username taken. Pick a distinct username.';
                 domAuthError.classList.remove('hidden');
                 return;
             }
@@ -519,60 +519,49 @@
             if (!error) {
                 domVentTextarea.value = '';
                 trackTextAreaMetrics();
+                await incrementUserInteractionPoints();
             }
         });
 
-        // FIXED FEEDBACK ROUTING PORTAL
-        document.getElementById('feedback-portal-form').addEventListener('submit', async (e) => {
+        // FACEBOOK-STYLE INDEPENDENT COMMENT RENDERER WITH VERIFIED ACTIVE DEVICE PROFILE LINKS
+        async function syncVentCommentsInline(ventId) {
+            const { data, error } = await _db.from('vent_comments').select('*').eq('vent_id', ventId).order('created_at', { ascending: true });
+            if (error || !data) return;
+            const container = document.getElementById(`comments-wrapper-${ventId}`);
+            if(container) {
+                container.innerHTML = data.map(c => `
+                    <div class="flex items-start space-x-2 bg-white/[0.02] p-2.5 rounded-xl border border-white/[0.04]">
+                        <img src="${c.user_avatar || `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${c.username}`}" class="w-6 h-6 rounded-full border border-purple-500/20 bg-zinc-900" />
+                        <div class="flex-1">
+                            <div class="flex justify-between items-baseline">
+                                <span class="text-[11px] font-bold text-purple-400">@${escapeSanitizedOutput(c.username)}</span>
+                                <span class="text-[9px] text-zinc-600 font-mono">${new Date(c.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                            </div>
+                            <p class="text-[11px] text-zinc-300 mt-0.5 whitespace-pre-wrap break-words">${escapeSanitizedOutput(c.comment_text)}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.handleCommentSubmission = async function(e, ventId) {
             e.preventDefault();
-            const textEl = document.getElementById('textarea-feedback');
-            const toast = document.getElementById('feedback-success-toast');
-            
-            const { error } = await _db.from('app_feedback').insert([{
+            const inputField = document.getElementById(`input-comment-${ventId}`);
+            const commentText = inputField.value.trim();
+            if(!commentText) return;
+
+            const { error } = await _db.from('vent_comments').insert([{
+                vent_id: ventId,
                 user_id: sessionUser.id,
                 username: sessionUser.username,
-                feedback_text: textEl.value.trim()
+                user_avatar: sessionUser.avatar_url,
+                comment_text: commentText
             }]);
 
             if(!error) {
-                textEl.value = '';
-                toast.classList.remove('hidden');
-                setTimeout(() => toast.classList.add('hidden'), 5000);
-            } else {
-                console.error(error);
-            }
-        });
-
-        document.getElementById('dare-proof-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const proofInput = document.getElementById('input-dare-proof');
-            const proofText = proofInput.value.trim();
-            const currentDare = document.getElementById('dare-text').innerText;
-
-            if(!proofText) return;
-
-            const { error } = await _db.from('dare_completions').insert([{
-                user_id: sessionUser.id,
-                username: sessionUser.username,
-                dare_text: currentDare,
-                proof_text: proofText
-            }]);
-
-            if(!error) {
-                proofInput.value = '';
-                document.getElementById('dare-proof-form').classList.add('hidden');
-                toggleHomeSubFeed('dares');
-            }
-        });
-
-        async function syncPinnedHotTake() {
-            const { data, error } = await _db.from('vents').select('*').order('same_count', { ascending: false }).limit(1);
-            const container = document.getElementById('pinned-hot-take');
-            if (!error && data && data.length > 0 && data[0].same_count > 2) {
-                document.getElementById('pinned-take-text').innerText = data[0].text;
-                container.classList.remove('hidden');
-            } else {
-                container.classList.add('hidden');
+                inputField.value = '';
+                await syncVentCommentsInline(ventId);
+                await incrementUserInteractionPoints();
             }
         }
 
@@ -584,49 +573,6 @@
                 : data.map(vent => compileVentCardTemplate(vent)).join('');
             
             data.forEach(vent => syncVentCommentsInline(vent.id));
-        }
-
-        async function syncVentCommentsInline(ventId) {
-            const { data, error } = await _db.from('vent_comments').select('*').eq('vent_id', ventId).order('created_at', { ascending: true });
-            if (error || !data) return;
-            const container = document.getElementById(`comments-wrapper-${ventId}`);
-            if(container) {
-                container.innerHTML = data.map(c => `
-                    <div class="text-[11px] text-zinc-400 bg-black/40 px-2.5 py-1.5 rounded-lg border border-white/[0.02]">
-                        <span class="text-purple-400 font-bold">@${escapeSanitizedOutput(c.username)}:</span> ${escapeSanitizedOutput(c.comment_text)}
-                    </div>
-                `).join('');
-            }
-        }
-
-        // FIXED COMMENTS ACTION MANAGER
-        window.handleCommentSubmission = async function(e, ventId) {
-            e.preventDefault();
-            const inputField = document.getElementById(`input-comment-${ventId}`);
-            const commentText = inputField.value.trim();
-            if(!commentText) return;
-
-            const { error } = await _db.from('vent_comments').insert([{
-                vent_id: ventId,
-                user_id: sessionUser.id,
-                username: sessionUser.username,
-                comment_text: commentText
-            }]);
-
-            if(!error) {
-                inputField.value = '';
-                syncVentCommentsInline(ventId);
-            } else {
-                console.error(error);
-            }
-        }
-
-        async function syncDareProofSubmissions() {
-            const { data, error } = await _db.from('dare_completions').select('*').order('created_at', { ascending: false });
-            if (error) return;
-            domDaresFeed.innerHTML = data.length === 0
-                ? `<p class="text-zinc-600 font-medium text-center py-12 text-xs">No proofs published yet. Be the first.</p>`
-                : data.map(proof => compileDareProofCardTemplate(proof)).join('');
         }
 
         function compileVentCardTemplate(vent) {
@@ -644,102 +590,19 @@
                             <span>💀 Cringe</span>
                             <span class="bg-red-500/10 text-red-400 px-2 py-0.5 text-[10px] rounded-md font-bold font-mono vote-counter-cringe">${vent.cringe_count || 0}</span>
                         </button>
-                        <button onclick="triggerAutomatedSystemRoast('${vent.id}')" class="bg-transparent text-zinc-600 hover:text-zinc-400 text-xs px-2 transition-all">
-                            Roast
-                        </button>
                     </div>
 
-                    <!-- Verified Inline Comment Frame -->
-                    <div class="border-t border-white/[0.04] pt-3 mt-1 space-y-2.5">
-                        <div id="comments-wrapper-${vent.id}" class="space-y-1.5 max-h-40 overflow-y-auto no-scrollbar"></div>
-                        <form onsubmit="handleCommentSubmission(event, '${vent.id}')" class="flex gap-2 mt-2">
-                            <input type="text" id="input-comment-${vent.id}" maxlength="150" placeholder="Write an anonymous reply..." required
-                                class="flex-1 bg-white/[0.02] border border-white/5 focus:border-purple-500 rounded-lg px-3 py-2 text-[11px] text-white outline-none transition-all">
-                            <button type="submit" class="bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 rounded-lg text-[10px] font-bold hover:bg-purple-500/30 transition-colors">Reply</button>
+                    <!-- Facebook-Style Comments Wrapper Framework -->
+                    <div class="border-t border-white/[0.04] pt-4 mt-1 space-y-3">
+                        <div id="comments-wrapper-${vent.id}" class="space-y-2 max-h-60 overflow-y-auto no-scrollbar"></div>
+                        <form onsubmit="handleCommentSubmission(event, '${vent.id}')" class="flex gap-2 items-center mt-2 bg-black/20 p-1.5 rounded-xl border border-white/5">
+                            <img src="${sessionUser ? sessionUser.avatar_url : ''}" class="w-6 h-6 rounded-full border border-purple-500/30 bg-zinc-900" />
+                            <input type="text" id="input-comment-${vent.id}" maxlength="150" placeholder="Write a comment as @${sessionUser ? sessionUser.username : 'user'}..." required
+                                class="flex-1 bg-transparent text-xs text-white outline-none px-1 placeholder-zinc-500">
+                            <button type="submit" class="bg-purple-500 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-purple-600 transition-colors">Post</button>
                         </form>
                     </div>
                 </div>`;
-        }
-
-        function compileDareProofCardTemplate(proof) {
-            return `
-                <div class="bg-amber-500/[0.02] border border-amber-500/10 p-5 rounded-2xl flex flex-col space-y-2 shadow-md animate-fade-in" id="proof-card-${proof.id}">
-                    <div class="flex justify-between items-center text-[10px]">
-                        <span class="text-amber-400 font-bold">@${escapeSanitizedOutput(proof.username)}</span>
-                        <span class="text-zinc-500">Completed Challenge</span>
-                    </div>
-                    <p class="text-zinc-500 text-[11px] italic">Target: ${escapeSanitizedOutput(proof.dare_text)}</p>
-                    <p class="text-zinc-200 text-xs font-medium bg-black/30 p-3 rounded-xl border border-white/[0.03] mt-1">${escapeSanitizedOutput(proof.proof_text)}</p>
-                    <div class="pt-2">
-                        <button onclick="hypeDareProof('${proof.id}', ${proof.hype_count}, this)" class="w-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-300 rounded-xl py-2 px-3 text-xs font-semibold flex items-center justify-center space-x-2 transition-all active:scale-[0.97]">
-                            <span>⚡ Hype This</span>
-                            <span class="bg-amber-500/20 text-amber-300 px-2 py-0.5 text-[10px] rounded-md font-bold font-mono proof-counter">${proof.hype_count}</span>
-                        </button>
-                    </div>
-                </div>`;
-        }
-
-        function activateStreamRealtimeSync() {
-            streamRealtimeSyncLink = _db
-                .channel('public:vents')
-                .on('postgres_changes', { event: 'insert', table: 'vents' }, (payload) => {
-                    const fallbackEl = domVentsFeed.querySelector('.text-zinc-600');
-                    if (fallbackEl) domVentsFeed.innerHTML = '';
-                    domVentsFeed.insertAdjacentHTML('afterbegin', compileVentCardTemplate(payload.new));
-                })
-                .on('postgres_changes', { event: 'update', table: 'vents' }, (payload) => {
-                    const existingCard = document.getElementById(`vent-card-${payload.new.id}`);
-                    if (existingCard) {
-                        existingCard.querySelector('.vote-counter-relate').innerText = payload.new.same_count;
-                        existingCard.querySelector('.vote-counter-cringe').innerText = payload.new.cringe_count || 0;
-                    }
-                })
-                .subscribe();
-        }
-
-        function activateCommentsRealtimeSync() {
-            commentsRealtimeSyncLink = _db
-                .channel('public:vent_comments')
-                .on('postgres_changes', { event: 'insert', table: 'vent_comments' }, (payload) => {
-                    syncVentCommentsInline(payload.new.vent_id);
-                })
-                .subscribe();
-        }
-
-        function activateDareRealtimeSync() {
-            dareRealtimeSyncLink = _db
-                .channel('public:dare_completions')
-                .on('postgres_changes', { event: 'insert', table: 'dare_completions' }, (payload) => {
-                    const fallbackEl = domDaresFeed.querySelector('.text-zinc-600');
-                    if (fallbackEl) domDaresFeed.innerHTML = '';
-                    domDaresFeed.insertAdjacentHTML('afterbegin', compileDareProofCardTemplate(payload.new));
-                })
-                .on('postgres_changes', { event: 'update', table: 'dare_completions' }, (payload) => {
-                    const existingCard = document.getElementById('proof-card-' + payload.new.id);
-                    if(existingCard) {
-                        existingCard.querySelector('.proof-counter').innerText = payload.new.hype_count;
-                    }
-                })
-                .subscribe();
-        }
-
-        window.handleVoteInteraction = async function(id, column, currentScore, el) {
-            const updatePayload = {};
-            updatePayload[column] = currentScore + 1;
-
-            const { error } = await _db.from('vents').update(updatePayload).eq('id', id);
-            if (!error) {
-                el.disabled = true;
-                el.classList.add('opacity-40');
-            }
-        }
-
-        window.hypeDareProof = async function(id, currentScore, el) {
-            const { error } = await _db.from('dare_completions').update({ hype_count: currentScore + 1 }).eq('id', id);
-            if(!error) {
-                el.disabled = true;
-                el.classList.add('opacity-40');
-            }
         }
 
         async function syncMoodRoomMessages() {
@@ -765,28 +628,116 @@
                 text: text
             }]);
 
-            if (!error) inputField.value = '';
+            if (!error) {
+                inputField.value = '';
+                await incrementUserInteractionPoints();
+            }
         });
+
+        // HIGHLY INTERACTIVE + HIGH-AURA LEADERBOARD FORMULA GENERATOR
+        async function syncLeaderboardStandings() {
+            const { data, error } = await _db.from('users').select('username, aura, avatar_url, streak_count, interaction_count').order('aura', { ascending: false }).limit(25);
+            if (error) return;
+
+            // Sort dynamically based on total dynamic engagement impact formula: Aura Score + Interaction Score Matrix Points
+            const calculatedLeaderboard = data.map(u => ({
+                ...u,
+                totalEngagementScore: (u.aura || 0) + ((u.interaction_count || 0) * 5)
+            })).sort((first, second) => second.totalEngagementScore - first.totalEngagementScore).slice(0, 10);
+
+            const listContainer = document.getElementById('leaderboard-list');
+            listContainer.innerHTML = calculatedLeaderboard.map((user, index) => {
+                const tier = calculateAuraTierSignature(user.aura || 0);
+                const isSelf = user.username === sessionUser.username ? 'border-purple-500/30 bg-purple-500/5' : 'border-white/5 bg-white/[0.02]';
+                return `
+                    <div class="border p-3.5 flex items-center justify-between rounded-xl shadow-sm ${isSelf}">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-xs font-mono font-bold text-zinc-500 w-4">${index + 1}</span>
+                            <img src="${user.avatar_url}" class="w-8 h-8 rounded-full border border-white/10 bg-zinc-900 p-0.5" />
+                            <div>
+                                <div class="flex items-center gap.1.5">
+                                    <span class="text-xs font-bold text-zinc-200">@${escapeSanitizedOutput(user.username || 'user')}</span>
+                                    <span class="text-[9px] text-amber-400 font-mono ml-1">🔥${user.streak_count || 1}</span>
+                                </div>
+                                <span class="text-[9px] tracking-wide block uppercase font-mono text-zinc-500">Activity Points: ${user.interaction_count || 0}</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs font-mono font-bold text-purple-300 bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/10">${user.aura || 0} Aura</span>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        function activateStreamRealtimeSync() {
+            streamRealtimeSyncLink = _db
+                .channel('public:vents')
+                .on('postgres_changes', { event: 'insert', table: 'vents' }, (payload) => {
+                    const fallbackEl = domVentsFeed.querySelector('.text-zinc-600');
+                    if (fallbackEl) domVentsFeed.innerHTML = '';
+                    domVentsFeed.insertAdjacentHTML('afterbegin', compileVentCardTemplate(payload.new));
+                    syncVentCommentsInline(payload.new.id);
+                })
+                .on('postgres_changes', { event: 'update', table: 'vents' }, (payload) => {
+                    const existingCard = document.getElementById(`vent-card-${payload.new.id}`);
+                    if (existingCard) {
+                        existingCard.querySelector('.vote-counter-relate').innerText = payload.new.same_count;
+                        existingCard.querySelector('.vote-counter-cringe').innerText = payload.new.cringe_count || 0;
+                    }
+                })
+                .subscribe();
+        }
+
+        function activateCommentsRealtimeSync() {
+            commentsRealtimeSyncLink = _db
+                .channel('public:vent_comments')
+                .on('postgres_changes', { event: 'insert', table: 'vent_comments' }, (payload) => {
+                    syncVentCommentsInline(payload.new.vent_id);
+                })
+                .subscribe();
+        }
 
         function activateRealtimeWebSocket() {
             chatRealtimeSyncLink = _db
                 .channel('public:messages')
-                .on('postgres_changes', { event: 'insert', table: 'messages', filter: "room=eq.School Stress" }, async (payload) => {
+                .on('postgres_changes', { event: 'insert', table: 'messages', filter: "room=eq.School Stress" }, (payload) => {
                     const fallbackEl = domChatFeed.querySelector('.text-zinc-600');
                     if (fallbackEl) domChatFeed.innerHTML = '';
-                    domChatFeed.insertAdjacentHTML('beforeend', compileChatBlockTemplate(payload.new, "bg-white/[0.03] border-white/5"));
+                    domChatFeed.insertAdjacentHTML('beforeend', compileChatBlockTemplate(payload.new));
                     forceChatViewportScroll();
                 })
                 .subscribe();
         }
 
-        function compileChatBlockTemplate(msg, assignedThemeClass) {
-            const theme = assignedThemeClass || "bg-white/[0.03] border-white/5";
-            const timeFormatted = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        function activateLeaderboardRealtimeSync() {
+            leaderboardSyncLink = _db.channel('public:users').on('postgres_changes', { event: 'update', table: 'users' }, () => { syncLeaderboardStandings(); }).subscribe();
+        }
+
+        function activateDareRealtimeSync() {
+            dareRealtimeSyncLink = _db.channel('public:dare_completions').on('postgres_changes', { event: 'insert', table: 'dare_completions' }, (p) => {
+                const fallbackEl = domDaresFeed.querySelector('.text-zinc-600');
+                if (fallbackEl) domDaresFeed.innerHTML = '';
+                domDaresFeed.insertAdjacentHTML('afterbegin', compileDareProofCardTemplate(p.new));
+            }).subscribe();
+        }
+
+        window.handleVoteInteraction = async function(id, column, currentScore, el) {
+            const updatePayload = {};
+            updatePayload[column] = currentScore + 1;
+            const { error } = await _db.from('vents').update(updatePayload).eq('id', id);
+            if (!error) {
+                el.disabled = true;
+                el.classList.add('opacity-40');
+                await incrementUserInteractionPoints();
+            }
+        }
+
+        function compileChatBlockTemplate(msg) {
+            const timeFormatted = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             return `
                 <div class="flex items-start space-x-3 animate-fade-in">
-                    <img src="${msg.user_avatar}" alt="" class="w-8 h-8 rounded-full border border-white/10 bg-zinc-900 mt-0.5 p-0.5" />
-                    <div class="border p-3 rounded-2xl flex-1 max-w-[85%] ${theme}">
+                    <img src="${msg.user_avatar || `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${msg.user_username}`}" class="w-8 h-8 rounded-full border border-white/10 bg-zinc-900 mt-0.5 p-0.5" />
+                    <div class="border p-3 rounded-2xl flex-1 max-w-[85%] bg-white/[0.03] border-white/5">
                         <div class="flex justify-between items-baseline space-x-4 mb-1">
                             <span class="text-xs font-bold text-purple-400">@${escapeSanitizedOutput(msg.user_username || 'anonymous')}</span>
                             <span class="text-[9px] font-mono text-zinc-500">${timeFormatted}</span>
@@ -798,50 +749,37 @@
 
         function forceChatViewportScroll() { domChatFeed.scrollTop = domChatFeed.scrollHeight; }
 
-        async function syncLeaderboardStandings() {
-            const { data, error } = await _db.from('users').select('username, aura, avatar_url, streak_count').order('aura', { ascending: false }).limit(10);
+        async function syncDareProofSubmissions() {
+            const { data, error } = await _db.from('dare_completions').select('*').order('created_at', { ascending: false });
             if (error) return;
-
-            const listContainer = document.getElementById('leaderboard-list');
-            listContainer.innerHTML = data.map((user, index) => {
-                const tier = calculateAuraTierSignature(user.aura || 0);
-                const isSelf = user.username === sessionUser.username ? 'border-purple-500/30 bg-purple-500/5' : 'border-white/5 bg-white/[0.02]';
-                return `
-                    <div class="border p-3.5 flex items-center justify-between rounded-xl shadow-sm ${isSelf}">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-xs font-mono font-bold text-zinc-500 w-4">${index + 1}</span>
-                            <img src="${user.avatar_url}" class="w-8 h-8 rounded-full border border-white/10 bg-zinc-900 p-0.5" />
-                            <div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-xs font-bold text-zinc-200">@${escapeSanitizedOutput(user.username || 'user')}</span>
-                                    <span class="text-[9px] text-amber-400 font-mono">🔥${user.streak_count || 1}</span>
-                                </div>
-                                <span class="text-[9px] uppercase tracking-wide block ${tier.color}">${tier.title}</span>
-                            </div>
-                        </div>
-                        <span class="text-xs font-mono font-bold text-purple-300 bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/10">${user.aura || 0} AM</span>
-                    </div>`;
-            }).join('');
+            domDaresFeed.innerHTML = data.length === 0
+                ? `<p class="text-zinc-600 font-medium text-center py-12 text-xs">No proofs published yet. Be the first.</p>`
+                : data.map(proof => compileDareProofCardTemplate(proof)).join('');
         }
 
-        function activateLeaderboardRealtimeSync() {
-            leaderboardSyncLink = _db
-                .channel('public:users')
-                .on('postgres_changes', { event: 'update', table: 'users' }, () => {
-                    syncLeaderboardStandings();
-                })
-                .subscribe();
+        function compileDareProofCardTemplate(proof) {
+            return `
+                <div class="bg-amber-500/[0.02] border border-amber-500/10 p-5 rounded-2xl flex flex-col space-y-2 shadow-md animate-fade-in" id="proof-card-${proof.id}">
+                    <div class="flex justify-between items-center text-[10px]">
+                        <span class="text-amber-400 font-bold">@${escapeSanitizedOutput(proof.username)}</span>
+                        <span class="text-zinc-500">Completed Challenge</span>
+                    </div>
+                    <p class="text-zinc-500 text-[11px] italic">Target: ${escapeSanitizedOutput(proof.dare_text)}</p>
+                    <p class="text-zinc-200 text-xs font-medium bg-black/30 p-3 rounded-xl border border-white/[0.03] mt-1">${escapeSanitizedOutput(proof.proof_text)}</p>
+                </div>`;
         }
 
-        window.triggerAutomatedSystemRoast = function(ventId) {
-            const card = document.getElementById(`vent-card-${ventId}`);
-            if (!card) return;
-            const targetBlock = card.querySelector('.roast-field');
-            const selection = ROAST_MANIFEST[Math.floor(Math.random() * ROAST_MANIFEST.length)];
-            
-            targetBlock.innerText = `🔥 System Roast: "${selection}"`;
-            targetBlock.classList.remove('hidden');
-        }
+        document.getElementById('feedback-portal-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const textEl = document.getElementById('textarea-feedback');
+            const toast = document.getElementById('feedback-success-toast');
+            const { error } = await _db.from('app_feedback').insert([{ user_id: sessionUser.id, username: sessionUser.username, feedback_text: textEl.value.trim() }]);
+            if(!error) {
+                textEl.value = '';
+                toast.classList.remove('hidden');
+                setTimeout(() => toast.classList.add('hidden'), 5000);
+            }
+        });
 
         document.getElementById('btn-copy-ref').addEventListener('click', () => {
             const targetEl = document.getElementById('referral-link-input');
