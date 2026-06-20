@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Kulix</title>
+    <title>Kulix — No Clout. No Cap.</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -19,15 +19,6 @@
                             cardBg: '#050505',
                             border: '#18181b'
                         }
-                    },
-                    animation: {
-                        'pulse-glow': 'pulseGlow 2s infinite alternate',
-                    },
-                    keyframes: {
-                        pulseGlow: {
-                            '0%': { 'box-shadow': '0 0 5px rgba(147,51,234,0.2), 0 0 10px rgba(147,51,234,0.1)' },
-                            '100%': { 'box-shadow': '0 0 20px rgba(236,72,153,0.6), 0 0 30px rgba(147,51,234,0.4)' }
-                        }
                     }
                 }
             }
@@ -37,36 +28,30 @@
         body { -webkit-tap-highlight-color: transparent; font-feature-settings: "cv02", "cv03", "cv04", "cv11"; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Dynamic Elite Status Themes */
-        .tier-glow-phantom { animation: pulseGlow 1.5s infinite alternate; border-color: #f59e0b !important; }
-        .tier-glow-fiend { border-color: #ec4899 !important; }
     </style>
 </head>
 <body class="h-full bg-black text-zinc-100 antialiased selection:bg-purple-600 selection:text-black">
 
     <div id="auth-screen" class="min-h-screen flex flex-col justify-center items-center px-4">
-        <div id="auth-box" class="w-full max-w-md border-2 border-purple-600 bg-kulix-darkBg p-8 rounded-none shadow-[6px_6px_0px_0px_rgba(147,51,234,1)]">
+        <div class="w-full max-w-md border-2 border-purple-600 bg-kulix-darkBg p-8 rounded-none shadow-[6px_6px_0px_0px_rgba(147,51,234,1)]">
             <header class="mb-6">
                 <div class="flex justify-between items-start">
                     <h1 class="text-4xl font-black uppercase tracking-tighter text-purple-500">KULIX</h1>
                     <span id="referral-badge" class="hidden bg-purple-950 text-purple-400 border border-purple-800 text-[9px] font-mono uppercase tracking-widest px-2 py-1">Linked Via Inv</span>
                 </div>
-                <p class="text-xs text-zinc-500 font-mono mt-1">No Algorithmic Feeds. No Parents. Just Real Teen Life.
-                     Founder of Kulix-MuchiNdu
-                </p>
+                <p class="text-xs text-zinc-500 font-mono mt-1">No Algorithmic Feeds. No Parents. Just Real Teen Life.</p>
             </header>
             
             <form id="auth-form" class="space-y-5" autocomplete="off">
                 <div>
-                    <label class="block text-xs uppercase tracking-widest text-purple-400 font-mono font-bold mb-1.5">Username</label>
+                    <label class="block text-xs uppercase tracking-widest text-purple-400 font-mono font-bold mb-1.5">Create Nickname</label>
                     <input type="text" id="input-nickname" maxlength="25" required
                         class="w-full bg-black border border-zinc-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 p-3 text-white outline-none rounded-none text-base transition-all font-mono"
                         placeholder="e.g., ghost_driver">
                 </div>
 
                 <div>
-                    <label class="block text-xs uppercase tracking-widest text-purple-400 font-mono font-bold mb-1.5">Enter your Age (13 - 19)</label>
+                    <label class="block text-xs uppercase tracking-widest text-purple-400 font-mono font-bold mb-1.5">Verify Teen Age (13 - 19)</label>
                     <input type="number" id="input-age" min="13" max="19" required
                         class="w-full bg-black border border-zinc-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 p-3 text-white outline-none rounded-none text-base transition-all font-mono"
                         placeholder="Your real age (System keeps it hidden)">
@@ -76,7 +61,7 @@
 
                 <button type="submit"
                     class="w-full bg-purple-600 hover:bg-purple-700 active:translate-y-0.5 text-black font-black uppercase tracking-wider py-4 border border-black shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all text-sm">
-                    Sign up
+                    Enter Ecosystem
                 </button>
             </form>
         </div>
@@ -101,31 +86,20 @@
         </header>
 
         <nav class="flex bg-kulix-darkBg border-b border-zinc-900 sticky top-[69px] z-40">
-            <button id="tab-vents" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-white bg-zinc-900/30 transition-all">
-                Home
+            <button id="tab-vents" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black border-b-2 border-purple-500 text-white bg-zinc-900/30 transition-all">
+                Chrono-Stream
             </button>
-            <button id="tab-mood" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all">
-                Chats
+            <button id="tab-mood" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-fancy transition-all">
+                Volatile Room
             </button>
-            <button id="tab-leaderboard" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all">
-                Leader board
-            </button>
-            <button id="tab-profile" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all">
-                share link
+            <button id="tab-profile" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-fancy transition-all">
+                Network Loop
             </button>
         </nav>
 
         <main class="flex-1 p-4 overflow-y-auto pb-28 no-scrollbar">
             
             <div id="panel-vents" class="space-y-6">
-                <div class="border border-amber-500/40 bg-amber-950/10 p-3.5 font-mono flex flex-col space-y-1">
-                    <div class="flex justify-between items-center">
-                        <span class="text-[9px] uppercase tracking-widest text-amber-500 font-black">⚡ SYSTEM DARE STORM</span>
-                        <span class="text-[8px] bg-amber-950 text-amber-400 px-1.5 border border-amber-900">UPDATED DAILY</span>
-                    </div>
-                    <p id="dare-text" class="text-xs text-zinc-300 font-bold italic">Loading protocol directive...</p>
-                </div>
-
                 <form id="vent-form" class="bg-kulix-cardBg border border-zinc-800 p-4">
                     <textarea id="textarea-vent" maxlength="200" required
                         class="w-full bg-black border border-zinc-900 focus:border-purple-900 p-3 text-sm text-white placeholder-zinc-600 outline-none resize-none h-24 font-mono transition-colors"
@@ -133,7 +107,7 @@
                     <div class="flex justify-between items-center mt-3">
                         <span id="vent-chars-left" class="text-xs font-mono text-zinc-500">200 left</span>
                         <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-black font-black text-xs uppercase px-5 py-2.5 transition-colors">
-                            post
+                            Broadcast Vent
                         </button>
                     </div>
                 </form>
@@ -143,7 +117,7 @@
             <div id="panel-mood" class="hidden flex flex-col h-[calc(100vh-220px)] relative">
                 <div class="bg-purple-950/20 border border-purple-900/30 p-2.5 mb-4 text-center">
                     <span class="text-[10px] uppercase font-mono tracking-widest text-purple-400 font-bold block">
-                        ⚡ Chats: School Stress and real life stress ⚡
+                        ⚡ Chamber: School Stress (Flushes Realtime) ⚡
                     </span>
                 </div>
                 
@@ -159,19 +133,10 @@
                 </form>
             </div>
 
-            <div id="panel-leaderboard" class="hidden space-y-4 font-mono">
-                <div class="border border-zinc-800 bg-kulix-cardBg p-4 text-center">
-                    <h3 class="text-xs uppercase tracking-widest font-black text-purple-400">Ecosystem Aura Standings</h3>
-                    <p class="text-[10px] text-zinc-500 mt-1">Real-time validation updates across the server link.</p>
-                </div>
-                <div id="leaderboard-list" class="space-y-2">
-                    </div>
-            </div>
-
             <div id="panel-profile" class="hidden space-y-6 font-mono">
                 <div class="bg-kulix-cardBg border border-zinc-800 p-6 space-y-4">
                     <h3 class="text-sm font-black text-purple-400 uppercase tracking-wider">Your Viral Engine</h3>
-                    <p class="text-xs text-zinc-400 leading-relaxed">invite users into Kulix. Each sign-up under your protocol injects <span class="text-purple-400 font-bold">+50 Aura</span> into your system signature.</p>
+                    <p class="text-xs text-zinc-400 leading-relaxed">Siphon users into Kulix. Each sign-up under your protocol injects <span class="text-purple-400 font-bold">+50 Aura</span> into your system signature.</p>
                     
                     <div class="space-y-2">
                         <label class="text-[10px] uppercase text-zinc-500 tracking-wider">Unique Invitation Link</label>
@@ -196,7 +161,7 @@
                         <div class="flex justify-between border-b border-zinc-950 pb-1"><span class="text-zinc-500">0 - 49 Aura</span><span class="text-zinc-400">NPC Default</span></div>
                         <div class="flex justify-between border-b border-zinc-950 pb-1"><span class="text-purple-500">50 - 199 Aura</span><span class="text-purple-400 font-bold">Protocol Agent</span></div>
                         <div class="flex justify-between border-b border-zinc-950 pb-1"><span class="text-pink-500">200 - 499 Aura</span><span class="text-pink-400 font-black">Clout Fiend</span></div>
-                        <div class="flex justify-between"><span class="text-amber-500">500+ Aura</span><span class="text-amber-400 font-black tracking-widest">⚡ PHANTOM</span></div>
+                        <div class="flex justify-between"><span class="text-amber-500">500+ Aura</span><span class="text-amber-400 font-black tracking-widest animate-pulse">⚡ PHANTOM</span></div>
                     </div>
                 </div>
             </div>
@@ -213,6 +178,7 @@
             supabaseAnonKey: "sb_publishable_uT8ky5GdL-0LQ3O5cJlJZw_EfP6IHCM" 
         };
         
+
         const _db = supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
 
         const ROAST_MANIFEST = [
@@ -221,43 +187,21 @@
             "Dating in 2026 is an absolute circus, you aren't special.",
             "Have you tried sleeping instead of typing paragraphs at midnight?",
             "Sending you structural reinforcement, because you sound unstable.",
+            "On a scale of 1 to dramatic, this is a solid 11.",
+            "Your GPA just dropped 3 points from writing this.",
             "NPC behavior detected. Please change your path scripts.",
             "They haven't texted back because they're simply chilling. Reset yourself.",
             "You are projecting so hard the wall is shaking.",
             "If crying built character, you'd be a historic monument.",
             "Main character energy score: 0.1/10.",
+            "Delete this mental draft immediately for your own safety.",
             "Hoping your cognitive system gets an update tomorrow morning."
-        ];
-
-        const DARE_MANIFEST = [
-            "Text your recent contact 'we need to talk' and drop their reaction here.",
-            "call you boy friend/girl friend and tell them that i need you right now!",
-            "tell you ex that 'baby i miss you'",
-            "ask a stranger for a phone number and say that it's okay i don't need it",
-            "approch you CRUSH and tell them that i love you",
-            "go in a public place and say you name out loud",
-            "Question any stranger this question 'do you believe in GOD'",
-            "if you are student 'tell a teacher that stop teaching us,we don't need you",
-            "if you see any boy/girl tell them that 'Go take a shower'",
-            "drink 1.5L of water",
-            "tell you bestfriend that 'i know your secrete'",
-            "What is the most high-key criminal lie you told your parents this week?",
-            "Drop the absolute worst song currently sitting inside your rotation.",
-            "post 20 photos on facebook",
-            "KISS you boyfriend/girlfriend in public",
-            "say M.G.Y ",
-            "Reveal exactly why you blocked the last person you cut off.",
-            "if you are a student go to school without books",
-            "call you sibling'your majesty'for th whole day",
-            "walk into a shop and ask if they sell spare wi-fi bundles",
-            "Admit the school drama that is living inside your head rent-free right now."
         ];
 
         let sessionUser = null;
         let activeTabContext = 'vents';
         let chatRealtimeSyncLink = null;
         let streamRealtimeSyncLink = null;
-        let leaderboardSyncLink = null;
 
         const domAuthScreen = document.getElementById('auth-screen');
         const domAppScreen = document.getElementById('app-screen');
@@ -269,10 +213,7 @@
         const domVentCharsLeft = document.getElementById('vent-chars-left');
 
         window.addEventListener('DOMContentLoaded', () => {
-            // Allocate Daily Challenge
-            const dayIndex = new Date().getDate() % DARE_MANIFEST.length;
-            document.getElementById('dare-text').innerText = `"${DARE_MANIFEST[dayIndex]}"`;
-
+            // Check for potential incoming organic invite vectors
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('ref')) {
                 localStorage.setItem('kulix_invite_vector', urlParams.get('ref'));
@@ -281,51 +222,45 @@
 
             const token = localStorage.getItem('kulix_session_user');
             if (token) {
-                try {
-                    sessionUser = JSON.parse(token);
-                    refreshSessionIdentityContext();
-                } catch(e) {
-                    localStorage.removeItem('kulix_session_user');
-                }
+                sessionUser = JSON.parse(token);
+                refreshSessionIdentityContext();
             }
             trackTextAreaMetrics();
         });
 
+        // Dynamic Status Badge Logic Tier Allocator
         function calculateAuraTierSignature(score) {
-            if (score >= 500) return { title: "⚡ Phantom", color: "text-amber-400", class: "tier-glow-phantom" };
-            if (score >= 200) return { title: "Clout Fiend", color: "text-pink-400 font-black", class: "tier-glow-fiend" };
-            if (score >= 50) return { title: "Protocol Agent", color: "text-purple-400 font-bold", class: "" };
-            return { title: "NPC Default", color: "text-zinc-500", class: "" };
+            if (score >= 500) return { title: "⚡ Phantom", color: "text-amber-400" };
+            if (score >= 200) return { title: "Clout Fiend", color: "text-pink-400 font-black" };
+            if (score >= 50) return { title: "Protocol Agent", color: "text-purple-400 font-bold" };
+            return { title: "NPC Default", color: "text-zinc-500" };
         }
 
         async function refreshSessionIdentityContext() {
-            const { data, error } = await _db.from('users').select('*').eq('id', sessionUser.id).maybeSingle();
+            // Always pull freshest structural profile metadata down from edge DB
+            const { data, error } = await _db.from('users').select('*').eq('id', sessionUser.id).single();
             if (!error && data) {
                 sessionUser = data;
                 localStorage.setItem('kulix_session_user', JSON.stringify(data));
-                openApplicationDashboard();
-            } else {
-                localStorage.removeItem('kulix_session_user');
             }
+            openApplicationDashboard();
         }
 
         function openApplicationDashboard() {
             domAuthScreen.classList.add('hidden');
             domAppScreen.classList.remove('hidden');
-            document.getElementById('user-avatar').src = sessionUser.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${sessionUser.username}`;
-            document.getElementById('user-display-name').innerText = `@${sessionUser.username}`;
+            document.getElementById('user-avatar').src = sessionUser.avatar_url;
+            document.getElementById('user-display-name').innerText = `@${sessionUser.nickname}`;
             
-            const badge = calculateAuraTierSignature(sessionUser.aura || 0);
-            document.getElementById('user-aura-tag').innerText = `Aura: ${sessionUser.aura || 0}`;
+            const badge = calculateAuraTierSignature(sessionUser.aura);
+            const domAuraTag = document.getElementById('user-aura-tag');
+            domAuraTag.innerText = `Aura: ${sessionUser.aura}`;
             
             const domUserTier = document.getElementById('user-tier');
             domUserTier.innerText = badge.title;
             domUserTier.className = `text-[9px] font-mono mt-1 block tracking-wider uppercase ${badge.color}`;
 
-            // Inject Custom Tier Flavor to Root Layout Frame
-            const appFrame = document.getElementById('app-screen');
-            appFrame.className = `min-h-screen max-w-md mx-auto border-x flex flex-col relative bg-black ${badge.class}`;
-
+            // Populate viral loop assets
             document.getElementById('referral-link-input').value = `${window.location.origin}${window.location.pathname}?ref=${sessionUser.id}`;
             document.getElementById('metric-referrals').innerText = sessionUser.referral_count || 0;
 
@@ -336,8 +271,9 @@
         domAuthForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             domAuthError.classList.add('hidden');
+            domAuthError.innerText = '';
 
-            const username = document.getElementById('input-nickname').value.trim();
+            const nickname = document.getElementById('input-nickname').value.trim();
             const age = parseInt(document.getElementById('input-age').value, 10);
 
             if (isNaN(age) || age < 13 || age > 19) {
@@ -346,31 +282,25 @@
                 return;
             }
 
-            // Check if user already exists
-            const { data: existingUser } = await _db.from('users').select('*').eq('username', username).maybeSingle();
-            if (existingUser) {
-                sessionUser = existingUser;
-                localStorage.setItem('kulix_session_user', JSON.stringify(existingUser));
-                openApplicationDashboard();
-                return;
-            }
-
-            const avatarSeed = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(username)}`;
+            const avatarSeed = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(nickname)}`;
             const targetedInviterId = localStorage.getItem('kulix_invite_vector');
 
+            // 1. Structural Insertion of the session user profile token
             const { data: newUser, error: userError } = await _db
                 .from('users')
-                .insert([{ username, age, avatar_url: avatarSeed, invited_by: targetedInviterId || null }])
+                .insert([{ nickname, age, avatar_url: avatarSeed, invited_by: targetedInviterId }])
                 .select().single();
 
             if (userError) {
-                domAuthError.innerText = userError.code === '23505' ? 'Name Taken: Try a unique modification.' : userError.message;
+                domAuthError.innerText = userError.code === '23505' ? 'Name Taken: Try adding a unique combination.' : userError.message;
                 domAuthError.classList.remove('hidden');
                 return;
             }
 
-            if (targetedInviterId && targetedInviterId !== "null" && targetedInviterId !== newUser.id) {
+            // 2. Cascade logic trigger loop for the organic viral invitation loop
+            if (targetedInviterId && targetedInviterId !== "null") {
                 try {
+                    // Pull inviter data signature
                     const { data: inviter } = await _db.from('users').select('aura, referral_count').eq('id', targetedInviterId).single();
                     if (inviter) {
                         await _db.from('users').update({
@@ -378,7 +308,7 @@
                             referral_count: (inviter.referral_count || 0) + 1
                         }).eq('id', targetedInviterId);
                     }
-                } catch(err) { console.error('Invite engine bypassed', err); }
+                } catch(err) { console.error('Viral allocation pipeline faulted contextually', err); }
                 localStorage.removeItem('kulix_invite_vector');
             }
 
@@ -396,33 +326,30 @@
         function teardownActiveRealtimeSinks() {
             if (chatRealtimeSyncLink) _db.removeChannel(chatRealtimeSyncLink);
             if (streamRealtimeSyncLink) _db.removeChannel(streamRealtimeSyncLink);
-            if (leaderboardSyncLink) _db.removeChannel(leaderboardSyncLink);
         }
 
         // --- INTERFACE TAB NAVIGATION CONTROL ROUTER ---
         const tabVentsBtn = document.getElementById('tab-vents');
         const tabMoodBtn = document.getElementById('tab-mood');
-        const tabLeaderboardBtn = document.getElementById('tab-leaderboard');
         const tabProfileBtn = document.getElementById('tab-profile');
         
         const panelVentsView = document.getElementById('panel-vents');
         const panelMoodView = document.getElementById('panel-mood');
-        const panelLeaderboardView = document.getElementById('panel-leaderboard');
         const panelProfileView = document.getElementById('panel-profile');
 
         tabVentsBtn.addEventListener('click', () => routeApplicationPanel('vents'));
         tabMoodBtn.addEventListener('click', () => routeApplicationPanel('mood'));
-        tabLeaderboardBtn.addEventListener('click', () => routeApplicationPanel('leaderboard'));
         tabProfileBtn.addEventListener('click', () => routeApplicationPanel('profile'));
 
         function routeApplicationPanel(target) {
             activeTabContext = target;
             teardownActiveRealtimeSinks();
 
-            [tabVentsBtn, tabMoodBtn, tabLeaderboardBtn, tabProfileBtn].forEach(b => {
+            // Reset navigation architecture UI highlight structures
+            [tabVentsBtn, tabMoodBtn, tabProfileBtn].forEach(b => {
                 b.className = "flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all";
             });
-            [panelVentsView, panelMoodView, panelLeaderboardView, panelProfileView].forEach(p => p.classList.add('hidden'));
+            [panelVentsView, panelMoodView, panelProfileView].forEach(p => p.classList.add('hidden'));
 
             const activeBtn = document.getElementById(`tab-${target}`);
             if(activeBtn) activeBtn.className = "flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black border-b-2 border-purple-500 text-white bg-zinc-900/30 transition-all";
@@ -435,16 +362,12 @@
                 panelMoodView.classList.remove('hidden');
                 syncMoodRoomMessages();
                 activateRealtimeWebSocket();
-            } else if (target === 'leaderboard') {
-                panelLeaderboardView.classList.remove('hidden');
-                syncLeaderboardStandings();
-                activateLeaderboardRealtimeSync();
             } else if (target === 'profile') {
                 panelProfileView.classList.remove('hidden');
             }
         }
 
-        // --- VENT TIMELINE PIPELINE WITH LIVE SYNC ---
+        // --- VENT TIMELINE ACTION PIPELINE WITH BIDIRECTIONAL REALTIME ---
         function trackTextAreaMetrics() {
             const available = 200 - domVentTextarea.value.length;
             domVentCharsLeft.innerText = `${available} characters left`;
@@ -456,18 +379,26 @@
             const text = domVentTextarea.value.trim();
             if (!text || text.length > 200) return;
 
-            const { error } = await _db.from('vents').insert([{ user_id: sessionUser.id, text }]);
+            const { error } = await _db
+                .from('vents')
+                .insert([{ user_id: sessionUser.id, text }]);
+
             if (!error) {
                 domVentTextarea.value = '';
                 trackTextAreaMetrics();
+                // Self updates decoupled since WebSockets channel handle inserts organically
             }
         });
 
         async function syncVentsChronologicalStream() {
-            const { data, error } = await _db.from('vents').select('*').order('created_at', { ascending: false });
+            const { data, error } = await _db
+                .from('vents')
+                .select('*')
+                .order('created_at', { ascending: false });
+
             if (error) return;
             domVentsFeed.innerHTML = data.length === 0 
-                ? `<p class="text-zinc-600 font-mono text-center py-12 text-xs">The stream is silent.</p>` 
+                ? `<p class="text-zinc-600 font-mono text-center py-12 text-xs">The stream is dead silent. Type something above.</p>` 
                 : data.map(vent => compileVentCardTemplate(vent)).join('');
         }
 
@@ -491,12 +422,12 @@
         function activateStreamRealtimeSync() {
             streamRealtimeSyncLink = _db
                 .channel('public:vents')
-                .on('postgres_changes', { event: 'insert', table: 'vents' }, (payload) => {
+                .on('postgres_changes', { event: 'INSERT', table: 'vents' }, (payload) => {
                     const fallbackEl = domVentsFeed.querySelector('.text-zinc-600');
                     if (fallbackEl) domVentsFeed.innerHTML = '';
                     domVentsFeed.insertAdjacentHTML('afterbegin', compileVentCardTemplate(payload.new));
                 })
-                .on('postgres_changes', { event: 'update', table: 'vents' }, (payload) => {
+                .on('postgres_changes', { event: 'UPDATE', table: 'vents' }, (payload) => {
                     const existingCard = document.getElementById(`vent-card-${payload.new.id}`);
                     if (existingCard) {
                         const counter = existingCard.querySelector('.metric-counter');
@@ -507,11 +438,13 @@
         }
 
         async function incrementEmpathyCount(id, current, el) {
+            // Atomic incremental addition up to structural database
             const { error } = await _db.from('vents').update({ same_count: current + 1 }).eq('id', id);
             if (!error) {
                 el.disabled = true;
                 el.classList.add('opacity-40');
                 
+                // Advance Author Aura Score Profile Structure dynamically
                 try {
                     const { data: targetVent } = await _db.from('vents').select('user_id').eq('id', id).single();
                     if(targetVent && targetVent.user_id !== sessionUser.id) {
@@ -520,16 +453,21 @@
                             await _db.from('users').update({ aura: (authorProfile.aura || 0) + 2 }).eq('id', targetVent.user_id);
                         }
                     }
-                } catch(e) { console.warn('Aura loop bypassed', e); }
+                } catch(e) { console.warn('Aura reward routine system bypassed', e); }
             }
         }
 
-        // --- REALTIME CHAT CHANNEL ---
+        // --- MOOD ROOM LIVE REALTIME CHAT STRAT ---
         async function syncMoodRoomMessages() {
-            const { data, error } = await _db.from('messages').select('*').eq('room', 'School Stress').order('created_at', { ascending: true });
+            const { data, error } = await _db
+                .from('messages')
+                .select('*')
+                .eq('room', 'School Stress')
+                .order('created_at', { ascending: true });
+
             if (error) return;
             domChatFeed.innerHTML = data.length === 0 
-                ? `<p class="text-zinc-600 font-mono text-center py-12 text-xs">Chamber empty.</p>`
+                ? `<p class="text-zinc-600 font-mono text-center py-12 text-xs">Chamber empty. Say it here, vanish it later.</p>`
                 : data.map(msg => compileChatBlockTemplate(msg)).join('');
             forceChatViewportScroll();
         }
@@ -543,9 +481,9 @@
             const { error } = await _db.from('messages').insert([{
                 room: 'School Stress',
                 user_id: sessionUser.id,
-                user_username: sessionUser.username,
+                user_nickname: sessionUser.nickname,
                 user_avatar: sessionUser.avatar_url,
-                text: text
+                text
             }]);
 
             if (!error) inputField.value = '';
@@ -554,7 +492,7 @@
         function activateRealtimeWebSocket() {
             chatRealtimeSyncLink = _db
                 .channel('public:messages')
-                .on('postgres_changes', { event: 'insert', table: 'messages', filter: "room=eq.School Stress" }, (payload) => {
+                .on('postgres_changes', { event: 'INSERT', table: 'messages', filter: "room=eq.School Stress" }, (payload) => {
                     const fallbackEl = domChatFeed.querySelector('.text-zinc-600');
                     if (fallbackEl) domChatFeed.innerHTML = '';
                     domChatFeed.insertAdjacentHTML('beforeend', compileChatBlockTemplate(payload.new));
@@ -567,10 +505,10 @@
             const timeFormatted = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
             return `
                 <div class="flex items-start space-x-3">
-                    <img src="${msg.user_avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${msg.user_username}`}" alt="" class="w-7 h-7 border border-zinc-800 bg-black mt-0.5 p-0.5" />
+                    <img src="${msg.user_avatar}" alt="" class="w-7 h-7 border border-zinc-800 bg-black mt-0.5 p-0.5" />
                     <div class="bg-kulix-cardBg border border-zinc-900 p-3 flex-1 max-w-[85%]">
                         <div class="flex justify-between items-baseline space-x-4 mb-1">
-                            <span class="text-xs font-black text-purple-400">@${escapeSanitizedOutput(msg.user_username || 'anonymous')}</span>
+                            <span class="text-xs font-black text-purple-400">@${escapeSanitizedOutput(msg.user_nickname)}</span>
                             <span class="text-[9px] font-mono text-zinc-600">${timeFormatted}</span>
                         </div>
                         <p class="text-xs text-zinc-300 break-words font-mono leading-relaxed">${escapeSanitizedOutput(msg.text)}</p>
@@ -578,42 +516,11 @@
                 </div>`;
         }
 
-        function forceChatViewportScroll() { domChatFeed.scrollTop = domChatFeed.scrollHeight; }
-
-        // --- REALTIME LEADERBOARD MATRIX ---
-        async function syncLeaderboardStandings() {
-            const { data, error } = await _db.from('users').select('username, aura, avatar_url').order('aura', { ascending: false }).limit(10);
-            if (error) return;
-
-            const listContainer = document.getElementById('leaderboard-list');
-            listContainer.innerHTML = data.map((user, index) => {
-                const tier = calculateAuraTierSignature(user.aura || 0);
-                const isSelf = user.username === sessionUser.username ? 'border-purple-600 bg-purple-950/10' : 'border-zinc-900 bg-kulix-cardBg';
-                return `
-                    <div class="border p-3 flex items-center justify-between ${isSelf}">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-xs font-black text-zinc-600 w-4">#${index + 1}</span>
-                            <img src="${user.avatar_url}" class="w-6 h-6 border border-zinc-800 bg-black p-0.5" />
-                            <div>
-                                <span class="text-xs font-bold text-zinc-200">@${escapeSanitizedOutput(user.username || 'user')}</span>
-                                <span class="text-[8px] uppercase tracking-wider block ${tier.color}">${tier.title}</span>
-                            </div>
-                        </div>
-                        <span class="text-xs font-black text-purple-400 bg-black px-2 py-1 border border-zinc-900">${user.aura || 0} AM</span>
-                    </div>`;
-            }).join('');
+        function forceChatViewportScroll() {
+            domChatFeed.scrollTop = domChatFeed.scrollHeight;
         }
 
-        function activateLeaderboardRealtimeSync() {
-            leaderboardSyncLink = _db
-                .channel('public:users')
-                .on('postgres_changes', { event: 'update', table: 'users' }, () => {
-                    syncLeaderboardStandings();
-                })
-                .subscribe();
-        }
-
-        // --- SYSTEM ROAST CALCULATOR ---
+        // --- BUILT-IN SYSTEM ROAST CALCULATOR MECHANISM ---
         function triggerAutomatedSystemRoast(ventId) {
             const card = document.getElementById(`vent-card-${ventId}`);
             if (!card) return;
@@ -624,7 +531,7 @@
             targetBlock.classList.remove('hidden');
         }
 
-        // --- COPY INVITATION INTERFACING ---
+        // --- COPY INTERFACING VECTOR ---
         document.getElementById('btn-copy-ref').addEventListener('click', () => {
             const targetEl = document.getElementById('referral-link-input');
             targetEl.select();
@@ -635,7 +542,6 @@
         });
 
         function escapeSanitizedOutput(string) {
-            if (!string) return '';
             return string.replace(/[&<>'"]/g, tag => ({
                 '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
             }[tag] || tag));
