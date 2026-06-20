@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Kulix — No Clout. No Cap.</title>
+    <title>Kulix</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -28,27 +28,11 @@
         body { -webkit-tap-highlight-color: transparent; font-feature-settings: "cv02", "cv03", "cv04", "cv11"; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        @keyframes glitch {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
-        }
-        .glitch-active { animation: glitch 0.15s infinite; }
     </style>
 </head>
-<body class="h-full bg-black text-zinc-100 antialiased selection:bg-purple-600 selection:text-black overflow-hidden">
+<body class="h-full bg-black text-zinc-100 antialiased selection:bg-purple-600 selection:text-black">
 
-    <!-- Anti-Screenshot / Narc Warning UI Layer -->
-    <div id="narc-overlay" class="hidden fixed inset-0 bg-red-600/90 z-[9999] flex flex-col justify-center items-center font-mono p-4 text-center">
-        <h1 class="text-5xl font-black text-black uppercase tracking-widest animate-bounce">NARC DETECTED</h1>
-        <p class="text-xl text-white font-bold uppercase mt-4 max-w-md">SECURITY BREACH INTERCEPTED. SCREENSHOT/WINDOW SWITCH PENALTY (-50 AURA) ENFORCED.</p>
-    </div>
-
-    <!-- AUTHENTICATION SCREEN CONTAINER -->
-    <div id="auth-screen" class="min-h-screen flex flex-col justify-center items-center px-4 overflow-y-auto">
+    <div id="auth-screen" class="min-h-screen flex flex-col justify-center items-center px-4">
         <div class="w-full max-w-md border-2 border-purple-600 bg-kulix-darkBg p-8 rounded-none shadow-[6px_6px_0px_0px_rgba(147,51,234,1)]">
             <header class="mb-6">
                 <div class="flex justify-between items-start">
@@ -83,19 +67,17 @@
         </div>
     </div>
 
-    <!-- MAIN APP INTERFACE SCREEN -->
-    <div id="app-screen" class="hidden h-screen max-w-md mx-auto border-x border-zinc-900 flex flex-col relative bg-black">
+    <div id="app-screen" class="hidden min-h-screen max-w-md mx-auto border-x border-zinc-900 flex flex-col relative bg-black">
         
-        <!-- Sticky Dynamic App Header -->
         <header class="sticky top-0 bg-kulix-darkBg/95 backdrop-blur-md border-b border-zinc-800 p-4 flex justify-between items-center z-50">
             <div class="flex items-center space-x-3">
-                <img id="user-avatar" src="" alt="Avatar" class="w-9 h-9 border border-purple-500 bg-black p-0.5" />
+                <img id="user-avatar" src="" alt="Session Token Avatar" class="w-9 h-9 border border-purple-500 bg-black p-0.5" />
                 <div>
                     <div class="flex items-center space-x-1.5">
                         <h2 id="user-display-name" class="text-sm font-black text-purple-400 leading-none"></h2>
                         <span id="user-aura-tag" class="text-[9px] font-mono px-1.5 py-0.5 bg-zinc-900 text-zinc-400 border border-zinc-800 font-bold uppercase">Aura: 0</span>
                     </div>
-                    <span id="user-tier" class="text-[9px] font-mono text-zinc-500 mt-1 block tracking-wider uppercase">Loading...</span>
+                    <span id="user-tier" class="text-[9px] font-mono text-zinc-500 mt-1 block tracking-wider uppercase">Loading Status Protocol...</span>
                 </div>
             </div>
             <button id="btn-logout" class="text-[10px] font-mono uppercase bg-zinc-900 hover:bg-zinc-800 text-zinc-400 px-3 py-1.5 border border-zinc-800 transition-colors">
@@ -103,57 +85,58 @@
             </button>
         </header>
 
-        <!-- Dynamic Content Engine Area -->
-        <main class="flex-1 p-4 overflow-y-auto pb-32 no-scrollbar">
-            
-            <!-- PANEL: CHRONO-STREAM -->
-            <div id="panel-vents" class="space-y-6">
-                <!-- Live Phantom Hour Ticker Widget -->
-                <div class="bg-purple-950/20 border-2 border-dashed border-purple-500/30 p-3 text-center font-mono">
-                    <span class="text-[11px] uppercase tracking-wider text-purple-400 font-black block animate-pulse">⚡ PHANTOM HOUR EVENT PIPELINE</span>
-                    <span id="phantom-countdown" class="text-xs text-zinc-400 mt-1 block font-bold">Checking synchronization matrix...</span>
-                </div>
+        <nav class="flex bg-kulix-darkBg border-b border-zinc-900 sticky top-[69px] z-40">
+            <button id="tab-vents" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black border-b-2 border-purple-500 text-white bg-zinc-900/30 transition-all">
+                Chrono-Stream
+            </button>
+            <button id="tab-mood" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-fancy transition-all">
+                Volatile Room
+            </button>
+            <button id="tab-profile" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-fancy transition-all">
+                Network Loop
+            </button>
+        </nav>
 
-                <form id="vent-form" class="bg-kulix-cardBg border border-zinc-800 p-4 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)]">
+        <main class="flex-1 p-4 overflow-y-auto pb-28 no-scrollbar">
+            
+            <div id="panel-vents" class="space-y-6">
+                <form id="vent-form" class="bg-kulix-cardBg border border-zinc-800 p-4">
                     <textarea id="textarea-vent" maxlength="200" required
-                        class="w-full bg-black border border-zinc-900 focus:border-purple-600 p-3 text-sm text-white placeholder-zinc-600 outline-none resize-none h-24 font-mono transition-colors"
+                        class="w-full bg-black border border-zinc-900 focus:border-purple-900 p-3 text-sm text-white placeholder-zinc-600 outline-none resize-none h-24 font-mono transition-colors"
                         placeholder="Say what you need to say. Max 200 characters..."></textarea>
                     <div class="flex justify-between items-center mt-3">
                         <span id="vent-chars-left" class="text-xs font-mono text-zinc-500">200 left</span>
-                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-black font-black text-xs uppercase px-5 py-2.5 transition-all active:scale-95 shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
-                            Broadcast
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-black font-black text-xs uppercase px-5 py-2.5 transition-colors">
+                            Broadcast Vent
                         </button>
                     </div>
                 </form>
                 <div id="vents-feed-container" class="space-y-4"></div>
             </div>
 
-            <!-- PANEL: VOLATILE CHAT ROOM -->
-            <div id="panel-mood" class="hidden flex flex-col h-[calc(100vh-190px)] relative">
-                <div class="bg-purple-950/30 border border-purple-800/40 p-2.5 mb-3 text-center rounded-sm">
-                    <span class="text-[10px] uppercase font-mono tracking-widest text-purple-400 font-black block">
-                        💥 CHAMBER: SCHOOL STRESS (DESTRUCTS CONTINUOUSLY) 💥
+            <div id="panel-mood" class="hidden flex flex-col h-[calc(100vh-220px)] relative">
+                <div class="bg-purple-950/20 border border-purple-900/30 p-2.5 mb-4 text-center">
+                    <span class="text-[10px] uppercase font-mono tracking-widest text-purple-400 font-bold block">
+                        ⚡ Chamber: School Stress (Flushes Realtime) ⚡
                     </span>
-                    <span class="text-[9px] text-zinc-500 font-mono block mt-0.5">Messages dissolve into digital ash automatically.</span>
                 </div>
                 
                 <div id="chat-messages-container" class="flex-1 overflow-y-auto space-y-4 pr-1 pb-20 no-scrollbar"></div>
 
-                <form id="chat-form" class="absolute bottom-0 left-0 right-0 py-3 bg-black border-t border-zinc-900 flex space-x-2 z-30">
+                <form id="chat-form" class="absolute bottom-0 left-0 right-0 p-4 bg-black border-t border-zinc-900 flex space-x-2 z-30">
                     <input type="text" id="input-message" required max="500" autocomplete="off"
                         class="flex-1 bg-kulix-darkBg border border-zinc-800 focus:border-purple-600 px-4 py-3 text-xs text-white outline-none font-mono"
-                        placeholder="Type an completely untraceable message...">
-                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-black uppercase font-black text-xs px-5 tracking-wider transition-all active:scale-95">
+                        placeholder="Type a completely untraceable message...">
+                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-black uppercase font-black text-xs px-5 tracking-wider transition-colors">
                         Send
                     </button>
                 </form>
             </div>
 
-            <!-- PANEL: NETWORK LOOP & OUTWARD ENGINE -->
             <div id="panel-profile" class="hidden space-y-6 font-mono">
-                <div class="bg-kulix-cardBg border border-zinc-800 p-6 space-y-4 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)]">
+                <div class="bg-kulix-cardBg border border-zinc-800 p-6 space-y-4">
                     <h3 class="text-sm font-black text-purple-400 uppercase tracking-wider">Your Viral Engine</h3>
-                    <p class="text-xs text-zinc-400 leading-relaxed">Siphon real users into Kulix. Each valid deployment under your protocol injects <span class="text-purple-400 font-bold">+50 Aura</span> directly into your system fingerprint.</p>
+                    <p class="text-xs text-zinc-400 leading-relaxed">Siphon users into Kulix. Each sign-up under your protocol injects <span class="text-purple-400 font-bold">+50 Aura</span> into your system signature.</p>
                     
                     <div class="space-y-2">
                         <label class="text-[10px] uppercase text-zinc-500 tracking-wider">Unique Invitation Link</label>
@@ -172,7 +155,7 @@
                     </div>
                 </div>
 
-                <div class="bg-kulix-cardBg border border-zinc-900 p-6 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)]">
+                <div class="bg-kulix-cardBg border border-zinc-900 p-6">
                     <h3 class="text-xs font-black text-zinc-400 uppercase tracking-wider mb-3">Aura Tier Spectrum Matrix</h3>
                     <div class="space-y-2 text-[11px]">
                         <div class="flex justify-between border-b border-zinc-950 pb-1"><span class="text-zinc-500">0 - 49 Aura</span><span class="text-zinc-400">NPC Default</span></div>
@@ -184,33 +167,18 @@
             </div>
 
         </main>
-
-        <!-- UPGRADED FIXED RETRO-CYBER BOTTOM NAV DOCK -->
-        <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md bg-zinc-950/95 backdrop-blur-md border border-zinc-800 p-2 flex justify-around items-center z-50 shadow-[0_8px_32px_rgba(0,0,0,0.8)]">
-            <button id="nav-vents" class="flex-1 flex flex-col items-center py-2 transition-all group scale-100">
-                <span class="text-lg group-hover:scale-110 transition-transform text-white">📡</span>
-                <span class="text-[9px] font-mono tracking-tighter uppercase mt-0.5 font-bold text-white">Stream</span>
-            </button>
-            <button id="nav-mood" class="flex-1 flex flex-col items-center py-2 transition-all group opacity-40">
-                <span class="text-lg group-hover:scale-110 transition-transform text-zinc-400">🔥</span>
-                <span class="text-[9px] font-mono tracking-tighter uppercase mt-0.5 font-medium text-zinc-500">Chamber</span>
-            </button>
-            <button id="nav-profile" class="flex-1 flex flex-col items-center py-2 transition-all group opacity-40">
-                <span class="text-lg group-hover:scale-110 transition-transform text-zinc-400">🧬</span>
-                <span class="text-[9px] font-mono tracking-tighter uppercase mt-0.5 font-medium text-zinc-500">Network</span>
-            </button>
-        </nav>
     </div>
 
     <script>
         // =========================================================================
-        // CORE DATABASE INTEGRATION PROTOCOLS
+        // CONFIGURATION AND LINKAGE CONFIG ENGINE
         // =========================================================================
         const CONFIG = {
             supabaseUrl: "https://jfzypvnlbrmpbuxmlhgp.supabase.co",
             supabaseAnonKey: "sb_publishable_uT8ky5GdL-0LQ3O5cJlJZw_EfP6IHCM" 
         };
         
+
         const _db = supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
 
         const ROAST_MANIFEST = [
@@ -245,6 +213,7 @@
         const domVentCharsLeft = document.getElementById('vent-chars-left');
 
         window.addEventListener('DOMContentLoaded', () => {
+            // Check for potential incoming organic invite vectors
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('ref')) {
                 localStorage.setItem('kulix_invite_vector', urlParams.get('ref'));
@@ -257,17 +226,18 @@
                 refreshSessionIdentityContext();
             }
             trackTextAreaMetrics();
-            initializePhantomHourTicker();
         });
 
+        // Dynamic Status Badge Logic Tier Allocator
         function calculateAuraTierSignature(score) {
-            if (score >= 500) return { title: "⚡ Phantom", color: "text-amber-400 font-black tracking-widest animate-pulse" };
+            if (score >= 500) return { title: "⚡ Phantom", color: "text-amber-400" };
             if (score >= 200) return { title: "Clout Fiend", color: "text-pink-400 font-black" };
             if (score >= 50) return { title: "Protocol Agent", color: "text-purple-400 font-bold" };
-            return { title: "NPC Default", color: "text-zinc-500 font-normal" };
+            return { title: "NPC Default", color: "text-zinc-500" };
         }
 
         async function refreshSessionIdentityContext() {
+            // Always pull freshest structural profile metadata down from edge DB
             const { data, error } = await _db.from('users').select('*').eq('id', sessionUser.id).single();
             if (!error && data) {
                 sessionUser = data;
@@ -283,19 +253,21 @@
             document.getElementById('user-display-name').innerText = `@${sessionUser.nickname}`;
             
             const badge = calculateAuraTierSignature(sessionUser.aura);
-            document.getElementById('user-aura-tag').innerText = `Aura: ${sessionUser.aura}`;
+            const domAuraTag = document.getElementById('user-aura-tag');
+            domAuraTag.innerText = `Aura: ${sessionUser.aura}`;
             
             const domUserTier = document.getElementById('user-tier');
             domUserTier.innerText = badge.title;
             domUserTier.className = `text-[9px] font-mono mt-1 block tracking-wider uppercase ${badge.color}`;
 
+            // Populate viral loop assets
             document.getElementById('referral-link-input').value = `${window.location.origin}${window.location.pathname}?ref=${sessionUser.id}`;
             document.getElementById('metric-referrals').innerText = sessionUser.referral_count || 0;
 
             routeApplicationPanel(activeTabContext);
         }
 
-        // --- AUTH SYSTEM COUPLING ---
+        // --- AUTH SYSTEM LAYER AND VALIDATION ---
         domAuthForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             domAuthError.classList.add('hidden');
@@ -313,19 +285,22 @@
             const avatarSeed = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(nickname)}`;
             const targetedInviterId = localStorage.getItem('kulix_invite_vector');
 
+            // 1. Structural Insertion of the session user profile token
             const { data: newUser, error: userError } = await _db
                 .from('users')
                 .insert([{ nickname, age, avatar_url: avatarSeed, invited_by: targetedInviterId }])
                 .select().single();
 
             if (userError) {
-                domAuthError.innerText = userError.code === '23505' ? 'Name Taken: Try another configuration.' : userError.message;
+                domAuthError.innerText = userError.code === '23505' ? 'Name Taken: Try adding a unique combination.' : userError.message;
                 domAuthError.classList.remove('hidden');
                 return;
             }
 
+            // 2. Cascade logic trigger loop for the organic viral invitation loop
             if (targetedInviterId && targetedInviterId !== "null") {
                 try {
+                    // Pull inviter data signature
                     const { data: inviter } = await _db.from('users').select('aura, referral_count').eq('id', targetedInviterId).single();
                     if (inviter) {
                         await _db.from('users').update({
@@ -333,7 +308,7 @@
                             referral_count: (inviter.referral_count || 0) + 1
                         }).eq('id', targetedInviterId);
                     }
-                } catch(err) { console.error('Viral allocation workflow fault', err); }
+                } catch(err) { console.error('Viral allocation pipeline faulted contextually', err); }
                 localStorage.removeItem('kulix_invite_vector');
             }
 
@@ -353,34 +328,31 @@
             if (streamRealtimeSyncLink) _db.removeChannel(streamRealtimeSyncLink);
         }
 
-        // --- MODERN FLOATING NAVIGATION SYSTEM CONTROLLER ---
-        const navVents = document.getElementById('nav-vents');
-        const navMood = document.getElementById('nav-mood');
-        const navProfile = document.getElementById('nav-profile');
+        // --- INTERFACE TAB NAVIGATION CONTROL ROUTER ---
+        const tabVentsBtn = document.getElementById('tab-vents');
+        const tabMoodBtn = document.getElementById('tab-mood');
+        const tabProfileBtn = document.getElementById('tab-profile');
         
         const panelVentsView = document.getElementById('panel-vents');
         const panelMoodView = document.getElementById('panel-mood');
         const panelProfileView = document.getElementById('panel-profile');
 
-        navVents.addEventListener('click', () => routeApplicationPanel('vents'));
-        navMood.addEventListener('click', () => routeApplicationPanel('mood'));
-        navProfile.addEventListener('click', () => routeApplicationPanel('profile'));
+        tabVentsBtn.addEventListener('click', () => routeApplicationPanel('vents'));
+        tabMoodBtn.addEventListener('click', () => routeApplicationPanel('mood'));
+        tabProfileBtn.addEventListener('click', () => routeApplicationPanel('profile'));
 
         function routeApplicationPanel(target) {
             activeTabContext = target;
             teardownActiveRealtimeSinks();
 
-            // Handle navigation visual highlight states cleanly
-            [navVents, navMood, navProfile].forEach(btn => {
-                btn.classList.add('opacity-40');
-                const title = btn.querySelector('span:last-child');
-                title.className = "text-[9px] font-mono tracking-tighter uppercase mt-0.5 font-medium text-zinc-500";
+            // Reset navigation architecture UI highlight structures
+            [tabVentsBtn, tabMoodBtn, tabProfileBtn].forEach(b => {
+                b.className = "flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all";
             });
             [panelVentsView, panelMoodView, panelProfileView].forEach(p => p.classList.add('hidden'));
 
-            const activeBtn = document.getElementById(`nav-${target}`);
-            activeBtn.classList.remove('opacity-40');
-            activeBtn.querySelector('span:last-child').className = "text-[9px] font-mono tracking-tighter uppercase mt-0.5 font-black text-purple-400";
+            const activeBtn = document.getElementById(`tab-${target}`);
+            if(activeBtn) activeBtn.className = "flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black border-b-2 border-purple-500 text-white bg-zinc-900/30 transition-all";
 
             if (target === 'vents') {
                 panelVentsView.classList.remove('hidden');
@@ -395,7 +367,7 @@
             }
         }
 
-        // --- CHRONO-STREAM LOGIC MATRIX & AURA WAGERING ---
+        // --- VENT TIMELINE ACTION PIPELINE WITH BIDIRECTIONAL REALTIME ---
         function trackTextAreaMetrics() {
             const available = 200 - domVentTextarea.value.length;
             domVentCharsLeft.innerText = `${available} characters left`;
@@ -414,6 +386,7 @@
             if (!error) {
                 domVentTextarea.value = '';
                 trackTextAreaMetrics();
+                // Self updates decoupled since WebSockets channel handle inserts organically
             }
         });
 
@@ -430,24 +403,17 @@
         }
 
         function compileVentCardTemplate(vent) {
-            const isHighTraction = vent.same_count >= 15;
-            const borderGlow = isHighTraction ? 'border-purple-600 shadow-[0_0_15px_rgba(147,51,234,0.25)] animate-pulse' : 'border-zinc-900';
-            
             return `
-                <div class="bg-kulix-cardBg border ${borderGlow} p-5 flex flex-col space-y-4 transition-all duration-200" id="vent-card-${vent.id}">
-                    <div class="flex justify-between items-center text-[9px] font-mono text-zinc-600">
-                        <span>📡 CHRONO_TRANSMISSION</span>
-                        ${isHighTraction ? '<span class="text-purple-400 font-bold tracking-widest">VOLATILE CONTENT</span>' : ''}
-                    </div>
+                <div class="bg-kulix-cardBg border border-zinc-900 p-5 flex flex-col space-y-4 shadow-sm" id="vent-card-${vent.id}">
                     <p class="text-zinc-300 text-sm whitespace-pre-wrap break-words leading-relaxed font-mono">${escapeSanitizedOutput(vent.text)}</p>
                     <div class="hidden bg-purple-950/20 border-l border-purple-500 p-3 text-xs text-purple-300 font-mono italic roast-field"></div>
                     <div class="flex space-x-2 pt-1">
-                        <button onclick="incrementEmpathyCount('${vent.id}', ${vent.same_count}, this)" class="flex-[2] bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 py-3 px-3 text-xs font-mono flex items-center justify-center space-x-2 transition-all active:scale-95">
+                        <button onclick="incrementEmpathyCount('${vent.id}', ${vent.same_count}, this)" class="flex-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 py-2.5 px-3 text-xs font-mono flex items-center justify-center space-x-2 transition-all active:scale-95">
                             <span>🤝 Same</span>
                             <span class="bg-purple-950 text-purple-400 px-2 py-0.5 text-[10px] font-bold metric-counter">${vent.same_count}</span>
                         </button>
-                        <button onclick="wagerAuraOnRoast('${vent.id}')" class="flex-1 bg-zinc-950 hover:bg-red-950/20 border border-zinc-900 hover:border-red-900/30 text-zinc-500 hover:text-red-400 py-3 px-2 text-xs font-mono transition-all active:scale-95 text-center">
-                            💀 Wager Roast
+                        <button onclick="triggerAutomatedSystemRoast('${vent.id}')" class="flex-1 bg-zinc-900/30 hover:bg-zinc-900 border border-zinc-800/40 text-zinc-500 hover:text-purple-400 py-2.5 px-3 text-xs font-mono transition-all active:scale-95">
+                            💀 Roast Me
                         </button>
                     </div>
                 </div>`;
@@ -472,10 +438,13 @@
         }
 
         async function incrementEmpathyCount(id, current, el) {
+            // Atomic incremental addition up to structural database
             const { error } = await _db.from('vents').update({ same_count: current + 1 }).eq('id', id);
             if (!error) {
                 el.disabled = true;
                 el.classList.add('opacity-40');
+                
+                // Advance Author Aura Score Profile Structure dynamically
                 try {
                     const { data: targetVent } = await _db.from('vents').select('user_id').eq('id', id).single();
                     if(targetVent && targetVent.user_id !== sessionUser.id) {
@@ -484,43 +453,11 @@
                             await _db.from('users').update({ aura: (authorProfile.aura || 0) + 2 }).eq('id', targetVent.user_id);
                         }
                     }
-                } catch(e) { console.warn('Aura adjustment bypass path', e); }
+                } catch(e) { console.warn('Aura reward routine system bypassed', e); }
             }
         }
 
-        // --- HIGH RISK GAMING: AURA ROAST WAGERING MECHANISM ---
-        async function wagerAuraOnRoast(ventId) {
-            if (sessionUser.aura < 10) {
-                alert("Aura transaction failed: You need at least 10 Aura to invoke this wager.");
-                return;
-            }
-
-            sessionUser.aura -= 10;
-            document.getElementById('user-aura-tag').innerText = `Aura: ${sessionUser.aura}`;
-            
-            const card = document.getElementById(`vent-card-${ventId}`);
-            if (card) {
-                card.classList.add('glitch-active', 'border-red-600');
-                setTimeout(() => card.classList.remove('glitch-active'), 800);
-                triggerAutomatedSystemRoast(ventId);
-                
-                await _db.from('users').update({ aura: sessionUser.aura }).eq('id', sessionUser.id);
-                const badge = calculateAuraTierSignature(sessionUser.aura);
-                document.getElementById('user-tier').innerText = badge.title;
-            }
-        }
-
-        function triggerAutomatedSystemRoast(ventId) {
-            const card = document.getElementById(`vent-card-${ventId}`);
-            if (!card) return;
-            const targetBlock = card.querySelector('.roast-field');
-            const selection = ROAST_MANIFEST[Math.floor(Math.random() * ROAST_MANIFEST.length)];
-            
-            targetBlock.innerText = `🔥 System Engine: "${selection}"`;
-            targetBlock.classList.remove('hidden');
-        }
-
-        // --- MOOD ROOM CHAT ENGINE & CONTINUOUS FADE PROTOCOL ---
+        // --- MOOD ROOM LIVE REALTIME CHAT STRAT ---
         async function syncMoodRoomMessages() {
             const { data, error } = await _db
                 .from('messages')
@@ -530,10 +467,9 @@
 
             if (error) return;
             domChatFeed.innerHTML = data.length === 0 
-                ? `<p class="text-zinc-600 font-mono text-center py-12 text-xs">Chamber empty. Say it here, watch it crumble.</p>`
+                ? `<p class="text-zinc-600 font-mono text-center py-12 text-xs">Chamber empty. Say it here, vanish it later.</p>`
                 : data.map(msg => compileChatBlockTemplate(msg)).join('');
             forceChatViewportScroll();
-            initiateDigitalAshFadeRoutine();
         }
 
         document.getElementById('chat-form').addEventListener('submit', async (e) => {
@@ -559,11 +495,8 @@
                 .on('postgres_changes', { event: 'INSERT', table: 'messages', filter: "room=eq.School Stress" }, (payload) => {
                     const fallbackEl = domChatFeed.querySelector('.text-zinc-600');
                     if (fallbackEl) domChatFeed.innerHTML = '';
-                    
-                    const blockHtml = compileChatBlockTemplate(payload.new);
-                    domChatFeed.insertAdjacentHTML('beforeend', blockHtml);
+                    domChatFeed.insertAdjacentHTML('beforeend', compileChatBlockTemplate(payload.new));
                     forceChatViewportScroll();
-                    initiateDigitalAshFadeRoutine();
                 })
                 .subscribe();
         }
@@ -571,14 +504,14 @@
         function compileChatBlockTemplate(msg) {
             const timeFormatted = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
             return `
-                <div class="flex items-start space-x-3 chat-message-block transition-all duration-1000 ease-out" data-timestamp="${new Date(msg.created_at).getTime()}">
+                <div class="flex items-start space-x-3">
                     <img src="${msg.user_avatar}" alt="" class="w-7 h-7 border border-zinc-800 bg-black mt-0.5 p-0.5" />
                     <div class="bg-kulix-cardBg border border-zinc-900 p-3 flex-1 max-w-[85%]">
                         <div class="flex justify-between items-baseline space-x-4 mb-1">
                             <span class="text-xs font-black text-purple-400">@${escapeSanitizedOutput(msg.user_nickname)}</span>
                             <span class="text-[9px] font-mono text-zinc-600">${timeFormatted}</span>
                         </div>
-                        <p class="text-xs text-zinc-300 break-words font-mono leading-relaxed message-text">${escapeSanitizedOutput(msg.text)}</p>
+                        <p class="text-xs text-zinc-300 break-words font-mono leading-relaxed">${escapeSanitizedOutput(msg.text)}</p>
                     </div>
                 </div>`;
         }
@@ -587,64 +520,18 @@
             domChatFeed.scrollTop = domChatFeed.scrollHeight;
         }
 
-        function initiateDigitalAshFadeRoutine() {
-            // Evaluates message lifespan dynamically to blur old chats
-            const now = new Date().getTime();
-            document.querySelectorAll('.chat-message-block').forEach(block => {
-                const ageMs = now - parseInt(block.getAttribute('data-timestamp'), 10);
-                const txt = block.querySelector('.message-text');
-                if (ageMs > 45000 && txt) {
-                    txt.classList.add('blur-[3px]', 'opacity-20', 'select-none');
-                } else if (ageMs > 20000 && txt) {
-                    txt.classList.add('blur-[1px]', 'opacity-60');
-                }
-            });
-        }
-        setInterval(initiateDigitalAshFadeRoutine, 5000);
-
-        // --- THE PHANTOM HOUR SCHEDULER MATRIX ---
-        function initializePhantomHourTicker() {
-            function updateClock() {
-                const now = new Date();
-                const currentHour = now.getHours();
-                const ticker = document.getElementById('phantom-countdown');
-                
-                if (currentHour === 22) {
-                    ticker.innerHTML = `<span class="text-purple-400 font-black tracking-widest animate-pulse">SYSTEM HIGH VOLTAGE STATE INJECTION ACTIVE (DOUBLE AURA GAINS OUTWARD)</span>`;
-                } else {
-                    const target = new Date();
-                    target.setHours(22, 0, 0, 0);
-                    if (now > target) target.setDate(target.getDate() + 1);
-                    
-                    const diffMs = target - now;
-                    const hours = Math.floor(diffMs / 3600000);
-                    const minutes = Math.floor((diffMs % 3600000) / 60000);
-                    const seconds = Math.floor((diffMs % 60000) / 1000);
-                    ticker.innerText = `Next Sequence Sync Window: T-Minus ${hours}h ${minutes}m ${seconds}s`;
-                }
-            }
-            setInterval(updateClock, 1000);
-            updateClock();
+        // --- BUILT-IN SYSTEM ROAST CALCULATOR MECHANISM ---
+        function triggerAutomatedSystemRoast(ventId) {
+            const card = document.getElementById(`vent-card-${ventId}`);
+            if (!card) return;
+            const targetBlock = card.querySelector('.roast-field');
+            const selection = ROAST_MANIFEST[Math.floor(Math.random() * ROAST_MANIFEST.length)];
+            
+            targetBlock.innerText = `🔥 System Engine: "${selection}"`;
+            targetBlock.classList.remove('hidden');
         }
 
-        // --- SECURITY PROTOCOL LAYER: ANTI-NARC INTERCEPTOR ---
-        window.addEventListener('blur', async () => {
-            if (sessionUser && !domAppScreen.classList.contains('hidden')) {
-                const overlay = document.getElementById('narc-overlay');
-                overlay.classList.remove('hidden');
-                
-                sessionUser.aura = Math.max(0, sessionUser.aura - 50);
-                document.getElementById('user-aura-tag').innerText = `Aura: ${sessionUser.aura}`;
-                
-                await _db.from('users').update({ aura: sessionUser.aura }).eq('id', sessionUser.id);
-                const badge = calculateAuraTierSignature(sessionUser.aura);
-                document.getElementById('user-tier').innerText = badge.title;
-                
-                setTimeout(() => { overlay.classList.add('hidden'); }, 4000);
-            }
-        });
-
-        // --- UTILITY INFRASTRUCTURE INTERFACES ---
+        // --- COPY INTERFACING VECTOR ---
         document.getElementById('btn-copy-ref').addEventListener('click', () => {
             const targetEl = document.getElementById('referral-link-input');
             targetEl.select();
