@@ -22,16 +22,11 @@
                     },
                     animation: {
                         'pulse-glow': 'pulseGlow 2s infinite alternate',
-                        'fade-in': 'fadeIn 0.3s ease-out forwards'
                     },
                     keyframes: {
                         pulseGlow: {
                             '0%': { 'box-shadow': '0 0 5px rgba(147,51,234,0.2), 0 0 10px rgba(147,51,234,0.1)' },
                             '100%': { 'box-shadow': '0 0 20px rgba(236,72,153,0.6), 0 0 30px rgba(147,51,234,0.4)' }
-                        },
-                        fadeIn: {
-                            '0%': { opacity: '0', transform: 'translateY(4px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' }
                         }
                     }
                 }
@@ -43,6 +38,7 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
+        /* Dynamic Elite Status Themes */
         .tier-glow-phantom { animation: pulseGlow 1.5s infinite alternate; border-color: #f59e0b !important; }
         .tier-glow-fiend { border-color: #ec4899 !important; }
     </style>
@@ -56,13 +52,15 @@
                     <h1 class="text-4xl font-black uppercase tracking-tighter text-purple-500">KULIX</h1>
                     <span id="referral-badge" class="hidden bg-purple-950 text-purple-400 border border-purple-800 text-[9px] font-mono uppercase tracking-widest px-2 py-1">Linked Via Inv</span>
                 </div>
-                <p class="text-xs text-zinc-500 font-mono mt-1">No Algorithmic Feeds. No Parents. Just Real Teen Life.<br>Founder of Kulix - MuchiNdu</p>
+                <p class="text-xs text-zinc-500 font-mono mt-1">No Algorithmic Feeds. No Parents. Just Real Teen Life.
+                     Founder of Kulix-MuchiNdu
+                </p>
             </header>
             
             <form id="auth-form" class="space-y-5" autocomplete="off">
                 <div>
                     <label class="block text-xs uppercase tracking-widest text-purple-400 font-mono font-bold mb-1.5">Username</label>
-                    <input type="text" id="input-username" maxlength="25" required
+                    <input type="text" id="input-nickname" maxlength="25" required
                         class="w-full bg-black border border-zinc-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 p-3 text-white outline-none rounded-none text-base transition-all font-mono"
                         placeholder="e.g., ghost_driver">
                 </div>
@@ -78,7 +76,7 @@
 
                 <button type="submit"
                     class="w-full bg-purple-600 hover:bg-purple-700 active:translate-y-0.5 text-black font-black uppercase tracking-wider py-4 border border-black shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all text-sm">
-                    Sign Up / Log In
+                    Sign up
                 </button>
             </form>
         </div>
@@ -88,7 +86,7 @@
         
         <header class="sticky top-0 bg-kulix-darkBg/95 backdrop-blur-md border-b border-zinc-800 p-4 flex justify-between items-center z-50">
             <div class="flex items-center space-x-3">
-                <img id="user-avatar" src="" alt="Avatar" class="w-9 h-9 border border-purple-500 bg-black p-0.5" />
+                <img id="user-avatar" src="" alt="Session Token Avatar" class="w-9 h-9 border border-purple-500 bg-black p-0.5" />
                 <div>
                     <div class="flex items-center space-x-1.5">
                         <h2 id="user-display-name" class="text-sm font-black text-purple-400 leading-none"></h2>
@@ -103,10 +101,18 @@
         </header>
 
         <nav class="flex bg-kulix-darkBg border-b border-zinc-900 sticky top-[69px] z-40">
-            <button id="tab-vents" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-white bg-zinc-900/30 transition-all">Home</button>
-            <button id="tab-mood" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all">Chats</button>
-            <button id="tab-leaderboard" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all">Leader Board</button>
-            <button id="tab-profile" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all">Share Link</button>
+            <button id="tab-vents" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-white bg-zinc-900/30 transition-all">
+                Home
+            </button>
+            <button id="tab-mood" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all">
+                Chats
+            </button>
+            <button id="tab-leaderboard" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all">
+                Leader board
+            </button>
+            <button id="tab-profile" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all">
+                share link
+            </button>
         </nav>
 
         <main class="flex-1 p-4 overflow-y-auto pb-28 no-scrollbar">
@@ -126,7 +132,9 @@
                         placeholder="Say what you need to say. Max 200 characters..."></textarea>
                     <div class="flex justify-between items-center mt-3">
                         <span id="vent-chars-left" class="text-xs font-mono text-zinc-500">200 left</span>
-                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-black font-black text-xs uppercase px-5 py-2.5 transition-colors">post</button>
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-black font-black text-xs uppercase px-5 py-2.5 transition-colors">
+                            post
+                        </button>
                     </div>
                 </form>
                 <div id="vents-feed-container" class="space-y-4"></div>
@@ -144,30 +152,35 @@
                 <form id="chat-form" class="absolute bottom-0 left-0 right-0 p-4 bg-black border-t border-zinc-900 flex space-x-2 z-30">
                     <input type="text" id="input-message" required max="500" autocomplete="off"
                         class="flex-1 bg-kulix-darkBg border border-zinc-800 focus:border-purple-600 px-4 py-3 text-xs text-white outline-none font-mono"
-                        placeholder="Type a verified user chat message...">
-                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-black uppercase font-black text-xs px-5 tracking-wider transition-colors">Send</button>
+                        placeholder="Type a completely untraceable message...">
+                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-black uppercase font-black text-xs px-5 tracking-wider transition-colors">
+                        Send
+                    </button>
                 </form>
             </div>
 
             <div id="panel-leaderboard" class="hidden space-y-4 font-mono">
                 <div class="border border-zinc-800 bg-kulix-cardBg p-4 text-center">
                     <h3 class="text-xs uppercase tracking-widest font-black text-purple-400">Ecosystem Aura Standings</h3>
-                    <p class="text-[10px] text-zinc-500 mt-1">Ranked dynamically by combined interactive activity and core Aura.</p>
+                    <p class="text-[10px] text-zinc-500 mt-1">Real-time validation updates across the server link.</p>
                 </div>
-                <div id="leaderboard-list" class="space-y-2"></div>
+                <div id="leaderboard-list" class="space-y-2">
+                    </div>
             </div>
 
             <div id="panel-profile" class="hidden space-y-6 font-mono">
                 <div class="bg-kulix-cardBg border border-zinc-800 p-6 space-y-4">
                     <h3 class="text-sm font-black text-purple-400 uppercase tracking-wider">Your Viral Engine</h3>
-                    <p class="text-xs text-zinc-400 leading-relaxed">Invite users into Kulix. Each sign-up under your protocol injects <span class="text-purple-400 font-bold">+50 Aura</span> into your system signature.</p>
+                    <p class="text-xs text-zinc-400 leading-relaxed">invite users into Kulix. Each sign-up under your protocol injects <span class="text-purple-400 font-bold">+50 Aura</span> into your system signature.</p>
                     
                     <div class="space-y-2">
                         <label class="text-[10px] uppercase text-zinc-500 tracking-wider">Unique Invitation Link</label>
                         <div class="flex">
                             <input type="text" id="referral-link-input" readonly
                                 class="flex-1 bg-black border border-zinc-800 text-xs text-zinc-400 p-3 outline-none rounded-none select-all font-mono">
-                            <button id="btn-copy-ref" class="bg-zinc-900 hover:bg-zinc-800 border-y border-r border-zinc-800 px-4 text-xs text-white uppercase font-bold active:bg-purple-950 transition-colors">Copy</button>
+                            <button id="btn-copy-ref" class="bg-zinc-900 hover:bg-zinc-800 border-y border-r border-zinc-800 px-4 text-xs text-white uppercase font-bold active:bg-purple-950 transition-colors">
+                                Copy
+                            </button>
                         </div>
                     </div>
 
@@ -192,24 +205,52 @@
     </div>
 
     <script>
+        // =========================================================================
+        // CONFIGURATION AND LINKAGE CONFIG ENGINE
+        // =========================================================================
         const CONFIG = {
             supabaseUrl: "https://jfzypvnlbrmpbuxmlhgp.supabase.co",
             supabaseAnonKey: "sb_publishable_uT8ky5GdL-0LQ3O5cJlJZw_EfP6IHCM" 
         };
-
+        
         const _db = supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
 
         const ROAST_MANIFEST = [
             "Bro, this post screams 'I sit alone at lunch'.",
             "This isn't your private diary, but fine, go off.",
+            "Dating in 2026 is an absolute circus, you aren't special.",
+            "Have you tried sleeping instead of typing paragraphs at midnight?",
+            "Sending you structural reinforcement, because you sound unstable.",
             "NPC behavior detected. Please change your path scripts.",
-            "If crying built character, you'd be a historic monument."
+            "They haven't texted back because they're simply chilling. Reset yourself.",
+            "You are projecting so hard the wall is shaking.",
+            "If crying built character, you'd be a historic monument.",
+            "Main character energy score: 0.1/10.",
+            "Hoping your cognitive system gets an update tomorrow morning."
         ];
 
         const DARE_MANIFEST = [
             "Text your recent contact 'we need to talk' and drop their reaction here.",
-            "Approach your CRUSH and tell them that I love you",
-            "What is the most high-key criminal lie you told your parents this week?"
+            "call you boy friend/girl friend and tell them that i need you right now!",
+            "tell you ex that 'baby i miss you'",
+            "ask a stranger for a phone number and say that it's okay i don't need it",
+            "approch you CRUSH and tell them that i love you",
+            "go in a public place and say you name out loud",
+            "Question any stranger this question 'do you believe in GOD'",
+            "if you are student 'tell a teacher that stop teaching us,we don't need you",
+            "if you see any boy/girl tell them that 'Go take a shower'",
+            "drink 1.5L of water",
+            "tell you bestfriend that 'i know your secrete'",
+            "What is the most high-key criminal lie you told your parents this week?",
+            "Drop the absolute worst song currently sitting inside your rotation.",
+            "post 20 photos on facebook",
+            "KISS you boyfriend/girlfriend in public",
+            "say M.G.Y ",
+            "Reveal exactly why you blocked the last person you cut off.",
+            "if you are a student go to school without books",
+            "call you sibling'your majesty'for th whole day",
+            "walk into a shop and ask if they sell spare wi-fi bundles",
+            "Admit the school drama that is living inside your head rent-free right now."
         ];
 
         let sessionUser = null;
@@ -217,7 +258,6 @@
         let chatRealtimeSyncLink = null;
         let streamRealtimeSyncLink = null;
         let leaderboardSyncLink = null;
-        let commentsRealtimeSyncLink = null;
 
         const domAuthScreen = document.getElementById('auth-screen');
         const domAppScreen = document.getElementById('app-screen');
@@ -228,8 +268,8 @@
         const domVentTextarea = document.getElementById('textarea-vent');
         const domVentCharsLeft = document.getElementById('vent-chars-left');
 
-        // FORCE AUTH VERIFICATION GATING FOR EVERY CONNECTING DEVICE
         window.addEventListener('DOMContentLoaded', () => {
+            // Allocate Daily Challenge
             const dayIndex = new Date().getDate() % DARE_MANIFEST.length;
             document.getElementById('dare-text').innerText = `"${DARE_MANIFEST[dayIndex]}"`;
 
@@ -246,18 +286,10 @@
                     refreshSessionIdentityContext();
                 } catch(e) {
                     localStorage.removeItem('kulix_session_user');
-                    showAuthGate();
                 }
-            } else {
-                showAuthGate();
             }
             trackTextAreaMetrics();
         });
-
-        function showAuthGate() {
-            domAuthScreen.classList.remove('hidden');
-            domAppScreen.classList.add('hidden');
-        }
 
         function calculateAuraTierSignature(score) {
             if (score >= 500) return { title: "⚡ Phantom", color: "text-amber-400", class: "tier-glow-phantom" };
@@ -274,21 +306,6 @@
                 openApplicationDashboard();
             } else {
                 localStorage.removeItem('kulix_session_user');
-                showAuthGate();
-            }
-        }
-
-        async function updateActivityMetrics() {
-            if (!sessionUser) return;
-            const curPoints = sessionUser.interaction_count || 0;
-            const { data } = await _db.from('users')
-                .update({ interaction_count: curPoints + 1, aura: (sessionUser.aura || 0) + 2 })
-                .eq('id', sessionUser.id)
-                .select().single();
-            if (data) {
-                sessionUser = data;
-                localStorage.setItem('kulix_session_user', JSON.stringify(data));
-                document.getElementById('user-aura-tag').innerText = `Aura: ${sessionUser.aura}`;
             }
         }
 
@@ -305,18 +322,22 @@
             domUserTier.innerText = badge.title;
             domUserTier.className = `text-[9px] font-mono mt-1 block tracking-wider uppercase ${badge.color}`;
 
-            document.getElementById('app-screen').className = `min-h-screen max-w-md mx-auto border-x flex flex-col relative bg-black ${badge.class}`;
+            // Inject Custom Tier Flavor to Root Layout Frame
+            const appFrame = document.getElementById('app-screen');
+            appFrame.className = `min-h-screen max-w-md mx-auto border-x flex flex-col relative bg-black ${badge.class}`;
+
             document.getElementById('referral-link-input').value = `${window.location.origin}${window.location.pathname}?ref=${sessionUser.id}`;
             document.getElementById('metric-referrals').innerText = sessionUser.referral_count || 0;
 
             routeApplicationPanel(activeTabContext);
         }
 
+        // --- AUTH SYSTEM LAYER AND VALIDATION ---
         domAuthForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             domAuthError.classList.add('hidden');
 
-            const username = document.getElementById('input-username').value.trim();
+            const username = document.getElementById('input-nickname').value.trim();
             const age = parseInt(document.getElementById('input-age').value, 10);
 
             if (isNaN(age) || age < 13 || age > 19) {
@@ -343,7 +364,7 @@
                 .select().single();
 
             if (userError) {
-                domAuthError.innerText = 'Username Taken: Try a unique modification.';
+                domAuthError.innerText = userError.code === '23505' ? 'Name Taken: Try a unique modification.' : userError.message;
                 domAuthError.classList.remove('hidden');
                 return;
             }
@@ -357,7 +378,7 @@
                             referral_count: (inviter.referral_count || 0) + 1
                         }).eq('id', targetedInviterId);
                     }
-                } catch(err) { console.error(err); }
+                } catch(err) { console.error('Invite engine bypassed', err); }
                 localStorage.removeItem('kulix_invite_vector');
             }
 
@@ -376,9 +397,9 @@
             if (chatRealtimeSyncLink) _db.removeChannel(chatRealtimeSyncLink);
             if (streamRealtimeSyncLink) _db.removeChannel(streamRealtimeSyncLink);
             if (leaderboardSyncLink) _db.removeChannel(leaderboardSyncLink);
-            if (commentsRealtimeSyncLink) _db.removeChannel(commentsRealtimeSyncLink);
         }
 
+        // --- INTERFACE TAB NAVIGATION CONTROL ROUTER ---
         const tabVentsBtn = document.getElementById('tab-vents');
         const tabMoodBtn = document.getElementById('tab-mood');
         const tabLeaderboardBtn = document.getElementById('tab-leaderboard');
@@ -410,7 +431,6 @@
                 panelVentsView.classList.remove('hidden');
                 syncVentsChronologicalStream();
                 activateStreamRealtimeSync();
-                activateCommentsRealtimeSync();
             } else if (target === 'mood') {
                 panelMoodView.classList.remove('hidden');
                 syncMoodRoomMessages();
@@ -424,9 +444,10 @@
             }
         }
 
+        // --- VENT TIMELINE PIPELINE WITH LIVE SYNC ---
         function trackTextAreaMetrics() {
             const available = 200 - domVentTextarea.value.length;
-            domVentCharsLeft.innerText = `${available} left`;
+            domVentCharsLeft.innerText = `${available} characters left`;
         }
         domVentTextarea.addEventListener('input', trackTextAreaMetrics);
 
@@ -439,51 +460,8 @@
             if (!error) {
                 domVentTextarea.value = '';
                 trackTextAreaMetrics();
-                await updateActivityMetrics();
             }
         });
-
-        // FACEBOOK-STYLE INLINE COMMENT RENDERING ENGINE
-        async function syncVentCommentsInline(ventId) {
-            const { data, error } = await _db.from('vent_comments').select('*').eq('vent_id', ventId).order('created_at', { ascending: true });
-            if (error || !data) return;
-            const container = document.getElementById(`comments-wrapper-${ventId}`);
-            if(container) {
-                container.innerHTML = data.map(c => `
-                    <div class="flex items-start space-x-2 bg-zinc-900/40 p-2.5 border border-zinc-900 animate-fade-in">
-                        <img src="${c.user_avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${c.username}`}" class="w-5 h-5 border border-purple-500/30 bg-black" />
-                        <div class="flex-1">
-                            <div class="flex justify-between items-baseline">
-                                <span class="text-[11px] font-bold text-purple-400">@${escapeSanitizedOutput(c.username)}</span>
-                                <span class="text-[9px] text-zinc-600 font-mono">${new Date(c.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false})}</span>
-                            </div>
-                            <p class="text-[11px] text-zinc-300 mt-0.5 font-mono whitespace-pre-wrap break-words">${escapeSanitizedOutput(c.comment_text)}</p>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        }
-
-        window.handleCommentSubmission = async function(e, ventId) {
-            e.preventDefault();
-            const inputField = document.getElementById(`input-comment-${ventId}`);
-            const commentText = inputField.value.trim();
-            if(!commentText) return;
-
-            const { error } = await _db.from('vent_comments').insert([{
-                vent_id: ventId,
-                user_id: sessionUser.id,
-                username: sessionUser.username,
-                user_avatar: sessionUser.avatar_url,
-                comment_text: commentText
-            }]);
-
-            if(!error) {
-                inputField.value = '';
-                await syncVentCommentsInline(ventId);
-                await updateActivityMetrics();
-            }
-        }
 
         async function syncVentsChronologicalStream() {
             const { data, error } = await _db.from('vents').select('*').order('created_at', { ascending: false });
@@ -491,13 +469,11 @@
             domVentsFeed.innerHTML = data.length === 0 
                 ? `<p class="text-zinc-600 font-mono text-center py-12 text-xs">The stream is silent.</p>` 
                 : data.map(vent => compileVentCardTemplate(vent)).join('');
-            
-            data.forEach(vent => syncVentCommentsInline(vent.id));
         }
 
         function compileVentCardTemplate(vent) {
             return `
-                <div class="bg-kulix-cardBg border border-zinc-900 p-5 flex flex-col space-y-4 shadow-sm animate-fade-in" id="vent-card-${vent.id}">
+                <div class="bg-kulix-cardBg border border-zinc-900 p-5 flex flex-col space-y-4 shadow-sm" id="vent-card-${vent.id}">
                     <p class="text-zinc-300 text-sm whitespace-pre-wrap break-words leading-relaxed font-mono">${escapeSanitizedOutput(vent.text)}</p>
                     <div class="hidden bg-purple-950/20 border-l border-purple-500 p-3 text-xs text-purple-300 font-mono italic roast-field"></div>
                     <div class="flex space-x-2 pt-1">
@@ -509,15 +485,6 @@
                             💀 Roast Me
                         </button>
                     </div>
-
-                    <div class="border-t border-zinc-900 pt-3 mt-1 space-y-2">
-                        <div id="comments-wrapper-${vent.id}" class="space-y-2 max-h-48 overflow-y-auto no-scrollbar"></div>
-                        <form onsubmit="handleCommentSubmission(event, '${vent.id}')" class="flex gap-2 items-center mt-2 bg-black p-1.5 border border-zinc-900">
-                            <input type="text" id="input-comment-${vent.id}" maxlength="150" placeholder="Comment as @${sessionUser ? sessionUser.username : 'user'}..." required
-                                class="flex-1 bg-transparent text-xs text-white outline-none font-mono px-1 placeholder-zinc-700">
-                            <button type="submit" class="bg-purple-600 text-black px-3 py-1 text-[10px] font-black uppercase tracking-wider hover:bg-purple-700">Post</button>
-                        </form>
-                    </div>
                 </div>`;
         }
 
@@ -528,7 +495,6 @@
                     const fallbackEl = domVentsFeed.querySelector('.text-zinc-600');
                     if (fallbackEl) domVentsFeed.innerHTML = '';
                     domVentsFeed.insertAdjacentHTML('afterbegin', compileVentCardTemplate(payload.new));
-                    syncVentCommentsInline(payload.new.id);
                 })
                 .on('postgres_changes', { event: 'update', table: 'vents' }, (payload) => {
                     const existingCard = document.getElementById(`vent-card-${payload.new.id}`);
@@ -540,21 +506,11 @@
                 .subscribe();
         }
 
-        function activateCommentsRealtimeSync() {
-            commentsRealtimeSyncLink = _db
-                .channel('public:vent_comments')
-                .on('postgres_changes', { event: 'insert', table: 'vent_comments' }, (payload) => {
-                    syncVentCommentsInline(payload.new.vent_id);
-                })
-                .subscribe();
-        }
-
         async function incrementEmpathyCount(id, current, el) {
             const { error } = await _db.from('vents').update({ same_count: current + 1 }).eq('id', id);
             if (!error) {
                 el.disabled = true;
                 el.classList.add('opacity-40');
-                await updateActivityMetrics();
                 
                 try {
                     const { data: targetVent } = await _db.from('vents').select('user_id').eq('id', id).single();
@@ -564,10 +520,11 @@
                             await _db.from('users').update({ aura: (authorProfile.aura || 0) + 2 }).eq('id', targetVent.user_id);
                         }
                     }
-                } catch(e) {}
+                } catch(e) { console.warn('Aura loop bypassed', e); }
             }
         }
 
+        // --- REALTIME CHAT CHANNEL ---
         async function syncMoodRoomMessages() {
             const { data, error } = await _db.from('messages').select('*').eq('room', 'School Stress').order('created_at', { ascending: true });
             if (error) return;
@@ -591,10 +548,7 @@
                 text: text
             }]);
 
-            if (!error) {
-                inputField.value = '';
-                await updateActivityMetrics();
-            }
+            if (!error) inputField.value = '';
         });
 
         function activateRealtimeWebSocket() {
@@ -612,8 +566,8 @@
         function compileChatBlockTemplate(msg) {
             const timeFormatted = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
             return `
-                <div class="flex items-start space-x-3 animate-fade-in">
-                    <img src="${msg.user_avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${msg.user_username}`}" class="w-7 h-7 border border-zinc-800 bg-black mt-0.5 p-0.5" />
+                <div class="flex items-start space-x-3">
+                    <img src="${msg.user_avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${msg.user_username}`}" alt="" class="w-7 h-7 border border-zinc-800 bg-black mt-0.5 p-0.5" />
                     <div class="bg-kulix-cardBg border border-zinc-900 p-3 flex-1 max-w-[85%]">
                         <div class="flex justify-between items-baseline space-x-4 mb-1">
                             <span class="text-xs font-black text-purple-400">@${escapeSanitizedOutput(msg.user_username || 'anonymous')}</span>
@@ -626,18 +580,13 @@
 
         function forceChatViewportScroll() { domChatFeed.scrollTop = domChatFeed.scrollHeight; }
 
-        // TRUE HIGH-INTERACTIVE + HIGH-AURA BALANCED FORMULA RANKINGS ENGINE
+        // --- REALTIME LEADERBOARD MATRIX ---
         async function syncLeaderboardStandings() {
-            const { data, error } = await _db.from('users').select('username, aura, avatar_url, interaction_count').order('aura', { ascending: false }).limit(25);
+            const { data, error } = await _db.from('users').select('username, aura, avatar_url').order('aura', { ascending: false }).limit(10);
             if (error) return;
 
-            const sortedFormulaRank = data.map(u => ({
-                ...u,
-                totalMatrixScore: (u.aura || 0) + ((u.interaction_count || 0) * 3)
-            })).sort((a, b) => b.totalMatrixScore - a.totalMatrixScore).slice(0, 10);
-
             const listContainer = document.getElementById('leaderboard-list');
-            listContainer.innerHTML = sortedFormulaRank.map((user, index) => {
+            listContainer.innerHTML = data.map((user, index) => {
                 const tier = calculateAuraTierSignature(user.aura || 0);
                 const isSelf = user.username === sessionUser.username ? 'border-purple-600 bg-purple-950/10' : 'border-zinc-900 bg-kulix-cardBg';
                 return `
@@ -647,7 +596,7 @@
                             <img src="${user.avatar_url}" class="w-6 h-6 border border-zinc-800 bg-black p-0.5" />
                             <div>
                                 <span class="text-xs font-bold text-zinc-200">@${escapeSanitizedOutput(user.username || 'user')}</span>
-                                <span class="text-[8px] uppercase tracking-wider block font-bold ${tier.color}">${tier.title} (Act: ${user.interaction_count || 0})</span>
+                                <span class="text-[8px] uppercase tracking-wider block ${tier.color}">${tier.title}</span>
                             </div>
                         </div>
                         <span class="text-xs font-black text-purple-400 bg-black px-2 py-1 border border-zinc-900">${user.aura || 0} AM</span>
@@ -656,9 +605,15 @@
         }
 
         function activateLeaderboardRealtimeSync() {
-            leaderboardSyncLink = _db.channel('public:users').on('postgres_changes', { event: 'update', table: 'users' }, () => { syncLeaderboardStandings(); }).subscribe();
+            leaderboardSyncLink = _db
+                .channel('public:users')
+                .on('postgres_changes', { event: 'update', table: 'users' }, () => {
+                    syncLeaderboardStandings();
+                })
+                .subscribe();
         }
 
+        // --- SYSTEM ROAST CALCULATOR ---
         function triggerAutomatedSystemRoast(ventId) {
             const card = document.getElementById(`vent-card-${ventId}`);
             if (!card) return;
@@ -669,6 +624,7 @@
             targetBlock.classList.remove('hidden');
         }
 
+        // --- COPY INVITATION INTERFACING ---
         document.getElementById('btn-copy-ref').addEventListener('click', () => {
             const targetEl = document.getElementById('referral-link-input');
             targetEl.select();
