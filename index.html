@@ -32,7 +32,7 @@
   <div id="app-screen" class="hidden max-w-2xl mx-auto px-4 pt-6">
     <header class="flex justify-between items-center mb-6 bg-zinc-900/50 p-4 border border-zinc-800 rounded-2xl">
       <div class="flex items-center space-x-3">
-        <img id="user-avatar" src="" alt="Identity Token" class="w-10 h-10 rounded-xl border border-indigo-500 bg-zinc-950" />
+        <img id="user-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-xl border border-indigo-500 bg-zinc-950" />
         <div>
           <h1 class="text-2xl font-black text-indigo-400 tracking-wide uppercase leading-none mb-1">Kulix</h1>
           <p id="user-display" class="text-xs text-zinc-400 font-bold tracking-tight"></p>
@@ -88,22 +88,22 @@
   </div>
 
   <nav id="bottom-nav" class="hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 py-3 px-6 flex justify-around items-center z-50">
-    <button onclick="switchTab('feed')" id="nav-feed" class="flex flex-col items-center gap-1 text-indigo-500 font-bold text-xs transition-colors">
+    <button id="nav-feed" class="flex flex-col items-center gap-1 text-indigo-500 font-bold text-xs transition-colors">
       <span>💬</span><span>Feed</span>
     </button>
-    <button onclick="switchTab('polls')" id="nav-polls" class="flex flex-col items-center gap-1 text-zinc-400 font-medium text-xs transition-colors">
+    <button id="nav-polls" class="flex flex-col items-center gap-1 text-zinc-400 font-medium text-xs transition-colors">
       <span>📊</span><span>Polls</span>
     </button>
-    <button onclick="switchTab('bucket')" id="nav-bucket" class="flex flex-col items-center gap-1 text-zinc-400 font-medium text-xs transition-colors">
+    <button id="nav-bucket" class="flex flex-col items-center gap-1 text-zinc-400 font-medium text-xs transition-colors">
       <span>⏳</span><span>Countdowns</span>
     </button>
   </nav>
 
   <script>
-
    // ⚠️ TO DO: PASTE YOUR UNIQUE SUPABASE KEYS RIGHT HERE
     const SUPABASE_URL = "https://vmjcaccyphhmirxnoipv.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_9ajwIGyWEUZfRxwtsdHD6g__Xi2hvwg";
+
 
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     let currentUser = null;
@@ -114,6 +114,11 @@
     const authForm = document.getElementById('auth-form');
     const authError = document.getElementById('auth-error');
     const userDisplay = document.getElementById('user-display');
+
+    // Attach navigation event handlers safely
+    document.getElementById('nav-feed').addEventListener('click', () => switchTab('feed'));
+    document.getElementById('nav-polls').addEventListener('click', () => switchTab('polls'));
+    document.getElementById('nav-bucket').addEventListener('click', () => switchTab('bucket'));
 
     window.addEventListener('DOMContentLoaded', () => {
       const savedSession = localStorage.getItem('kulix_registered_user');
@@ -133,6 +138,7 @@
       switchTab('feed');
     }
 
+    // REGISTRY AUTH HANDLER
     authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       authError.classList.add('hidden');
@@ -146,29 +152,29 @@
         return;
       }
 
-      const { data: searchUser } = await supabase.from('users').select('*').eq('nickname', rawNickname).maybeSingle();
-      
-      if (searchUser) {
-        currentUser = searchUser;
-        localStorage.setItem('kulix_registered_user', JSON.stringify(searchUser));
-        renderAppSpace();
-      } else {
-        const avatarUrl = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(rawNickname)}`;
+      try {
+        const { data: searchUser, error: fetchErr } = await supabase.from('users').select('*').eq('nickname', rawNickname).maybeSingle();
         
-        const { data: newUser, error } = await supabase
-          .from('users')
-          .insert([{ nickname: rawNickname, avatar_url: avatarUrl }])
-          .select().single();
+        if (searchUser) {
+          currentUser = searchUser;
+          localStorage.setItem('kulix_registered_user', JSON.stringify(searchUser));
+          renderAppSpace();
+        } else {
+          const avatarUrl = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(rawNickname)}`;
+          const { data: newUser, error: insertErr } = await supabase
+            .from('users')
+            .insert([{ nickname: rawNickname, avatar_url: avatarUrl }])
+            .select().single();
 
-        if (error) {
-          authError.innerText = 'Could not register nickname. Try another one.';
-          authError.classList.remove('hidden');
-          return;
+          if (insertErr) throw insertErr;
+
+          currentUser = newUser;
+          localStorage.setItem('kulix_registered_user', JSON.stringify(newUser));
+          renderAppSpace();
         }
-
-        currentUser = newUser;
-        localStorage.setItem('kulix_registered_user', JSON.stringify(newUser));
-        renderAppSpace();
+      } catch (err) {
+        authError.innerText = 'Connection failure or registry name taken. Try again.';
+        authError.classList.remove('hidden');
       }
     });
 
@@ -197,7 +203,7 @@
       if(tabId === 'bucket') fetchBucketList();
     }
 
-    // ================= MODULE 1: ATOMIC FEED TRACKER =================
+    // ================= MODULE 1: SOCIAL CONSOLE LOGS =================
     document.getElementById('post-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const content = document.getElementById('post-content').value.trim();
@@ -250,7 +256,7 @@
           </form>
         `;
 
-        // Direct Event Attachment Layer to prevent single/double quote string crashes
+        // Safe programmatic attachment
         card.querySelector('.like-toggle-btn').addEventListener('click', () => toggleLike(post.id, hasLiked));
         card.querySelector('.comment-submission-form').addEventListener('submit', (e) => {
           e.preventDefault();
@@ -278,7 +284,7 @@
       fetchFeed();
     }
 
-    // ================= MODULE 2: ATOMIC SURVEYS / POLLS =================
+    // ================= MODULE 2: LIVE METRICS ENGINE =================
     document.getElementById('poll-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const question = document.getElementById('poll-question').value.trim();
@@ -327,7 +333,6 @@
             </div>
           `;
           
-          // Secure Event Handler Binding without string-injection pitfalls
           optBtn.addEventListener('click', () => votePoll(poll.id, opt));
           optionsBox.appendChild(optBtn);
         });
@@ -364,7 +369,7 @@
 
       const safeEvents = events || [];
       if(safeEvents.length === 0) {
-        container.innerHTML = `<p class="text-zinc-600 text-center text-xs py-8 font-mono">No upcoming target logs recorded.</p>`;
+        container.innerHTML = `<p class="text-zinc-600 text-center text-xs py-8 font-mono">No upcoming milestones recorded.</p>`;
         return;
       }
 
@@ -395,7 +400,6 @@
       fetchBucketList();
     }
 
-    // Safety Sanitization Utility
     function escapeHTML(str) {
       if(!str) return '';
       return str.replace(/[&<>'\"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
