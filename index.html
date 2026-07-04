@@ -12,17 +12,24 @@
   <div id="auth-screen" class="flex flex-col items-center justify-center min-h-screen px-4">
     <div class="bg-zinc-900 p-8 rounded-2xl w-full max-w-md border border-zinc-800 shadow-2xl">
       <h1 class="text-5xl font-black text-center mb-2 tracking-wider text-indigo-500 uppercase">Kulix</h1>
-      <p class="text-zinc-400 text-center text-sm mb-6 font-medium">Claim Your Username</p>
-      
-      <form id="auth-form" class="space-y-4">
+      <p class="text-zinc-400 text-center text-sm mb-6 font-medium">Teens Only Hub</p>
+      <form id="login-form" class="space-y-4">
         <div>
-          <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1">Username</label>
-          <input type="text" id="username-input" required placeholder="e.g., skater_alex" minlength="3" maxlength="15" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-indigo-500 transition-colors">
-          <p class="text-[10px] text-zinc-500 mt-2">⚠️ Your account will be permanently locked to this specific device.</p>
+          <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1">Email</label>
+          <input type="email" id="email" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 focus:outline-none focus:border-indigo-500 transition-colors">
         </div>
-        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98]">
-          Enter Hub
-        </button>
+        <div>
+          <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1">Password</label>
+          <input type="password" id="password" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 focus:outline-none focus:border-indigo-500 transition-colors">
+        </div>
+        <div class="flex gap-3">
+          <button type="submit" id="submit-login" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98]">
+            Log In
+          </button>
+          <button type="button" id="submit-signup" class="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold py-3 rounded-xl transition-all active:scale-[0.98]">
+            Sign Up
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -31,9 +38,11 @@
     <header class="flex justify-between items-center mb-6">
       <div>
         <h1 class="text-3xl font-black text-indigo-400 tracking-wide uppercase">Kulix</h1>
-        <p id="user-display" class="text-xs text-zinc-400 font-bold tracking-wide"></p>
+        <p id="user-display" class="text-xs text-zinc-500 font-medium"></p>
       </div>
-      <div class="text-xs text-zinc-600 font-medium">Teens Only</div>
+      <button id="logout-btn" class="text-xs bg-zinc-900 hover:bg-zinc-800 px-3 py-2 rounded-xl border border-zinc-800 font-medium transition-colors">
+        Log Out
+      </button>
     </header>
 
     <div id="tab-feed" class="tab-content space-y-6">
@@ -93,106 +102,60 @@
   </nav>
 
   <script>
-    // ⚠️ TO DO: PASTE YOUR UNIQUE SUPABASE KEYS RIGHT HERE
+     // ⚠️ TO DO: PASTE YOUR UNIQUE SUPABASE KEYS RIGHT HERE
     const SUPABASE_URL = "https://vmjcaccyphhmirxnoipv.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_9ajwIGyWEUZfRxwtsdHD6g__Xi2hvwg";
 
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    
-    let currentUsername = "";
-    let activeTab = "feed";
+    let currentUserEmail = "";
 
-    // App Navigation & Screens
     const authScreen = document.getElementById('auth-screen');
     const appScreen = document.getElementById('app-screen');
     const bottomNav = document.getElementById('bottom-nav');
-    const authForm = document.getElementById('auth-form');
+    const loginForm = document.getElementById('login-form');
     const userDisplay = document.getElementById('user-display');
 
-    // Generate or fetch a secure internal hardware key signature for this phone
-    function getDeviceToken() {
-      let token = localStorage.getItem('kulix_device_signature');
-      if (!token) {
-        token = 'kx_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        localStorage.setItem('kulix_device_signature', token);
-      }
-      return token;
-    }
-
-    async function initSession() {
-      const token = getDeviceToken();
-      
-      // Look up if this phone signature already has an assigned username
-      const { data: user, error } = await supabase
-        .from('kulix_users')
-        .select('*')
-        .eq('device_token', token)
-        .maybeSingle();
-
-      if (user) {
-        currentUsername = user.username;
-        launchApp();
+    async function checkUser() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        currentUserEmail = session.user.email;
+        userDisplay.innerText = `Logged in as: ${currentUserEmail}`;
+        authScreen.classList.add('hidden');
+        appScreen.classList.remove('hidden');
+        bottomNav.classList.remove('hidden');
+        switchTab('feed');
       } else {
         authScreen.classList.remove('hidden');
+        appScreen.classList.add('hidden');
+        bottomNav.classList.add('hidden');
       }
     }
 
-    authForm.addEventListener('submit', async (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const inputName = document.getElementById('username-input').value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
-      const token = getDeviceToken();
-
-      if(inputName.length < 3) {
-        alert("Username must be at least 3 characters.");
-        return;
-      }
-
-      // Check if username is already claimed by someone else
-      const { data: existingUser } = await supabase.from('kulix_users').select('*').eq('username', inputName).maybeSingle();
-      
-      if (existingUser) {
-        alert("This username is already claimed by another device!");
-        return;
-      }
-
-      // Double check this phone hasn't secretly registered an account already via a different method
-      const { data: tokenCheck } = await supabase.from('kulix_users').select('*').eq('device_token', token).maybeSingle();
-      if (tokenCheck) {
-        alert(`Device lock warning: This device is already registered under the account "@${tokenCheck.username}"! Returning you to your profile.`);
-        currentUsername = tokenCheck.username;
-        launchApp();
-        return;
-      }
-
-      // Everything checks out! Save the new profile
-      const { error: insertError } = await supabase.from('kulix_users').insert([{ username: inputName, device_token: token }]);
-      
-      if (insertError) {
-        alert("Registration failed. Try a different username.");
-      } else {
-        currentUsername = inputName;
-        launchApp();
-      }
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) alert(error.message); else checkUser();
     });
 
-    function launchApp() {
-      userDisplay.innerText = `@${currentUsername}`;
-      authScreen.classList.add('hidden');
-      appScreen.classList.remove('hidden');
-      bottomNav.classList.remove('hidden');
-      
-      // Live syncing streams
-      supabase.channel('global-sync').on('postgres_changes', { event: '*', schema: 'public' }, () => {
-        if (activeTab === 'feed') fetchFeed();
-        if (activeTab === 'polls') fetchPolls();
-        if (activeTab === 'bucket') fetchBucketList();
-      }).subscribe();
+    document.getElementById('submit-signup').addEventListener('click', async () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      if (!email || !password) {
+        alert("Please enter both email and password first.");
+        return;
+      }
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error) alert(error.message); else alert("Signup successful! You can now log in.");
+    });
 
-      switchTab('feed');
-    }
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      window.location.reload();
+    });
 
     function switchTab(tabId) {
-      activeTab = tabId;
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
       document.getElementById(`tab-${tabId}`).classList.remove('hidden');
       
@@ -212,52 +175,51 @@
       if(tabId === 'bucket') fetchBucketList();
     }
 
-    // ================= FEED MODULE =================
+    // ================= MODULE 1: SOCIAL FEED ENGINE =================
     document.getElementById('post-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const content = document.getElementById('post-content').value.trim();
       const image_url = document.getElementById('post-image').value.trim();
       
-      await supabase.from('posts').insert([{ username: currentUsername, content, image_url }]);
+      await supabase.from('posts').insert([{ user_email: currentUserEmail, content, image_url }]);
       document.getElementById('post-form').reset();
       fetchFeed();
     });
 
     async function fetchFeed() {
-      const { data: posts } = await supabase.from('posts').select('*, likes(*), comments(*)').order('created_at', { ascending: false });
+      const { data: posts, error } = await supabase.from('posts').select('*, likes(*), comments(*)').order('created_at', { ascending: false });
       const container = document.getElementById('feed-container');
-      if (!container) return; container.innerHTML = '';
+      container.innerHTML = '';
 
-      if (!posts || posts.length === 0) {
-        container.innerHTML = `<p class="text-zinc-500 text-center py-8 text-xs">No updates from the crew yet.</p>`;
-        return;
-      }
-
-      posts.forEach(post => {
-        const hasLiked = post.likes && post.likes.some(l => l.username === currentUsername);
-        const imgTag = post.image_url ? `<img src="${escapeHTML(post.image_url)}" class="rounded-xl max-h-72 w-full object-cover my-2 border border-zinc-800" onerror="this.style.display='none'" />` : '';
-        const commentsHTML = post.comments ? post.comments.map(c => `
-          <div class="text-[11px] bg-zinc-950 p-2 rounded-lg border border-zinc-900/50"><span class="font-bold text-indigo-400">@${escapeHTML(c.username)}:</span> ${escapeHTML(c.content)}</div>
-        `).join('') : '';
+      const safePosts = posts || [];
+      safePosts.forEach(post => {
+        const safeLikes = post.likes || [];
+        const safeComments = post.comments || [];
+        const hasLiked = safeLikes.some(l => l.user_email === currentUserEmail);
+        const imgTag = post.image_url ? `<img src="${post.image_url}" class="rounded-xl max-h-72 w-full object-cover my-2 border border-zinc-800" />` : '';
+        
+        const commentsHTML = safeComments.map(c => `
+          <div class="text-xs bg-zinc-950 p-2 rounded-lg border border-zinc-900"><span class="font-bold text-indigo-400">${c.user_email ? c.user_email.split('@')[0] : 'User'}:</span> ${c.content}</div>
+        `).join('');
 
         const card = document.createElement('div');
         card.className = "bg-zinc-900 p-4 rounded-2xl border border-zinc-800 space-y-2 shadow-sm";
         card.innerHTML = `
           <div class="flex justify-between items-center text-xs text-zinc-500">
-            <span class="font-bold text-zinc-300">@${escapeHTML(post.username)}</span>
+            <span class="font-bold text-zinc-300">${post.user_email ? post.user_email.split('@')[0] : 'User'}</span>
             <span>${new Date(post.created_at).toLocaleDateString()}</span>
           </div>
-          <p class="text-sm text-zinc-100 whitespace-pre-wrap">${escapeHTML(post.content)}</p>
+          <p class="text-sm text-zinc-100 whitespace-pre-wrap">${post.content}</p>
           ${imgTag}
           <div class="flex items-center gap-4 py-1 text-xs">
             <button onclick="toggleLike('${post.id}', ${hasLiked})" class="${hasLiked ? 'text-pink-500 font-bold' : 'text-zinc-400'} flex items-center gap-1">
-              ❤️ <span>${post.likes ? post.likes.length : 0}</span>
+              ❤️ <span>${safeLikes.length}</span>
             </button>
           </div>
           <div class="space-y-1.5 pt-2 border-t border-zinc-950">${commentsHTML}</div>
           <form onsubmit="addComment(event, '${post.id}')" class="flex gap-2 mt-2">
-            <input type="text" placeholder="Reply..." required class="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg text-xs px-2 py-1.5 focus:outline-none text-zinc-100">
-            <button class="bg-indigo-600 text-white text-xs px-3 py-1 rounded-lg font-bold">Send</button>
+            <input type="text" placeholder="Write a comment..." required class="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg text-xs px-2 py-1.5 focus:outline-none text-zinc-100">
+            <button class="bg-indigo-600 text-white text-xs px-3 py-1 rounded-lg font-bold">Post</button>
           </form>
         `;
         container.appendChild(card);
@@ -266,9 +228,9 @@
 
     async function toggleLike(postId, hasLiked) {
       if (hasLiked) {
-        await supabase.from('likes').delete().eq('post_id', postId).eq('username', currentUsername);
+        await supabase.from('likes').delete().eq('post_id', postId).eq('user_email', currentUserEmail);
       } else {
-        await supabase.from('likes').insert([{ post_id: postId, username: currentUsername }]);
+        await supabase.from('likes').insert([{ post_id: postId, user_email: currentUserEmail }]);
       }
       fetchFeed();
     }
@@ -276,18 +238,17 @@
     async function addComment(e, postId) {
       e.preventDefault();
       const input = e.target.querySelector('input');
-      const text = input.value.trim();
-      if(!text) return;
-      await supabase.from('comments').insert([{ post_id: postId, username: currentUsername, content: text }]);
+      await supabase.from('comments').insert([{ post_id: postId, user_email: currentUserEmail, content: input.value }]);
       input.value = '';
       fetchFeed();
     }
 
-    // ================= POLL MODULE =================
+    // ================= MODULE 2: LIVE POLL ENGINE =================
     document.getElementById('poll-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const question = document.getElementById('poll-question').value.trim();
-      const optionsArr = document.getElementById('poll-options').value.split(',').map(o => o.trim()).filter(o => o.length > 0);
+      const question = document.getElementById('poll-question').value;
+      const optionsArr = document.getElementById('poll-options').value.split(',').map(o => o.trim());
+      
       const initialVotes = {};
       optionsArr.forEach(opt => initialVotes[opt] = 0);
 
@@ -297,27 +258,22 @@
     });
 
     async function fetchPolls() {
-      const { data: polls } = await supabase.from('polls').select('*').order('created_at', { ascending: false });
+      const { data: polls, error } = await supabase.from('polls').select('*').order('created_at', { ascending: false });
       const container = document.getElementById('polls-container');
-      if (!container) return; container.innerHTML = '';
+      container.innerHTML = '';
 
-      if (!polls || polls.length === 0) {
-        container.innerHTML = `<p class="text-zinc-500 text-center py-8 text-xs">No custom decisions yet.</p>`;
-        return;
-      }
-
-      polls.forEach(poll => {
-        let totalVotes = Object.values(poll.votes).reduce((a, b) => a + b, 0) || 0;
-        let displayTotal = totalVotes === 0 ? 1 : totalVotes;
-
-        const optionsHTML = poll.options.map(opt => {
-          const count = poll.votes[opt] || 0;
-          const percentage = Math.round((count / displayTotal) * 100);
+      const safePolls = polls || [];
+      safePolls.forEach(poll => {
+        const votesObj = poll.votes || {};
+        let totalVotes = Object.values(votesObj).reduce((a, b) => a + b, 0) || 1;
+        const optionsHTML = (poll.options || []).map(opt => {
+          const count = votesObj[opt] || 0;
+          const percentage = Math.round((count / totalVotes) * 100);
           return `
-            <button onclick="votePoll('${poll.id}', '${escapeQuotes(opt)}')" class="w-full text-left bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 rounded-xl relative overflow-hidden p-3 mb-1.5">
-              <div class="bg-indigo-600/20 absolute top-0 left-0 bottom-0 timeline-bar" style="width: ${percentage}%"></div>
+            <button onclick="votePoll('${poll.id}', '${opt}')" class="w-full text-left bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 rounded-xl relative overflow-hidden p-3 transition-all active:scale-[0.99]">
+              <div class="bg-indigo-600/20 absolute top-0 left-0 bottom-0 transition-all duration-500" style="width: ${percentage}%"></div>
               <div class="relative flex justify-between text-xs font-bold">
-                <span>${escapeHTML(opt)}</span>
+                <span>${opt}</span>
                 <span class="text-indigo-400">${count} votes (${percentage}%)</span>
               </div>
             </button>
@@ -325,56 +281,53 @@
         }).join('');
 
         const card = document.createElement('div');
-        card.className = "bg-zinc-900 p-4 rounded-2xl border border-zinc-800 shadow-sm";
-        card.innerHTML = `<h3 class="text-sm font-bold text-zinc-100 mb-2">${escapeHTML(poll.question)}</h3><div>${optionsHTML}</div>`;
+        card.className = "bg-zinc-900 p-4 rounded-2xl border border-zinc-800 space-y-3";
+        card.innerHTML = `<h3 class="text-sm font-bold text-zinc-100">${poll.question}</h3><div class="space-y-2">${optionsHTML}</div>`;
         container.appendChild(card);
       });
     }
 
     async function votePoll(pollId, selectedOption) {
       const { data: poll } = await supabase.from('polls').select('*').eq('id', pollId).single();
-      if(!poll) return;
-      const updatedVotes = { ...poll.votes };
+      if (!poll) return;
+      const updatedVotes = { ...(poll.votes || {}) };
       updatedVotes[selectedOption] = (updatedVotes[selectedOption] || 0) + 1;
+      
       await supabase.from('polls').update({ votes: updatedVotes }).eq('id', pollId);
       fetchPolls();
     }
 
-    // ================= COUNTDOWN MODULE =================
+    // ================= MODULE 3: BUCKET LIST & COUNTDOWNS =================
     document.getElementById('bucket-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const title = document.getElementById('bucket-title').value.trim();
+      const title = document.getElementById('bucket-title').value;
       const target_date = document.getElementById('bucket-date').value;
+      
       await supabase.from('bucket_list').insert([{ title, target_date }]);
       document.getElementById('bucket-form').reset();
       fetchBucketList();
     });
 
     async function fetchBucketList() {
-      const { data: events } = await supabase.from('bucket_list').select('*').order('target_date', { ascending: true });
+      const { data: events, error } = await supabase.from('bucket_list').select('*').order('target_date', { ascending: true });
       const container = document.getElementById('bucket-container');
-      if (!container) return; container.innerHTML = '';
+      container.innerHTML = '';
 
-      if (!events || events.length === 0) {
-        container.innerHTML = `<p class="text-zinc-500 text-center py-8 text-xs">No milestones created yet.</p>`;
-        return;
-      }
-
-      events.forEach(ev => {
-        const target = new Date(ev.target_date + 'T00:00:00');
-        const today = new Date(); today.setHours(0,0,0,0);
-        const daysLeft = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
-        let countdownText = daysLeft > 0 ? `⏳ ${daysLeft} days left` : daysLeft === 0 ? "🎉 TODAY!" : "✅ Completed";
-
+      const safeEvents = events || [];
+      safeEvents.forEach(ev => {
+        const timeDiff = new Date(ev.target_date) - new Date();
+        const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+        let countdownText = daysLeft > 0 ? `⏳ ${daysLeft} days left` : daysLeft === 0 ? "🎉 HAPPENING TODAY!" : "✅ Completed / Past Event";
+        
         const card = document.createElement('div');
-        card.className = `bg-zinc-900 p-4 rounded-2xl border ${ev.is_completed ? 'border-emerald-900/40 opacity-60' : 'border-zinc-800'} flex justify-between items-center`;
+        card.className = `bg-zinc-900 p-4 rounded-2xl border ${ev.is_completed ? 'border-emerald-900/40 opacity-60' : 'border-zinc-800'} flex justify-between items-center shadow-sm`;
         card.innerHTML = `
           <div>
-            <h4 class="text-sm font-bold ${ev.is_completed ? 'line-through text-zinc-500' : 'text-zinc-100'}">${escapeHTML(ev.title)}</h4>
+            <h4 class="text-sm font-bold ${ev.is_completed ? 'line-through text-zinc-500' : 'text-zinc-100'}">${ev.title}</h4>
             <p class="text-[11px] font-medium text-zinc-400 mt-0.5">${countdownText}</p>
           </div>
-          <button onclick="toggleBucketComplete('${ev.id}', ${ev.is_completed})" class="text-xs bg-zinc-950 border border-zinc-800 px-3 py-1.5 rounded-xl font-bold">
-            ${ev.is_completed ? 'Reset' : 'Done'}
+          <button onclick="toggleBucketComplete('${ev.id}', ${ev.is_completed})" class="text-sm bg-zinc-950 p-2 rounded-xl border border-zinc-800">
+            ${ev.is_completed ? '🔄 Undo' : '✅ Done'}
           </button>
         `;
         container.appendChild(card);
@@ -386,17 +339,7 @@
       fetchBucketList();
     }
 
-    function escapeHTML(str) {
-      if(!str) return '';
-      return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
-    }
-    function escapeQuotes(str) {
-      if(!str) return '';
-      return str.replace(/'/g, "\\'");
-    }
-
-    // Fire it up
-    initSession();
+    checkUser();
   </script>
 </body>
 </html>
