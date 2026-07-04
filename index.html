@@ -139,22 +139,26 @@
       userDisplay.innerText = `@${currentUser.nickname}`;
       switchTab('feed');
     }
+// REGISTRY AUTH HANDLER
+authForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-    // REGISTRY AUTH HANDLER
-    authForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      authError.classList.add('hidden');
-      authError.innerText = '';
+    authError.classList.add('hidden');
+    authError.innerText = '';
 
-      const rawNickname = document.getElementById('input-nickname').value.trim();
-      
-      if (rawNickname.includes(' ') || rawNickname.includes('@')) {
-        authError.innerText = 'Nicknames cannot contain spaces or "@" marks.';
+    let rawNickname = document
+        .getElementById('input-nickname')
+        .value
+        .trim()
+        .replace(/\s+/g, ' ');
+
+    if (rawNickname.includes('@')) {
+        authError.innerText = 'Nickname cannot contain "@".';
         authError.classList.remove('hidden');
         return;
-      }
+    }
 
-      try {
+    try {
         const { data: searchUser, error: fetchErr } = await supabase.from('users').select('*').eq('nickname', rawNickname).maybeSingle();
         
         if (searchUser) {
