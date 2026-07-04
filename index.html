@@ -13,35 +13,33 @@
     <div class="bg-zinc-900 p-8 rounded-2xl w-full max-w-md border border-zinc-800 shadow-2xl">
       <h1 class="text-5xl font-black text-center mb-2 tracking-wider text-indigo-500 uppercase">Kulix</h1>
       <p class="text-zinc-400 text-center text-sm mb-6 font-medium">Teens Only Hub</p>
-      <form id="login-form" class="space-y-4">
+      
+      <form id="auth-form" class="space-y-4">
         <div>
-          <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1">Username</label>
-          <input type="text" id="username-input" required placeholder="e.g., coolteen42" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 focus:outline-none focus:border-indigo-500 transition-colors">
+          <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1 tracking-wider">Choose a Nickname</label>
+          <input type="text" id="input-nickname" maxlength="25" required placeholder="e.g., skate_pro" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 focus:outline-none focus:border-indigo-500 transition-colors">
         </div>
-        <div>
-          <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1">Password</label>
-          <input type="password" id="password" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 focus:outline-none focus:border-indigo-500 transition-colors">
-        </div>
-        <div class="flex gap-3">
-          <button type="submit" id="submit-login" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98]">
-            Log In
-          </button>
-          <button type="button" id="submit-signup" class="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold py-3 rounded-xl transition-all active:scale-[0.98]">
-            Sign Up
-          </button>
-        </div>
+        
+        <div id="auth-error" class="hidden text-red-400 font-medium text-xs border border-red-900/50 bg-red-950/20 p-2.5 rounded-xl"></div>
+
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98]">
+          Enter Space
+        </button>
       </form>
     </div>
   </div>
 
   <div id="app-screen" class="hidden max-w-2xl mx-auto px-4 pt-6">
-    <header class="flex justify-between items-center mb-6">
-      <div>
-        <h1 class="text-3xl font-black text-indigo-400 tracking-wide uppercase">Kulix</h1>
-        <p id="user-display" class="text-xs text-zinc-500 font-medium"></p>
+    <header class="flex justify-between items-center mb-6 bg-zinc-900/50 p-4 border border-zinc-800 rounded-2xl">
+      <div class="flex items-center space-x-3">
+        <img id="user-avatar" src="" alt="Identity Token" class="w-10 h-10 rounded-xl border border-indigo-500 bg-zinc-950" />
+        <div>
+          <h1 class="text-2xl font-black text-indigo-400 tracking-wide uppercase leading-none mb-1">Kulix</h1>
+          <p id="user-display" class="text-xs text-zinc-400 font-bold tracking-tight"></p>
+        </div>
       </div>
-      <button id="logout-btn" class="text-xs bg-zinc-900 hover:bg-zinc-800 px-3 py-2 rounded-xl border border-zinc-800 font-medium transition-colors">
-        Log Out
+      <button id="logout-btn" class="text-xs bg-zinc-950 hover:bg-zinc-900 px-3 py-2 rounded-xl border border-zinc-800 font-semibold transition-colors text-zinc-400 hover:text-zinc-200">
+        Exit Hub
       </button>
     </header>
 
@@ -102,79 +100,86 @@
   </nav>
 
   <script>
-     // ⚠️ TO DO: PASTE YOUR UNIQUE SUPABASE KEYS RIGHT HERE
+   // ⚠️ TO DO: PASTE YOUR UNIQUE SUPABASE KEYS RIGHT HERE
     const SUPABASE_URL = "https://vmjcaccyphhmirxnoipv.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_9ajwIGyWEUZfRxwtsdHD6g__Xi2hvwg";
 
-
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    let currentUsername = "";
-
-    // Helper to generate fake internal email mask from nickname
-    function makeEmail(username) {
-      return `${username.trim().toLowerCase()}@kulix.local`;
-    }
-
-    // Helper to extract username cleanly back from user instance
-    function extractUsername(email) {
-      if (!email) return "User";
-      return email.split('@')[0];
-    }
+    
+    // Runtime User Memory Cache Mapping
+    let currentUser = null;
 
     const authScreen = document.getElementById('auth-screen');
     const appScreen = document.getElementById('app-screen');
     const bottomNav = document.getElementById('bottom-nav');
-    const loginForm = document.getElementById('login-form');
+    const authForm = document.getElementById('auth-form');
+    const authError = document.getElementById('auth-error');
     const userDisplay = document.getElementById('user-display');
 
-    async function checkUser() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        currentUsername = extractUsername(session.user.email);
-        userDisplay.innerText = `Logged in as: @${currentUsername}`;
-        authScreen.classList.add('hidden');
-        appScreen.classList.remove('hidden');
-        bottomNav.classList.remove('hidden');
-        switchTab('feed');
-      } else {
-        authScreen.classList.remove('hidden');
-        appScreen.classList.add('hidden');
-        bottomNav.classList.add('hidden');
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedSession = localStorage.getItem('kulix_registered_user');
+      if (savedSession) {
+        currentUser = JSON.parse(savedSession);
+        renderAppSpace();
       }
+    });
+
+    function renderAppSpace() {
+      authScreen.classList.add('hidden');
+      appScreen.classList.remove('hidden');
+      bottomNav.classList.remove('hidden');
+      
+      document.getElementById('user-avatar').src = currentUser.avatar_url;
+      userDisplay.innerText = `@${currentUser.nickname}`;
+      switchTab('feed');
     }
 
-    loginForm.addEventListener('submit', async (e) => {
+    // IDENTITY INTERCEPTOR ENGINE
+    authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const rawUser = document.getElementById('username-input').value;
-      const password = document.getElementById('password').value;
-      const email = makeEmail(rawUser);
+      authError.classList.add('hidden');
+      authError.innerText = '';
 
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) alert(error.message); else checkUser();
-    });
-
-    document.getElementById('submit-signup').addEventListener('click', async () => {
-      const rawUser = document.getElementById('username-input').value;
-      const password = document.getElementById('password').value;
-      if (!rawUser || !password) {
-        alert("Please enter both username and password first.");
-        return;
-      }
+      const rawNickname = document.getElementById('input-nickname').value.trim();
       
-      // Clean check to ensure username doesn't contain bad characters
-      if (rawUser.includes('@') || rawUser.includes(' ')) {
-        alert("Username cannot contain spaces or '@' symbols!");
+      if (rawNickname.includes(' ') || rawNickname.includes('@')) {
+        authError.innerText = 'Nicknames cannot contain spaces or "@" marks.';
+        authError.classList.remove('hidden');
         return;
       }
 
-      const email = makeEmail(rawUser);
-      const { error } = await supabase.auth.signUp({ email, password });
-      if (error) alert(error.message); else alert("Signup successful! You can now log in using your username.");
+      // Check for user or insert if not taken
+      const { data: searchUser } = await supabase.from('users').select('*').eq('nickname', rawNickname).maybeSingle();
+      
+      if (searchUser) {
+        // Log in as existing user
+        currentUser = searchUser;
+        localStorage.setItem('kulix_registered_user', JSON.stringify(searchUser));
+        renderAppSpace();
+      } else {
+        // Create new user profile
+        const avatarUrl = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(rawNickname)}`;
+        
+        const { data: newUser, error } = await supabase
+          .from('users')
+          .insert([{ nickname: rawNickname, avatar_url: avatarUrl }])
+          .select().single();
+
+        if (error) {
+          authError.innerText = 'That identity signature is currently unavailable.';
+          authError.classList.remove('hidden');
+          return;
+        }
+
+        currentUser = newUser;
+        localStorage.setItem('kulix_registered_user', JSON.stringify(newUser));
+        renderAppSpace();
+      }
     });
 
-    document.getElementById('logout-btn').addEventListener('click', async () => {
-      await supabase.auth.signOut();
-      window.location.reload();
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      localStorage.removeItem('kulix_registered_user');
+      location.reload();
     });
 
     function switchTab(tabId) {
@@ -197,13 +202,13 @@
       if(tabId === 'bucket') fetchBucketList();
     }
 
-    // ================= MODULE 1: SOCIAL FEED ENGINE =================
+    // ================= MODULE 1: INTERACTION SOCIAL STREAM =================
     document.getElementById('post-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const content = document.getElementById('post-content').value.trim();
       const image_url = document.getElementById('post-image').value.trim();
       
-      await supabase.from('posts').insert([{ username: currentUsername, content, image_url }]);
+      await supabase.from('posts').insert([{ user_id: currentUser.id, nickname: currentUser.nickname, content, image_url }]);
       document.getElementById('post-form').reset();
       fetchFeed();
     });
@@ -214,24 +219,29 @@
       container.innerHTML = '';
 
       const safePosts = posts || [];
+      if(safePosts.length === 0) {
+        container.innerHTML = `<p class="text-zinc-600 text-center text-xs py-8 font-mono">No updates shared on the wall yet.</p>`;
+        return;
+      }
+
       safePosts.forEach(post => {
         const safeLikes = post.likes || [];
         const safeComments = post.comments || [];
-        const hasLiked = safeLikes.some(l => l.username === currentUsername);
+        const hasLiked = safeLikes.some(l => l.user_id === currentUser.id);
         const imgTag = post.image_url ? `<img src="${post.image_url}" class="rounded-xl max-h-72 w-full object-cover my-2 border border-zinc-800" />` : '';
         
         const commentsHTML = safeComments.map(c => `
-          <div class="text-xs bg-zinc-950 p-2 rounded-lg border border-zinc-900"><span class="font-bold text-indigo-400">@${c.username || 'user'}:</span> ${c.content}</div>
+          <div class="text-xs bg-zinc-950 p-2 rounded-lg border border-zinc-900"><span class="font-bold text-indigo-400">@${escapeHTML(c.nickname)}:</span> ${escapeHTML(c.content)}</div>
         `).join('');
 
         const card = document.createElement('div');
         card.className = "bg-zinc-900 p-4 rounded-2xl border border-zinc-800 space-y-2 shadow-sm";
         card.innerHTML = `
           <div class="flex justify-between items-center text-xs text-zinc-500">
-            <span class="font-bold text-zinc-300">@${post.username || 'user'}</span>
+            <span class="font-bold text-zinc-300">@${escapeHTML(post.nickname)}</span>
             <span>${new Date(post.created_at).toLocaleDateString()}</span>
           </div>
-          <p class="text-sm text-zinc-100 whitespace-pre-wrap">${post.content}</p>
+          <p class="text-sm text-zinc-100 whitespace-pre-wrap break-words">${escapeHTML(post.content)}</p>
           ${imgTag}
           <div class="flex items-center gap-4 py-1 text-xs">
             <button onclick="toggleLike('${post.id}', ${hasLiked})" class="${hasLiked ? 'text-pink-500 font-bold' : 'text-zinc-400'} flex items-center gap-1">
@@ -250,9 +260,9 @@
 
     async function toggleLike(postId, hasLiked) {
       if (hasLiked) {
-        await supabase.from('likes').delete().eq('post_id', postId).eq('username', currentUsername);
+        await supabase.from('likes').delete().eq('post_id', postId).eq('user_id', currentUser.id);
       } else {
-        await supabase.from('likes').insert([{ post_id: postId, username: currentUsername }]);
+        await supabase.from('likes').insert([{ post_id: postId, user_id: currentUser.id, nickname: currentUser.nickname }]);
       }
       fetchFeed();
     }
@@ -260,15 +270,15 @@
     async function addComment(e, postId) {
       e.preventDefault();
       const input = e.target.querySelector('input');
-      await supabase.from('comments').insert([{ post_id: postId, username: currentUsername, content: input.value }]);
+      await supabase.from('comments').insert([{ post_id: postId, user_id: currentUser.id, nickname: currentUser.nickname, content: input.value.trim() }]);
       input.value = '';
       fetchFeed();
     }
 
-    // ================= MODULE 2: LIVE POLL ENGINE =================
+    // ================= MODULE 2: LIVE VOTING DATA METRICS =================
     document.getElementById('poll-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const question = document.getElementById('poll-question').value;
+      const question = document.getElementById('poll-question').value.trim();
       const optionsArr = document.getElementById('poll-options').value.split(',').map(o => o.trim());
       
       const initialVotes = {};
@@ -285,6 +295,11 @@
       container.innerHTML = '';
 
       const safePolls = polls || [];
+      if(safePolls.length === 0) {
+        container.innerHTML = `<p class="text-zinc-600 text-center text-xs py-8 font-mono">No surveys launched yet.</p>`;
+        return;
+      }
+
       safePolls.forEach(poll => {
         const votesObj = poll.votes || {};
         let totalVotes = Object.values(votesObj).reduce((a, b) => a + b, 0) || 1;
@@ -292,10 +307,10 @@
           const count = votesObj[opt] || 0;
           const percentage = Math.round((count / totalVotes) * 100);
           return `
-            <button onclick="votePoll('${poll.id}', '${opt}')" class="w-full text-left bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 rounded-xl relative overflow-hidden p-3 transition-all active:scale-[0.99]">
+            <button onclick="votePoll('${poll.id}', '${escapeQuotes(opt)}')" class="w-full text-left bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 rounded-xl relative overflow-hidden p-3 transition-all active:scale-[0.99]">
               <div class="bg-indigo-600/20 absolute top-0 left-0 bottom-0 transition-all duration-500" style="width: ${percentage}%"></div>
               <div class="relative flex justify-between text-xs font-bold">
-                <span>${opt}</span>
+                <span>${escapeHTML(opt)}</span>
                 <span class="text-indigo-400">${count} votes (${percentage}%)</span>
               </div>
             </button>
@@ -304,7 +319,7 @@
 
         const card = document.createElement('div');
         card.className = "bg-zinc-900 p-4 rounded-2xl border border-zinc-800 space-y-3";
-        card.innerHTML = `<h3 class="text-sm font-bold text-zinc-100">${poll.question}</h3><div class="space-y-2">${optionsHTML}</div>`;
+        card.innerHTML = `<h3 class="text-sm font-bold text-zinc-100">${escapeHTML(poll.question)}</h3><div class="space-y-2">${optionsHTML}</div>`;
         container.appendChild(card);
       });
     }
@@ -319,10 +334,10 @@
       fetchPolls();
     }
 
-    // ================= MODULE 3: BUCKET LIST & COUNTDOWNS =================
+    // ================= MODULE 3: COUNTDOWNS PLANNER SYSTEM =================
     document.getElementById('bucket-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const title = document.getElementById('bucket-title').value;
+      const title = document.getElementById('bucket-title').value.trim();
       const target_date = document.getElementById('bucket-date').value;
       
       await supabase.from('bucket_list').insert([{ title, target_date }]);
@@ -336,6 +351,11 @@
       container.innerHTML = '';
 
       const safeEvents = events || [];
+      if(safeEvents.length === 0) {
+        container.innerHTML = `<p class="text-zinc-600 text-center text-xs py-8 font-mono">No upcoming target logs recorded.</p>`;
+        return;
+      }
+
       safeEvents.forEach(ev => {
         const timeDiff = new Date(ev.target_date) - new Date();
         const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
@@ -345,10 +365,10 @@
         card.className = `bg-zinc-900 p-4 rounded-2xl border ${ev.is_completed ? 'border-emerald-900/40 opacity-60' : 'border-zinc-800'} flex justify-between items-center shadow-sm`;
         card.innerHTML = `
           <div>
-            <h4 class="text-sm font-bold ${ev.is_completed ? 'line-through text-zinc-500' : 'text-zinc-100'}">${ev.title}</h4>
+            <h4 class="text-sm font-bold ${ev.is_completed ? 'line-through text-zinc-500' : 'text-zinc-100'}">${escapeHTML(ev.title)}</h4>
             <p class="text-[11px] font-medium text-zinc-400 mt-0.5">${countdownText}</p>
           </div>
-          <button onclick="toggleBucketComplete('${ev.id}', ${ev.is_completed})" class="text-sm bg-zinc-950 p-2 rounded-xl border border-zinc-800">
+          <button onclick="toggleBucketComplete('${ev.id}', ${ev.is_completed})" class="text-sm bg-zinc-950 p-2 rounded-xl border border-zinc-800 font-semibold">
             ${ev.is_completed ? '🔄 Undo' : '✅ Done'}
           </button>
         `;
@@ -361,7 +381,15 @@
       fetchBucketList();
     }
 
-    checkUser();
+    // Safety Sanitization Utilities
+    function escapeHTML(str) {
+      if(!str) return '';
+      return str.replace(/[&<>'\"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
+    }
+    function escapeQuotes(str) {
+      if(!str) return '';
+      return str.replace(/'/g, "\\'");
+    }
   </script>
 </body>
 </html>
