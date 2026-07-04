@@ -100,13 +100,12 @@
   </nav>
 
   <script>
+
    // ⚠️ TO DO: PASTE YOUR UNIQUE SUPABASE KEYS RIGHT HERE
     const SUPABASE_URL = "https://vmjcaccyphhmirxnoipv.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_9ajwIGyWEUZfRxwtsdHD6g__Xi2hvwg";
 
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    
-    // Runtime User Memory Cache Mapping
     let currentUser = null;
 
     const authScreen = document.getElementById('auth-screen');
@@ -134,7 +133,6 @@
       switchTab('feed');
     }
 
-    // IDENTITY INTERCEPTOR ENGINE
     authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       authError.classList.add('hidden');
@@ -148,16 +146,13 @@
         return;
       }
 
-      // Check for user or insert if not taken
       const { data: searchUser } = await supabase.from('users').select('*').eq('nickname', rawNickname).maybeSingle();
       
       if (searchUser) {
-        // Log in as existing user
         currentUser = searchUser;
         localStorage.setItem('kulix_registered_user', JSON.stringify(searchUser));
         renderAppSpace();
       } else {
-        // Create new user profile
         const avatarUrl = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(rawNickname)}`;
         
         const { data: newUser, error } = await supabase
@@ -166,7 +161,7 @@
           .select().single();
 
         if (error) {
-          authError.innerText = 'That identity signature is currently unavailable.';
+          authError.innerText = 'Could not register nickname. Try another one.';
           authError.classList.remove('hidden');
           return;
         }
@@ -202,7 +197,7 @@
       if(tabId === 'bucket') fetchBucketList();
     }
 
-    // ================= MODULE 1: INTERACTION SOCIAL STREAM =================
+    // ================= MODULE 1: ATOMIC FEED TRACKER =================
     document.getElementById('post-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const content = document.getElementById('post-content').value.trim();
@@ -228,7 +223,7 @@
         const safeLikes = post.likes || [];
         const safeComments = post.comments || [];
         const hasLiked = safeLikes.some(l => l.user_id === currentUser.id);
-        const imgTag = post.image_url ? `<img src="${post.image_url}" class="rounded-xl max-h-72 w-full object-cover my-2 border border-zinc-800" />` : '';
+        const imgTag = post.image_url ? `<img src="${escapeHTML(post.image_url)}" class="rounded-xl max-h-72 w-full object-cover my-2 border border-zinc-800" />` : '';
         
         const commentsHTML = safeComments.map(c => `
           <div class="text-xs bg-zinc-950 p-2 rounded-lg border border-zinc-900"><span class="font-bold text-indigo-400">@${escapeHTML(c.nickname)}:</span> ${escapeHTML(c.content)}</div>
@@ -244,16 +239,26 @@
           <p class="text-sm text-zinc-100 whitespace-pre-wrap break-words">${escapeHTML(post.content)}</p>
           ${imgTag}
           <div class="flex items-center gap-4 py-1 text-xs">
-            <button onclick="toggleLike('${post.id}', ${hasLiked})" class="${hasLiked ? 'text-pink-500 font-bold' : 'text-zinc-400'} flex items-center gap-1">
+            <button class="like-toggle-btn ${hasLiked ? 'text-pink-500 font-bold' : 'text-zinc-400'} flex items-center gap-1">
               ❤️ <span>${safeLikes.length}</span>
             </button>
           </div>
           <div class="space-y-1.5 pt-2 border-t border-zinc-950">${commentsHTML}</div>
-          <form onsubmit="addComment(event, '${post.id}')" class="flex gap-2 mt-2">
+          <form class="comment-submission-form flex gap-2 mt-2">
             <input type="text" placeholder="Write a comment..." required class="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg text-xs px-2 py-1.5 focus:outline-none text-zinc-100">
             <button class="bg-indigo-600 text-white text-xs px-3 py-1 rounded-lg font-bold">Post</button>
           </form>
         `;
+
+        // Direct Event Attachment Layer to prevent single/double quote string crashes
+        card.querySelector('.like-toggle-btn').addEventListener('click', () => toggleLike(post.id, hasLiked));
+        card.querySelector('.comment-submission-form').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const input = e.target.querySelector('input');
+          addComment(post.id, input.value.trim());
+          input.value = '';
+        });
+
         container.appendChild(card);
       });
     }
@@ -267,15 +272,13 @@
       fetchFeed();
     }
 
-    async function addComment(e, postId) {
-      e.preventDefault();
-      const input = e.target.querySelector('input');
-      await supabase.from('comments').insert([{ post_id: postId, user_id: currentUser.id, nickname: currentUser.nickname, content: input.value.trim() }]);
-      input.value = '';
+    async function addComment(postId, commentText) {
+      if(!commentText) return;
+      await supabase.from('comments').insert([{ post_id: postId, user_id: currentUser.id, nickname: currentUser.nickname, content: commentText }]);
       fetchFeed();
     }
 
-    // ================= MODULE 2: LIVE VOTING DATA METRICS =================
+    // ================= MODULE 2: ATOMIC SURVEYS / POLLS =================
     document.getElementById('poll-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const question = document.getElementById('poll-question').value.trim();
@@ -303,23 +306,32 @@
       safePolls.forEach(poll => {
         const votesObj = poll.votes || {};
         let totalVotes = Object.values(votesObj).reduce((a, b) => a + b, 0) || 1;
-        const optionsHTML = (poll.options || []).map(opt => {
-          const count = votesObj[opt] || 0;
-          const percentage = Math.round((count / totalVotes) * 100);
-          return `
-            <button onclick="votePoll('${poll.id}', '${escapeQuotes(opt)}')" class="w-full text-left bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 rounded-xl relative overflow-hidden p-3 transition-all active:scale-[0.99]">
-              <div class="bg-indigo-600/20 absolute top-0 left-0 bottom-0 transition-all duration-500" style="width: ${percentage}%"></div>
-              <div class="relative flex justify-between text-xs font-bold">
-                <span>${escapeHTML(opt)}</span>
-                <span class="text-indigo-400">${count} votes (${percentage}%)</span>
-              </div>
-            </button>
-          `;
-        }).join('');
 
         const card = document.createElement('div');
         card.className = "bg-zinc-900 p-4 rounded-2xl border border-zinc-800 space-y-3";
-        card.innerHTML = `<h3 class="text-sm font-bold text-zinc-100">${escapeHTML(poll.question)}</h3><div class="space-y-2">${optionsHTML}</div>`;
+        card.innerHTML = `<h3 class="text-sm font-bold text-zinc-100">${escapeHTML(poll.question)}</h3><div class="poll-options-box space-y-2"></div>`;
+        
+        const optionsBox = card.querySelector('.poll-options-box');
+
+        (poll.options || []).forEach(opt => {
+          const count = votesObj[opt] || 0;
+          const percentage = Math.round((count / totalVotes) * 100);
+
+          const optBtn = document.createElement('button');
+          optBtn.className = "w-full text-left bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 rounded-xl relative overflow-hidden p-3 transition-all active:scale-[0.99]";
+          optBtn.innerHTML = `
+            <div class="bg-indigo-600/20 absolute top-0 left-0 bottom-0 transition-all duration-500" style="width: ${percentage}%"></div>
+            <div class="relative flex justify-between text-xs font-bold">
+              <span>${escapeHTML(opt)}</span>
+              <span class="text-indigo-400">${count} votes (${percentage}%)</span>
+            </div>
+          `;
+          
+          // Secure Event Handler Binding without string-injection pitfalls
+          optBtn.addEventListener('click', () => votePoll(poll.id, opt));
+          optionsBox.appendChild(optBtn);
+        });
+
         container.appendChild(card);
       });
     }
@@ -334,7 +346,7 @@
       fetchPolls();
     }
 
-    // ================= MODULE 3: COUNTDOWNS PLANNER SYSTEM =================
+    // ================= MODULE 3: TARGET TRACKERS =================
     document.getElementById('bucket-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const title = document.getElementById('bucket-title').value.trim();
@@ -368,10 +380,12 @@
             <h4 class="text-sm font-bold ${ev.is_completed ? 'line-through text-zinc-500' : 'text-zinc-100'}">${escapeHTML(ev.title)}</h4>
             <p class="text-[11px] font-medium text-zinc-400 mt-0.5">${countdownText}</p>
           </div>
-          <button onclick="toggleBucketComplete('${ev.id}', ${ev.is_completed})" class="text-sm bg-zinc-950 p-2 rounded-xl border border-zinc-800 font-semibold">
+          <button class="status-toggle-action text-sm bg-zinc-950 p-2 rounded-xl border border-zinc-800 font-semibold">
             ${ev.is_completed ? '🔄 Undo' : '✅ Done'}
           </button>
         `;
+
+        card.querySelector('.status-toggle-action').addEventListener('click', () => toggleBucketComplete(ev.id, ev.is_completed));
         container.appendChild(card);
       });
     }
@@ -381,14 +395,10 @@
       fetchBucketList();
     }
 
-    // Safety Sanitization Utilities
+    // Safety Sanitization Utility
     function escapeHTML(str) {
       if(!str) return '';
       return str.replace(/[&<>'\"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
-    }
-    function escapeQuotes(str) {
-      if(!str) return '';
-      return str.replace(/'/g, "\\'");
     }
   </script>
 </body>
