@@ -15,8 +15,8 @@
       <p class="text-zinc-400 text-center text-sm mb-6 font-medium">Teens Only Hub</p>
       <form id="login-form" class="space-y-4">
         <div>
-          <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1">Email</label>
-          <input type="email" id="email" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 focus:outline-none focus:border-indigo-500 transition-colors">
+          <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1">Username</label>
+          <input type="text" id="username-input" required placeholder="e.g., coolteen42" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 focus:outline-none focus:border-indigo-500 transition-colors">
         </div>
         <div>
           <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1">Password</label>
@@ -106,8 +106,20 @@
     const SUPABASE_URL = "https://vmjcaccyphhmirxnoipv.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_9ajwIGyWEUZfRxwtsdHD6g__Xi2hvwg";
 
+
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    let currentUserEmail = "";
+    let currentUsername = "";
+
+    // Helper to generate fake internal email mask from nickname
+    function makeEmail(username) {
+      return `${username.trim().toLowerCase()}@kulix.local`;
+    }
+
+    // Helper to extract username cleanly back from user instance
+    function extractUsername(email) {
+      if (!email) return "User";
+      return email.split('@')[0];
+    }
 
     const authScreen = document.getElementById('auth-screen');
     const appScreen = document.getElementById('app-screen');
@@ -118,8 +130,8 @@
     async function checkUser() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        currentUserEmail = session.user.email;
-        userDisplay.innerText = `Logged in as: ${currentUserEmail}`;
+        currentUsername = extractUsername(session.user.email);
+        userDisplay.innerText = `Logged in as: @${currentUsername}`;
         authScreen.classList.add('hidden');
         appScreen.classList.remove('hidden');
         bottomNav.classList.remove('hidden');
@@ -133,21 +145,31 @@
 
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value;
+      const rawUser = document.getElementById('username-input').value;
       const password = document.getElementById('password').value;
+      const email = makeEmail(rawUser);
+
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) alert(error.message); else checkUser();
     });
 
     document.getElementById('submit-signup').addEventListener('click', async () => {
-      const email = document.getElementById('email').value;
+      const rawUser = document.getElementById('username-input').value;
       const password = document.getElementById('password').value;
-      if (!email || !password) {
-        alert("Please enter both email and password first.");
+      if (!rawUser || !password) {
+        alert("Please enter both username and password first.");
         return;
       }
+      
+      // Clean check to ensure username doesn't contain bad characters
+      if (rawUser.includes('@') || rawUser.includes(' ')) {
+        alert("Username cannot contain spaces or '@' symbols!");
+        return;
+      }
+
+      const email = makeEmail(rawUser);
       const { error } = await supabase.auth.signUp({ email, password });
-      if (error) alert(error.message); else alert("Signup successful! You can now log in.");
+      if (error) alert(error.message); else alert("Signup successful! You can now log in using your username.");
     });
 
     document.getElementById('logout-btn').addEventListener('click', async () => {
@@ -181,13 +203,13 @@
       const content = document.getElementById('post-content').value.trim();
       const image_url = document.getElementById('post-image').value.trim();
       
-      await supabase.from('posts').insert([{ user_email: currentUserEmail, content, image_url }]);
+      await supabase.from('posts').insert([{ username: currentUsername, content, image_url }]);
       document.getElementById('post-form').reset();
       fetchFeed();
     });
 
     async function fetchFeed() {
-      const { data: posts, error } = await supabase.from('posts').select('*, likes(*), comments(*)').order('created_at', { ascending: false });
+      const { data: posts } = await supabase.from('posts').select('*, likes(*), comments(*)').order('created_at', { ascending: false });
       const container = document.getElementById('feed-container');
       container.innerHTML = '';
 
@@ -195,18 +217,18 @@
       safePosts.forEach(post => {
         const safeLikes = post.likes || [];
         const safeComments = post.comments || [];
-        const hasLiked = safeLikes.some(l => l.user_email === currentUserEmail);
+        const hasLiked = safeLikes.some(l => l.username === currentUsername);
         const imgTag = post.image_url ? `<img src="${post.image_url}" class="rounded-xl max-h-72 w-full object-cover my-2 border border-zinc-800" />` : '';
         
         const commentsHTML = safeComments.map(c => `
-          <div class="text-xs bg-zinc-950 p-2 rounded-lg border border-zinc-900"><span class="font-bold text-indigo-400">${c.user_email ? c.user_email.split('@')[0] : 'User'}:</span> ${c.content}</div>
+          <div class="text-xs bg-zinc-950 p-2 rounded-lg border border-zinc-900"><span class="font-bold text-indigo-400">@${c.username || 'user'}:</span> ${c.content}</div>
         `).join('');
 
         const card = document.createElement('div');
         card.className = "bg-zinc-900 p-4 rounded-2xl border border-zinc-800 space-y-2 shadow-sm";
         card.innerHTML = `
           <div class="flex justify-between items-center text-xs text-zinc-500">
-            <span class="font-bold text-zinc-300">${post.user_email ? post.user_email.split('@')[0] : 'User'}</span>
+            <span class="font-bold text-zinc-300">@${post.username || 'user'}</span>
             <span>${new Date(post.created_at).toLocaleDateString()}</span>
           </div>
           <p class="text-sm text-zinc-100 whitespace-pre-wrap">${post.content}</p>
@@ -228,9 +250,9 @@
 
     async function toggleLike(postId, hasLiked) {
       if (hasLiked) {
-        await supabase.from('likes').delete().eq('post_id', postId).eq('user_email', currentUserEmail);
+        await supabase.from('likes').delete().eq('post_id', postId).eq('username', currentUsername);
       } else {
-        await supabase.from('likes').insert([{ post_id: postId, user_email: currentUserEmail }]);
+        await supabase.from('likes').insert([{ post_id: postId, username: currentUsername }]);
       }
       fetchFeed();
     }
@@ -238,7 +260,7 @@
     async function addComment(e, postId) {
       e.preventDefault();
       const input = e.target.querySelector('input');
-      await supabase.from('comments').insert([{ post_id: postId, user_email: currentUserEmail, content: input.value }]);
+      await supabase.from('comments').insert([{ post_id: postId, username: currentUsername, content: input.value }]);
       input.value = '';
       fetchFeed();
     }
@@ -258,7 +280,7 @@
     });
 
     async function fetchPolls() {
-      const { data: polls, error } = await supabase.from('polls').select('*').order('created_at', { ascending: false });
+      const { data: polls } = await supabase.from('polls').select('*').order('created_at', { ascending: false });
       const container = document.getElementById('polls-container');
       container.innerHTML = '';
 
@@ -309,7 +331,7 @@
     });
 
     async function fetchBucketList() {
-      const { data: events, error } = await supabase.from('bucket_list').select('*').order('target_date', { ascending: true });
+      const { data: events } = await supabase.from('bucket_list').select('*').order('target_date', { ascending: true });
       const container = document.getElementById('bucket-container');
       container.innerHTML = '';
 
