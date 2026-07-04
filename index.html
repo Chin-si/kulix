@@ -101,9 +101,10 @@
 
   <script>
    // ⚠️ TO DO: PASTE YOUR UNIQUE SUPABASE KEYS RIGHT HERE
-    const SUPABASE_URL = "https://vmjcaccyphhmirxnoipv.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_9ajwIGyWEUZfRxwtsdHD6g__Xi2hvwg";
-
+    const CONFIG = {
+  supabaseUrl: "https://jfzypvnlbrmpbuxmlhgp.supabase.co",
+  supabaseAnonKey: "sb_publishable_uT8ky5GdL-0LQ305cJIJZw_EfP6IHCM"
+};
 
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     let currentUser = null;
