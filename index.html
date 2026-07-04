@@ -1,551 +1,378 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-black">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Kulix</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        kulix: {
-                            neon: '#9333ea',
-                            darkBg: '#09090b',
-                            cardBg: '#050505',
-                            border: '#18181b'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { -webkit-tap-highlight-color: transparent; font-feature-settings: "cv02", "cv03", "cv04", "cv11"; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kulix</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="h-full bg-black text-zinc-100 antialiased selection:bg-purple-600 selection:text-black">
+<body class="bg-zinc-950 text-zinc-100 min-h-screen font-sans antialiased pb-24">
 
-    <div id="auth-screen" class="min-h-screen flex flex-col justify-center items-center px-4">
-        <div class="w-full max-w-md border-2 border-purple-600 bg-kulix-darkBg p-8 rounded-none shadow-[6px_6px_0px_0px_rgba(147,51,234,1)]">
-            <header class="mb-6">
-                <div class="flex justify-between items-start">
-                    <h1 class="text-4xl font-black uppercase tracking-tighter text-purple-500">KULIX</h1>
-                    <span id="referral-badge" class="hidden bg-purple-950 text-purple-400 border border-purple-800 text-[9px] font-mono uppercase tracking-widest px-2 py-1">Linked Via Inv</span>
-                </div>
-                <p class="text-xs text-zinc-500 font-mono mt-1">No Algorithmic Feeds. No Parents. Just Real Teen Life.</p>
-            </header>
-            
-            <form id="auth-form" class="space-y-5" autocomplete="off">
-                <div>
-                    <label class="block text-xs uppercase tracking-widest text-purple-400 font-mono font-bold mb-1.5">Create Nickname</label>
-                    <input type="text" id="input-nickname" maxlength="25" required
-                        class="w-full bg-black border border-zinc-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 p-3 text-white outline-none rounded-none text-base transition-all font-mono"
-                        placeholder="e.g., ghost_driver">
-                </div>
-
-                <div>
-                    <label class="block text-xs uppercase tracking-widest text-purple-400 font-mono font-bold mb-1.5">Verify Teen Age (13 - 19)</label>
-                    <input type="number" id="input-age" min="13" max="19" required
-                        class="w-full bg-black border border-zinc-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 p-3 text-white outline-none rounded-none text-base transition-all font-mono"
-                        placeholder="Your real age (System keeps it hidden)">
-                </div>
-
-                <div id="auth-error" class="hidden text-red-400 font-mono text-xs border border-red-900/50 bg-red-950/20 p-3 text-left"></div>
-
-                <button type="submit"
-                    class="w-full bg-purple-600 hover:bg-purple-700 active:translate-y-0.5 text-black font-black uppercase tracking-wider py-4 border border-black shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all text-sm">
-                    Enter Ecosystem
-                </button>
-            </form>
+  <div id="auth-screen" class="flex flex-col items-center justify-center min-h-screen px-4">
+    <div class="bg-zinc-900 p-8 rounded-2xl w-full max-w-md border border-zinc-800 shadow-2xl">
+      <h1 class="text-5xl font-black text-center mb-2 tracking-wider text-indigo-500 uppercase">Kulix</h1>
+      <p class="text-zinc-400 text-center text-sm mb-6 font-medium">Teens Only Hub</p>
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1">Email</label>
+          <input type="email" id="email" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 focus:outline-none focus:border-indigo-500 transition-colors">
         </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1">Password</label>
+          <input type="password" id="password" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 focus:outline-none focus:border-indigo-500 transition-colors">
+        </div>
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98]">
+          Enter Hub
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div id="app-screen" class="hidden max-w-2xl mx-auto px-4 pt-6">
+    <header class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-3xl font-black text-indigo-400 tracking-wide uppercase">Kulix</h1>
+        <p id="user-display" class="text-xs text-zinc-500 font-medium"></p>
+      </div>
+      <button id="logout-btn" class="text-xs bg-zinc-900 hover:bg-zinc-800 px-3 py-2 rounded-xl border border-zinc-800 font-medium transition-colors">
+        Log Out
+      </button>
+    </header>
+
+    <div id="tab-feed" class="tab-content space-y-6">
+      <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 shadow-md">
+        <form id="post-form" class="space-y-3">
+          <textarea id="post-content" required placeholder="What's going down?" rows="3" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 resize-none"></textarea>
+          <input type="url" id="post-image" placeholder="Image URL (optional)" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-100 placeholder-zinc-500 text-xs focus:outline-none focus:border-indigo-500">
+          <div class="flex justify-end">
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold text-sm transition-all shadow-md">
+              Share Update
+            </button>
+          </div>
+        </form>
+      </div>
+      <div id="feed-container" class="space-y-4"></div>
     </div>
 
-    <div id="app-screen" class="hidden min-h-screen max-w-md mx-auto border-x border-zinc-900 flex flex-col relative bg-black">
-        
-        <header class="sticky top-0 bg-kulix-darkBg/95 backdrop-blur-md border-b border-zinc-800 p-4 flex justify-between items-center z-50">
-            <div class="flex items-center space-x-3">
-                <img id="user-avatar" src="" alt="Session Token Avatar" class="w-9 h-9 border border-purple-500 bg-black p-0.5" />
-                <div>
-                    <div class="flex items-center space-x-1.5">
-                        <h2 id="user-display-name" class="text-sm font-black text-purple-400 leading-none"></h2>
-                        <span id="user-aura-tag" class="text-[9px] font-mono px-1.5 py-0.5 bg-zinc-900 text-zinc-400 border border-zinc-800 font-bold uppercase">Aura: 0</span>
-                    </div>
-                    <span id="user-tier" class="text-[9px] font-mono text-zinc-500 mt-1 block tracking-wider uppercase">Loading Status Protocol...</span>
-                </div>
-            </div>
-            <button id="btn-logout" class="text-[10px] font-mono uppercase bg-zinc-900 hover:bg-zinc-800 text-zinc-400 px-3 py-1.5 border border-zinc-800 transition-colors">
-                Log Out
-            </button>
-        </header>
-
-        <nav class="flex bg-kulix-darkBg border-b border-zinc-900 sticky top-[69px] z-40">
-            <button id="tab-vents" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black border-b-2 border-purple-500 text-white bg-zinc-900/30 transition-all">
-                Chrono-Stream
-            </button>
-            <button id="tab-mood" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-fancy transition-all">
-                Volatile Room
-            </button>
-            <button id="tab-profile" class="flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-fancy transition-all">
-                Network Loop
-            </button>
-        </nav>
-
-        <main class="flex-1 p-4 overflow-y-auto pb-28 no-scrollbar">
-            
-            <div id="panel-vents" class="space-y-6">
-                <form id="vent-form" class="bg-kulix-cardBg border border-zinc-800 p-4">
-                    <textarea id="textarea-vent" maxlength="200" required
-                        class="w-full bg-black border border-zinc-900 focus:border-purple-900 p-3 text-sm text-white placeholder-zinc-600 outline-none resize-none h-24 font-mono transition-colors"
-                        placeholder="Say what you need to say. Max 200 characters..."></textarea>
-                    <div class="flex justify-between items-center mt-3">
-                        <span id="vent-chars-left" class="text-xs font-mono text-zinc-500">200 left</span>
-                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-black font-black text-xs uppercase px-5 py-2.5 transition-colors">
-                            Broadcast Vent
-                        </button>
-                    </div>
-                </form>
-                <div id="vents-feed-container" class="space-y-4"></div>
-            </div>
-
-            <div id="panel-mood" class="hidden flex flex-col h-[calc(100vh-220px)] relative">
-                <div class="bg-purple-950/20 border border-purple-900/30 p-2.5 mb-4 text-center">
-                    <span class="text-[10px] uppercase font-mono tracking-widest text-purple-400 font-bold block">
-                        ⚡ Chamber: School Stress (Flushes Realtime) ⚡
-                    </span>
-                </div>
-                
-                <div id="chat-messages-container" class="flex-1 overflow-y-auto space-y-4 pr-1 pb-20 no-scrollbar"></div>
-
-                <form id="chat-form" class="absolute bottom-0 left-0 right-0 p-4 bg-black border-t border-zinc-900 flex space-x-2 z-30">
-                    <input type="text" id="input-message" required max="500" autocomplete="off"
-                        class="flex-1 bg-kulix-darkBg border border-zinc-800 focus:border-purple-600 px-4 py-3 text-xs text-white outline-none font-mono"
-                        placeholder="Type a completely untraceable message...">
-                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-black uppercase font-black text-xs px-5 tracking-wider transition-colors">
-                        Send
-                    </button>
-                </form>
-            </div>
-
-            <div id="panel-profile" class="hidden space-y-6 font-mono">
-                <div class="bg-kulix-cardBg border border-zinc-800 p-6 space-y-4">
-                    <h3 class="text-sm font-black text-purple-400 uppercase tracking-wider">Your Viral Engine</h3>
-                    <p class="text-xs text-zinc-400 leading-relaxed">Siphon users into Kulix. Each sign-up under your protocol injects <span class="text-purple-400 font-bold">+50 Aura</span> into your system signature.</p>
-                    
-                    <div class="space-y-2">
-                        <label class="text-[10px] uppercase text-zinc-500 tracking-wider">Unique Invitation Link</label>
-                        <div class="flex">
-                            <input type="text" id="referral-link-input" readonly
-                                class="flex-1 bg-black border border-zinc-800 text-xs text-zinc-400 p-3 outline-none rounded-none select-all font-mono">
-                            <button id="btn-copy-ref" class="bg-zinc-900 hover:bg-zinc-800 border-y border-r border-zinc-800 px-4 text-xs text-white uppercase font-bold active:bg-purple-950 transition-colors">
-                                Copy
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-zinc-900 pt-4 flex justify-between items-center text-xs">
-                        <span class="text-zinc-500">Successful Invites:</span>
-                        <span id="metric-referrals" class="font-black text-purple-400 bg-purple-950/40 px-2 py-0.5 border border-purple-900">0</span>
-                    </div>
-                </div>
-
-                <div class="bg-kulix-cardBg border border-zinc-900 p-6">
-                    <h3 class="text-xs font-black text-zinc-400 uppercase tracking-wider mb-3">Aura Tier Spectrum Matrix</h3>
-                    <div class="space-y-2 text-[11px]">
-                        <div class="flex justify-between border-b border-zinc-950 pb-1"><span class="text-zinc-500">0 - 49 Aura</span><span class="text-zinc-400">NPC Default</span></div>
-                        <div class="flex justify-between border-b border-zinc-950 pb-1"><span class="text-purple-500">50 - 199 Aura</span><span class="text-purple-400 font-bold">Protocol Agent</span></div>
-                        <div class="flex justify-between border-b border-zinc-950 pb-1"><span class="text-pink-500">200 - 499 Aura</span><span class="text-pink-400 font-black">Clout Fiend</span></div>
-                        <div class="flex justify-between"><span class="text-amber-500">500+ Aura</span><span class="text-amber-400 font-black tracking-widest animate-pulse">⚡ PHANTOM</span></div>
-                    </div>
-                </div>
-            </div>
-
-        </main>
+    <div id="tab-polls" class="tab-content hidden space-y-6">
+      <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 shadow-md">
+        <h3 class="text-sm font-bold text-zinc-400 mb-3 uppercase tracking-wider">Create a Poll</h3>
+        <form id="poll-form" class="space-y-3">
+          <input type="text" id="poll-question" required placeholder="Where are we hanging out tonight?" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-indigo-500">
+          <input type="text" id="poll-options" required placeholder="Comma separated choices (e.g., Mall, Beach, Park)" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-zinc-100 focus:outline-none focus:border-indigo-500">
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 py-2 rounded-xl font-bold text-sm transition-colors">
+            Launch Poll
+          </button>
+        </form>
+      </div>
+      <div id="polls-container" class="space-y-4"></div>
     </div>
 
-    <script>
-        // =========================================================================
-        // CONFIGURATION AND LINKAGE CONFIG ENGINE
-        // =========================================================================
-        const CONFIG = {
-            supabaseUrl: "https://jfzypvnlbrmpbuxmlhgp.supabase.co",
-            supabaseAnonKey: "sb_publishable_uT8ky5GdL-0LQ3O5cJlJZw_EfP6IHCM" 
-        };
+    <div id="tab-bucket" class="tab-content hidden space-y-6">
+      <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 shadow-md">
+        <h3 class="text-sm font-bold text-zinc-400 mb-3 uppercase tracking-wider">Add Group Goal / Event</h3>
+        <form id="bucket-form" class="flex flex-col sm:flex-row gap-2">
+          <input type="text" id="bucket-title" required placeholder="Road Trip / Alex's Birthday" class="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+          <input type="date" id="bucket-date" required class="bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-sm text-zinc-400 focus:outline-none focus:border-indigo-500">
+          <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-xl font-bold text-sm transition-colors whitespace-nowrap">
+            Add Event
+          </button>
+        </form>
+      </div>
+      <div id="bucket-container" class="space-y-4"></div>
+    </div>
+  </div>
+
+  <nav id="bottom-nav" class="hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 py-3 px-6 flex justify-around items-center z-50">
+    <button onclick="switchTab('feed')" id="nav-feed" class="flex flex-col items-center gap-1 text-indigo-500 font-bold text-xs transition-colors">
+      <span>💬</span><span>Feed</span>
+    </button>
+    <button onclick="switchTab('polls')" id="nav-polls" class="flex flex-col items-center gap-1 text-zinc-400 font-medium text-xs transition-colors">
+      <span>📊</span><span>Polls</span>
+    </button>
+    <button onclick="switchTab('bucket')" id="nav-bucket" class="flex flex-col items-center gap-1 text-zinc-400 font-medium text-xs transition-colors">
+      <span>⏳</span><span>Countdowns</span>
+    </button>
+  </nav>
+
+  <script>
+    // ⚠️ PASTE YOUR UNIQUE SUPABASE KEYS HERE
+    const SUPABASE_URL = "https://vmjcaccyphhmirxnoipv.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_9ajwIGyWEUZfRxwtsdHD6g__Xi2hvwg";
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let currentUserEmail = "";
+    let activeTab = "feed";
+
+    const authScreen = document.getElementById('auth-screen');
+    const appScreen = document.getElementById('app-screen');
+    const bottomNav = document.getElementById('bottom-nav');
+    const loginForm = document.getElementById('login-form');
+    const userDisplay = document.getElementById('user-display');
+
+    async function checkUser() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        currentUserEmail = session.user.email;
+        userDisplay.innerText = `Logged in as: ${currentUserEmail.split('@')[0]}`;
+        authScreen.classList.add('hidden');
+        appScreen.classList.remove('hidden');
+        bottomNav.classList.remove('hidden');
+        setupRealtimeSync();
+        switchTab(activeTab);
+      } else {
+        authScreen.classList.remove('hidden');
+        appScreen.classList.add('hidden');
+        bottomNav.classList.add('hidden');
+      }
+    }
+
+    // Realtime listener so updates stream live onto screens without reloading
+    function setupRealtimeSync() {
+      supabase
+        .channel('schema-db-changes')
+        .on('postgres_changes', { event: '*', schema: 'public' }, () => {
+          if (activeTab === 'feed') fetchFeed();
+          if (activeTab === 'polls') fetchPolls();
+          if (activeTab === 'bucket') fetchBucketList();
+        })
+        .subscribe();
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) alert("Access Denied: " + error.message); else checkUser();
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      window.location.reload();
+    });
+
+    function switchTab(tabId) {
+      activeTab = tabId;
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      
+      ['feed', 'polls', 'bucket'].forEach(t => {
+        const btn = document.getElementById(`nav-${t}`);
+        if (t === tabId) {
+          btn.classList.replace('text-zinc-400', 'text-indigo-500');
+          btn.classList.replace('font-medium', 'font-bold');
+        } else {
+          btn.classList.replace('text-indigo-500', 'text-zinc-400');
+          btn.classList.replace('font-bold', 'font-medium');
+        }
+      });
+
+      if(tabId === 'feed') fetchFeed();
+      if(tabId === 'polls') fetchPolls();
+      if(tabId === 'bucket') fetchBucketList();
+    }
+
+    // ================= MODULE 1: SOCIAL FEED ENGINE =================
+    document.getElementById('post-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const content = document.getElementById('post-content').value.trim();
+      const image_url = document.getElementById('post-image').value.trim();
+      
+      await supabase.from('posts').insert([{ user_email: currentUserEmail, content, image_url }]);
+      document.getElementById('post-form').reset();
+      fetchFeed();
+    });
+
+    async function fetchFeed() {
+      const { data: posts } = await supabase.from('posts').select('*, likes(*), comments(*)').order('created_at', { ascending: false });
+      const container = document.getElementById('feed-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (!posts || posts.length === 0) {
+        container.innerHTML = `<p class="text-zinc-500 text-center py-8 text-xs">No posts yet. Break the ice!</p>`;
+        return;
+      }
+
+      posts.forEach(post => {
+        const hasLiked = post.likes && post.likes.some(l => l.user_email === currentUserEmail);
+        const likeCount = post.likes ? post.likes.length : 0;
+        const imgTag = post.image_url ? `<img src="${escapeHTML(post.image_url)}" class="rounded-xl max-h-72 w-full object-cover my-2 border border-zinc-800" onerror="this.style.display='none'" />` : '';
         
+        const commentsHTML = post.comments ? post.comments.map(c => `
+          <div class="text-[11px] bg-zinc-950 p-2 rounded-lg border border-zinc-900/50"><span class="font-bold text-indigo-400">${escapeHTML(c.user_email.split('@')[0])}:</span> ${escapeHTML(c.content)}</div>
+        `).join('') : '';
 
-        const _db = supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
+        const card = document.createElement('div');
+        card.className = "bg-zinc-900 p-4 rounded-2xl border border-zinc-800 space-y-2 shadow-sm";
+        card.innerHTML = `
+          <div class="flex justify-between items-center text-xs text-zinc-500">
+            <span class="font-bold text-zinc-300">${escapeHTML(post.user_email.split('@')[0])}</span>
+            <span>${new Date(post.created_at).toLocaleDateString()}</span>
+          </div>
+          <p class="text-sm text-zinc-100 whitespace-pre-wrap">${escapeHTML(post.content)}</p>
+          ${imgTag}
+          <div class="flex items-center gap-4 py-1 text-xs">
+            <button onclick="toggleLike('${post.id}', ${hasLiked})" class="${hasLiked ? 'text-pink-500 font-bold' : 'text-zinc-400'} flex items-center gap-1 active:scale-90 transition-transform">
+              ❤️ <span>${likeCount}</span>
+            </button>
+          </div>
+          <div class="space-y-1.5 pt-2 border-t border-zinc-950">${commentsHTML}</div>
+          <form onsubmit="addComment(event, '${post.id}')" class="flex gap-2 mt-2">
+            <input type="text" placeholder="Write a comment..." required class="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg text-xs px-2 py-1.5 focus:outline-none text-zinc-100">
+            <button class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-1 rounded-lg font-bold transition-colors">Post</button>
+          </form>
+        `;
+        container.appendChild(card);
+      });
+    }
 
-        const ROAST_MANIFEST = [
-            "Bro, this post screams 'I sit alone at lunch'.",
-            "This isn't your private diary, but fine, go off.",
-            "Dating in 2026 is an absolute circus, you aren't special.",
-            "Have you tried sleeping instead of typing paragraphs at midnight?",
-            "Sending you structural reinforcement, because you sound unstable.",
-            "On a scale of 1 to dramatic, this is a solid 11.",
-            "Your GPA just dropped 3 points from writing this.",
-            "NPC behavior detected. Please change your path scripts.",
-            "They haven't texted back because they're simply chilling. Reset yourself.",
-            "You are projecting so hard the wall is shaking.",
-            "If crying built character, you'd be a historic monument.",
-            "Main character energy score: 0.1/10.",
-            "Delete this mental draft immediately for your own safety.",
-            "Hoping your cognitive system gets an update tomorrow morning."
-        ];
+    async function toggleLike(postId, hasLiked) {
+      if (hasLiked) {
+        await supabase.from('likes').delete().eq('post_id', postId).eq('user_email', currentUserEmail);
+      } else {
+        await supabase.from('likes').insert([{ post_id: postId, user_email: currentUserEmail }]);
+      }
+      fetchFeed();
+    }
 
-        let sessionUser = null;
-        let activeTabContext = 'vents';
-        let chatRealtimeSyncLink = null;
-        let streamRealtimeSyncLink = null;
+    async function addComment(e, postId) {
+      e.preventDefault();
+      const input = e.target.querySelector('input');
+      const text = input.value.trim();
+      if(!text) return;
+      await supabase.from('comments').insert([{ post_id: postId, user_email: currentUserEmail, content: text }]);
+      input.value = '';
+      fetchFeed();
+    }
 
-        const domAuthScreen = document.getElementById('auth-screen');
-        const domAppScreen = document.getElementById('app-screen');
-        const domAuthForm = document.getElementById('auth-form');
-        const domAuthError = document.getElementById('auth-error');
-        const domVentsFeed = document.getElementById('vents-feed-container');
-        const domChatFeed = document.getElementById('chat-messages-container');
-        const domVentTextarea = document.getElementById('textarea-vent');
-        const domVentCharsLeft = document.getElementById('vent-chars-left');
+    // ================= MODULE 2: LIVE POLL ENGINE =================
+    document.getElementById('poll-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const question = document.getElementById('poll-question').value.trim();
+      const optionsArr = document.getElementById('poll-options').value.split(',').map(o => o.trim()).filter(o => o.length > 0);
+      
+      const initialVotes = {};
+      optionsArr.forEach(opt => initialVotes[opt] = 0);
 
-        window.addEventListener('DOMContentLoaded', () => {
-            // Check for potential incoming organic invite vectors
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('ref')) {
-                localStorage.setItem('kulix_invite_vector', urlParams.get('ref'));
-                document.getElementById('referral-badge').classList.remove('hidden');
-            }
+      await supabase.from('polls').insert([{ question, options: optionsArr, votes: initialVotes }]);
+      document.getElementById('poll-form').reset();
+      fetchPolls();
+    });
 
-            const token = localStorage.getItem('kulix_session_user');
-            if (token) {
-                sessionUser = JSON.parse(token);
-                refreshSessionIdentityContext();
-            }
-            trackTextAreaMetrics();
-        });
+    async function fetchPolls() {
+      const { data: polls } = await supabase.from('polls').select('*').order('created_at', { ascending: false });
+      const container = document.getElementById('polls-container');
+      if (!container) return;
+      container.innerHTML = '';
 
-        // Dynamic Status Badge Logic Tier Allocator
-        function calculateAuraTierSignature(score) {
-            if (score >= 500) return { title: "⚡ Phantom", color: "text-amber-400" };
-            if (score >= 200) return { title: "Clout Fiend", color: "text-pink-400 font-black" };
-            if (score >= 50) return { title: "Protocol Agent", color: "text-purple-400 font-bold" };
-            return { title: "NPC Default", color: "text-zinc-500" };
-        }
+      if (!polls || polls.length === 0) {
+        container.innerHTML = `<p class="text-zinc-500 text-center py-8 text-xs">No current group questions.</p>`;
+        return;
+      }
 
-        async function refreshSessionIdentityContext() {
-            // Always pull freshest structural profile metadata down from edge DB
-            const { data, error } = await _db.from('users').select('*').eq('id', sessionUser.id).single();
-            if (!error && data) {
-                sessionUser = data;
-                localStorage.setItem('kulix_session_user', JSON.stringify(data));
-            }
-            openApplicationDashboard();
-        }
+      polls.forEach(poll => {
+        let totalVotes = Object.values(poll.votes).reduce((a, b) => a + b, 0) || 0;
+        let displayTotal = totalVotes === 0 ? 1 : totalVotes;
 
-        function openApplicationDashboard() {
-            domAuthScreen.classList.add('hidden');
-            domAppScreen.classList.remove('hidden');
-            document.getElementById('user-avatar').src = sessionUser.avatar_url;
-            document.getElementById('user-display-name').innerText = `@${sessionUser.nickname}`;
-            
-            const badge = calculateAuraTierSignature(sessionUser.aura);
-            const domAuraTag = document.getElementById('user-aura-tag');
-            domAuraTag.innerText = `Aura: ${sessionUser.aura}`;
-            
-            const domUserTier = document.getElementById('user-tier');
-            domUserTier.innerText = badge.title;
-            domUserTier.className = `text-[9px] font-mono mt-1 block tracking-wider uppercase ${badge.color}`;
+        const optionsHTML = poll.options.map(opt => {
+          const count = poll.votes[opt] || 0;
+          const percentage = Math.round((count / displayTotal) * 100);
+          return `
+            <button onclick="votePoll('${poll.id}', '${escapeQuotes(opt)}')" class="w-full text-left bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 rounded-xl relative overflow-hidden p-3 transition-all active:scale-[0.99]">
+              <div class="bg-indigo-600/20 absolute top-0 left-0 bottom-0 transition-all duration-500" style="width: ${percentage}%"></div>
+              <div class="relative flex justify-between text-xs font-bold">
+                <span>${escapeHTML(opt)}</span>
+                <span class="text-indigo-400">${count} votes (${percentage}%)</span>
+              </div>
+            </button>
+          `;
+        }).join('');
 
-            // Populate viral loop assets
-            document.getElementById('referral-link-input').value = `${window.location.origin}${window.location.pathname}?ref=${sessionUser.id}`;
-            document.getElementById('metric-referrals').innerText = sessionUser.referral_count || 0;
+        const card = document.createElement('div');
+        card.className = "bg-zinc-900 p-4 rounded-2xl border border-zinc-800 space-y-3 shadow-sm";
+        card.innerHTML = `<h3 class="text-sm font-bold text-zinc-100">${escapeHTML(poll.question)}</h3><div class="space-y-2">${optionsHTML}</div>`;
+        container.appendChild(card);
+      });
+    }
 
-            routeApplicationPanel(activeTabContext);
-        }
+    async function votePoll(pollId, selectedOption) {
+      const { data: poll } = await supabase.from('polls').select('*').eq('id', pollId).single();
+      if(!poll) return;
+      
+      const updatedVotes = { ...poll.votes };
+      updatedVotes[selectedOption] = (updatedVotes[selectedOption] || 0) + 1;
+      
+      await supabase.from('polls').update({ votes: updatedVotes }).eq('id', pollId);
+      fetchPolls();
+    }
 
-        // --- AUTH SYSTEM LAYER AND VALIDATION ---
-        domAuthForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            domAuthError.classList.add('hidden');
-            domAuthError.innerText = '';
+    // ================= MODULE 3: BUCKET LIST & COUNTDOWNS =================
+    document.getElementById('bucket-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('bucket-title').value.trim();
+      const target_date = document.getElementById('bucket-date').value;
+      
+      await supabase.from('bucket_list').insert([{ title, target_date }]);
+      document.getElementById('bucket-form').reset();
+      fetchBucketList();
+    });
 
-            const nickname = document.getElementById('input-nickname').value.trim();
-            const age = parseInt(document.getElementById('input-age').value, 10);
+    async function fetchBucketList() {
+      const { data: events } = await supabase.from('bucket_list').select('*').order('target_date', { ascending: true });
+      const container = document.getElementById('bucket-container');
+      if (!container) return;
+      container.innerHTML = '';
 
-            if (isNaN(age) || age < 13 || age > 19) {
-                domAuthError.innerText = 'Access Denied: Kulix is structurally reserved for users aged 13-19.';
-                domAuthError.classList.remove('hidden');
-                return;
-            }
+      if (!events || events.length === 0) {
+        container.innerHTML = `<p class="text-zinc-500 text-center py-8 text-xs">No scheduled activities or goals.</p>`;
+        return;
+      }
 
-            const avatarSeed = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(nickname)}`;
-            const targetedInviterId = localStorage.getItem('kulix_invite_vector');
-
-            // 1. Structural Insertion of the session user profile token
-            const { data: newUser, error: userError } = await _db
-                .from('users')
-                .insert([{ nickname, age, avatar_url: avatarSeed, invited_by: targetedInviterId }])
-                .select().single();
-
-            if (userError) {
-                domAuthError.innerText = userError.code === '23505' ? 'Name Taken: Try adding a unique combination.' : userError.message;
-                domAuthError.classList.remove('hidden');
-                return;
-            }
-
-            // 2. Cascade logic trigger loop for the organic viral invitation loop
-            if (targetedInviterId && targetedInviterId !== "null") {
-                try {
-                    // Pull inviter data signature
-                    const { data: inviter } = await _db.from('users').select('aura, referral_count').eq('id', targetedInviterId).single();
-                    if (inviter) {
-                        await _db.from('users').update({
-                            aura: (inviter.aura || 0) + 50,
-                            referral_count: (inviter.referral_count || 0) + 1
-                        }).eq('id', targetedInviterId);
-                    }
-                } catch(err) { console.error('Viral allocation pipeline faulted contextually', err); }
-                localStorage.removeItem('kulix_invite_vector');
-            }
-
-            sessionUser = newUser;
-            localStorage.setItem('kulix_session_user', JSON.stringify(newUser));
-            openApplicationDashboard();
-        });
-
-        document.getElementById('btn-logout').addEventListener('click', () => {
-            localStorage.removeItem('kulix_session_user');
-            teardownActiveRealtimeSinks();
-            location.reload();
-        });
-
-        function teardownActiveRealtimeSinks() {
-            if (chatRealtimeSyncLink) _db.removeChannel(chatRealtimeSyncLink);
-            if (streamRealtimeSyncLink) _db.removeChannel(streamRealtimeSyncLink);
-        }
-
-        // --- INTERFACE TAB NAVIGATION CONTROL ROUTER ---
-        const tabVentsBtn = document.getElementById('tab-vents');
-        const tabMoodBtn = document.getElementById('tab-mood');
-        const tabProfileBtn = document.getElementById('tab-profile');
+      events.forEach(ev => {
+        // Clear time offsets for accurate target day tracking
+        const target = new Date(ev.target_date + 'T00:00:00');
+        const today = new Date();
+        today.setHours(0,0,0,0);
         
-        const panelVentsView = document.getElementById('panel-vents');
-        const panelMoodView = document.getElementById('panel-mood');
-        const panelProfileView = document.getElementById('panel-profile');
+        const timeDiff = target - today;
+        const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+        
+        let countdownText = daysLeft > 0 ? `⏳ ${daysLeft} days left` : daysLeft === 0 ? "🎉 HAPPENING TODAY!" : "✅ Past Event";
+        
+        const card = document.createElement('div');
+        card.className = `bg-zinc-900 p-4 rounded-2xl border ${ev.is_completed ? 'border-emerald-900/40 opacity-60' : 'border-zinc-800'} flex justify-between items-center shadow-sm`;
+        card.innerHTML = `
+          <div>
+            <h4 class="text-sm font-bold ${ev.is_completed ? 'line-through text-zinc-500' : 'text-zinc-100'}">${escapeHTML(ev.title)}</h4>
+            <p class="text-[11px] font-medium text-zinc-400 mt-0.5">${countdownText}</p>
+          </div>
+          <button onclick="toggleBucketComplete('${ev.id}', ${ev.is_completed})" class="text-xs font-bold bg-zinc-950 hover:bg-zinc-900 px-3 py-2 rounded-xl border border-zinc-800 transition-colors">
+            ${ev.is_completed ? '🔄 Reset' : '✅ Done'}
+          </button>
+        `;
+        container.appendChild(card);
+      });
+    }
 
-        tabVentsBtn.addEventListener('click', () => routeApplicationPanel('vents'));
-        tabMoodBtn.addEventListener('click', () => routeApplicationPanel('mood'));
-        tabProfileBtn.addEventListener('click', () => routeApplicationPanel('profile'));
+    async function toggleBucketComplete(id, currentStatus) {
+      await supabase.from('bucket_list').update({ is_completed: !currentStatus }).eq('id', id);
+      fetchBucketList();
+    }
 
-        function routeApplicationPanel(target) {
-            activeTabContext = target;
-            teardownActiveRealtimeSinks();
+    // Safety Parsers
+    function escapeHTML(str) {
+      if(!str) return '';
+      return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+    }
+    function escapeQuotes(str) {
+      if(!str) return '';
+      return str.replace(/'/g, "\\'");
+    }
 
-            // Reset navigation architecture UI highlight structures
-            [tabVentsBtn, tabMoodBtn, tabProfileBtn].forEach(b => {
-                b.className = "flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black text-zinc-500 hover:text-zinc-400 transition-all";
-            });
-            [panelVentsView, panelMoodView, panelProfileView].forEach(p => p.classList.add('hidden'));
-
-            const activeBtn = document.getElementById(`tab-${target}`);
-            if(activeBtn) activeBtn.className = "flex-1 py-3.5 text-center uppercase tracking-wider text-xs font-black border-b-2 border-purple-500 text-white bg-zinc-900/30 transition-all";
-
-            if (target === 'vents') {
-                panelVentsView.classList.remove('hidden');
-                syncVentsChronologicalStream();
-                activateStreamRealtimeSync();
-            } else if (target === 'mood') {
-                panelMoodView.classList.remove('hidden');
-                syncMoodRoomMessages();
-                activateRealtimeWebSocket();
-            } else if (target === 'profile') {
-                panelProfileView.classList.remove('hidden');
-            }
-        }
-
-        // --- VENT TIMELINE ACTION PIPELINE WITH BIDIRECTIONAL REALTIME ---
-        function trackTextAreaMetrics() {
-            const available = 200 - domVentTextarea.value.length;
-            domVentCharsLeft.innerText = `${available} characters left`;
-        }
-        domVentTextarea.addEventListener('input', trackTextAreaMetrics);
-
-        document.getElementById('vent-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const text = domVentTextarea.value.trim();
-            if (!text || text.length > 200) return;
-
-            const { error } = await _db
-                .from('vents')
-                .insert([{ user_id: sessionUser.id, text }]);
-
-            if (!error) {
-                domVentTextarea.value = '';
-                trackTextAreaMetrics();
-                // Self updates decoupled since WebSockets channel handle inserts organically
-            }
-        });
-
-        async function syncVentsChronologicalStream() {
-            const { data, error } = await _db
-                .from('vents')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) return;
-            domVentsFeed.innerHTML = data.length === 0 
-                ? `<p class="text-zinc-600 font-mono text-center py-12 text-xs">The stream is dead silent. Type something above.</p>` 
-                : data.map(vent => compileVentCardTemplate(vent)).join('');
-        }
-
-        function compileVentCardTemplate(vent) {
-            return `
-                <div class="bg-kulix-cardBg border border-zinc-900 p-5 flex flex-col space-y-4 shadow-sm" id="vent-card-${vent.id}">
-                    <p class="text-zinc-300 text-sm whitespace-pre-wrap break-words leading-relaxed font-mono">${escapeSanitizedOutput(vent.text)}</p>
-                    <div class="hidden bg-purple-950/20 border-l border-purple-500 p-3 text-xs text-purple-300 font-mono italic roast-field"></div>
-                    <div class="flex space-x-2 pt-1">
-                        <button onclick="incrementEmpathyCount('${vent.id}', ${vent.same_count}, this)" class="flex-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 py-2.5 px-3 text-xs font-mono flex items-center justify-center space-x-2 transition-all active:scale-95">
-                            <span>🤝 Same</span>
-                            <span class="bg-purple-950 text-purple-400 px-2 py-0.5 text-[10px] font-bold metric-counter">${vent.same_count}</span>
-                        </button>
-                        <button onclick="triggerAutomatedSystemRoast('${vent.id}')" class="flex-1 bg-zinc-900/30 hover:bg-zinc-900 border border-zinc-800/40 text-zinc-500 hover:text-purple-400 py-2.5 px-3 text-xs font-mono transition-all active:scale-95">
-                            💀 Roast Me
-                        </button>
-                    </div>
-                </div>`;
-        }
-
-        function activateStreamRealtimeSync() {
-            streamRealtimeSyncLink = _db
-                .channel('public:vents')
-                .on('postgres_changes', { event: 'INSERT', table: 'vents' }, (payload) => {
-                    const fallbackEl = domVentsFeed.querySelector('.text-zinc-600');
-                    if (fallbackEl) domVentsFeed.innerHTML = '';
-                    domVentsFeed.insertAdjacentHTML('afterbegin', compileVentCardTemplate(payload.new));
-                })
-                .on('postgres_changes', { event: 'UPDATE', table: 'vents' }, (payload) => {
-                    const existingCard = document.getElementById(`vent-card-${payload.new.id}`);
-                    if (existingCard) {
-                        const counter = existingCard.querySelector('.metric-counter');
-                        if (counter) counter.innerText = payload.new.same_count;
-                    }
-                })
-                .subscribe();
-        }
-
-        async function incrementEmpathyCount(id, current, el) {
-            // Atomic incremental addition up to structural database
-            const { error } = await _db.from('vents').update({ same_count: current + 1 }).eq('id', id);
-            if (!error) {
-                el.disabled = true;
-                el.classList.add('opacity-40');
-                
-                // Advance Author Aura Score Profile Structure dynamically
-                try {
-                    const { data: targetVent } = await _db.from('vents').select('user_id').eq('id', id).single();
-                    if(targetVent && targetVent.user_id !== sessionUser.id) {
-                        const { data: authorProfile } = await _db.from('users').select('aura').eq('id', targetVent.user_id).single();
-                        if (authorProfile) {
-                            await _db.from('users').update({ aura: (authorProfile.aura || 0) + 2 }).eq('id', targetVent.user_id);
-                        }
-                    }
-                } catch(e) { console.warn('Aura reward routine system bypassed', e); }
-            }
-        }
-
-        // --- MOOD ROOM LIVE REALTIME CHAT STRAT ---
-        async function syncMoodRoomMessages() {
-            const { data, error } = await _db
-                .from('messages')
-                .select('*')
-                .eq('room', 'School Stress')
-                .order('created_at', { ascending: true });
-
-            if (error) return;
-            domChatFeed.innerHTML = data.length === 0 
-                ? `<p class="text-zinc-600 font-mono text-center py-12 text-xs">Chamber empty. Say it here, vanish it later.</p>`
-                : data.map(msg => compileChatBlockTemplate(msg)).join('');
-            forceChatViewportScroll();
-        }
-
-        document.getElementById('chat-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const inputField = document.getElementById('input-message');
-            const text = inputField.value.trim();
-            if (!text) return;
-
-            const { error } = await _db.from('messages').insert([{
-                room: 'School Stress',
-                user_id: sessionUser.id,
-                user_nickname: sessionUser.nickname,
-                user_avatar: sessionUser.avatar_url,
-                text
-            }]);
-
-            if (!error) inputField.value = '';
-        });
-
-        function activateRealtimeWebSocket() {
-            chatRealtimeSyncLink = _db
-                .channel('public:messages')
-                .on('postgres_changes', { event: 'INSERT', table: 'messages', filter: "room=eq.School Stress" }, (payload) => {
-                    const fallbackEl = domChatFeed.querySelector('.text-zinc-600');
-                    if (fallbackEl) domChatFeed.innerHTML = '';
-                    domChatFeed.insertAdjacentHTML('beforeend', compileChatBlockTemplate(payload.new));
-                    forceChatViewportScroll();
-                })
-                .subscribe();
-        }
-
-        function compileChatBlockTemplate(msg) {
-            const timeFormatted = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-            return `
-                <div class="flex items-start space-x-3">
-                    <img src="${msg.user_avatar}" alt="" class="w-7 h-7 border border-zinc-800 bg-black mt-0.5 p-0.5" />
-                    <div class="bg-kulix-cardBg border border-zinc-900 p-3 flex-1 max-w-[85%]">
-                        <div class="flex justify-between items-baseline space-x-4 mb-1">
-                            <span class="text-xs font-black text-purple-400">@${escapeSanitizedOutput(msg.user_nickname)}</span>
-                            <span class="text-[9px] font-mono text-zinc-600">${timeFormatted}</span>
-                        </div>
-                        <p class="text-xs text-zinc-300 break-words font-mono leading-relaxed">${escapeSanitizedOutput(msg.text)}</p>
-                    </div>
-                </div>`;
-        }
-
-        function forceChatViewportScroll() {
-            domChatFeed.scrollTop = domChatFeed.scrollHeight;
-        }
-
-        // --- BUILT-IN SYSTEM ROAST CALCULATOR MECHANISM ---
-        function triggerAutomatedSystemRoast(ventId) {
-            const card = document.getElementById(`vent-card-${ventId}`);
-            if (!card) return;
-            const targetBlock = card.querySelector('.roast-field');
-            const selection = ROAST_MANIFEST[Math.floor(Math.random() * ROAST_MANIFEST.length)];
-            
-            targetBlock.innerText = `🔥 System Engine: "${selection}"`;
-            targetBlock.classList.remove('hidden');
-        }
-
-        // --- COPY INTERFACING VECTOR ---
-        document.getElementById('btn-copy-ref').addEventListener('click', () => {
-            const targetEl = document.getElementById('referral-link-input');
-            targetEl.select();
-            navigator.clipboard.writeText(targetEl.value);
-            const copyBtn = document.getElementById('btn-copy-ref');
-            copyBtn.innerText = "COPIED!";
-            setTimeout(() => { copyBtn.innerText = "COPY"; }, 2000);
-        });
-
-        function escapeSanitizedOutput(string) {
-            return string.replace(/[&<>'"]/g, tag => ({
-                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-            }[tag] || tag));
-        }
-    </script>
+    checkUser();
+  </script>
 </body>
 </html>
