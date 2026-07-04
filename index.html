@@ -100,13 +100,14 @@
   </nav>
 
   <script>
-   // ⚠️ TO DO: PASTE YOUR UNIQUE SUPABASE KEYS RIGHT HERE
+    // Configuration object mapping your custom credentials
     const CONFIG = {
-  supabaseUrl: "https://jfzypvnlbrmpbuxmlhgp.supabase.co",
-  supabaseAnonKey: "sb_publishable_uT8ky5GdL-0LQ305cJIJZw_EfP6IHCM"
-};
+      supabaseUrl: "https://jfzypvnlbrmpbuxmlhgp.supabase.co",
+      supabaseAnonKey: "sb_publishable_uT8ky5GdL-0LQ305cJIJZw_EfP6IHCM"
+    };
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // FIXED: Accessing the global 'window.supabase' constructor to avoid variable name collisions
+    const supabase = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
     let currentUser = null;
 
     const authScreen = document.getElementById('auth-screen');
@@ -257,7 +258,6 @@
           </form>
         `;
 
-        // Safe programmatic attachment
         card.querySelector('.like-toggle-btn').addEventListener('click', () => toggleLike(post.id, hasLiked));
         card.querySelector('.comment-submission-form').addEventListener('submit', (e) => {
           e.preventDefault();
