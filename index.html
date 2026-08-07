@@ -1,414 +1,1241 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kulix</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M.G.Y TENSION — Official Music Platform</title>
+  <meta name="description" content="Stream original tracks, download beats, and join the M.G.Y Tension community. Built from pressure." />
+  <meta name="theme-color" content="#030712" />
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Supabase JS Client for Database & File Storage -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            cyber: ['Orbitron', 'sans-serif'],
+          },
+          colors: {
+            neon: '#a855f7',
+            electric: '#3b82f6',
+            cyberpink: '#ec4899',
+            darkBg: '#030712',
+          },
+          boxShadow: {
+            'neon': '0 0 25px rgba(168, 85, 247, 0.45)',
+            'neon-sm': '0 0 15px rgba(168, 85, 247, 0.3)',
+            'electric': '0 0 25px rgba(59, 130, 246, 0.4)',
+            'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.4)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #030712; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #a855f7, #3b82f6); border-radius: 3px; }
+
+    .cyber-bg {
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(168, 85, 247, 0.18), transparent 50%),
+        radial-gradient(ellipse 60% 40% at 90% 60%, rgba(59, 130, 246, 0.12), transparent 50%),
+        radial-gradient(ellipse 50% 30% at 10% 80%, rgba(236, 72, 153, 0.08), transparent 50%),
+        #030712;
+    }
+
+    .glass {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-card {
+      background: rgba(30, 41, 59, 0.45);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(168, 85, 247, 0.15);
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.25s;
+    }
+    .glass-card:hover {
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 0 24px rgba(59, 130, 246, 0.2);
+      transform: translateY(-3px);
+    }
+
+    @keyframes barBounce {
+      0%, 100% { height: 4px; }
+      50% { height: 18px; }
+    }
+    .v-bar {
+      animation: barBounce 1.1s infinite ease-in-out;
+      animation-play-state: paused;
+    }
+    .is-playing-vis .v-bar { animation-play-state: running; }
+    .v-bar:nth-child(1) { animation-delay: 0.1s; }
+    .v-bar:nth-child(2) { animation-delay: 0.25s; }
+    .v-bar:nth-child(3) { animation-delay: 0.15s; }
+    .v-bar:nth-child(4) { animation-delay: 0.35s; }
+
+    /* Playing state on cards */
+    .is-playing-card {
+      border-color: rgba(168, 85, 247, 0.8) !important;
+      box-shadow: 0 0 28px rgba(168, 85, 247, 0.35) !important;
+    }
+
+    /* Player dock slide-in */
+    #playerDock { transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+    #playerDock.visible { transform: translateY(0); }
+
+    /* Modal Animation */
+    .modal-enter { animation: modalIn 0.25s ease-out forwards; }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Toast Notification */
+    .toast {
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen font-sans antialiased pb-24">
+<body class="cyber-bg text-slate-100 min-h-screen antialiased selection:bg-neon selection:text-white pb-32">
 
-  <div id="auth-screen" class="flex flex-col items-center justify-center min-h-screen px-4">
-    <div class="bg-zinc-900 p-8 rounded-2xl w-full max-w-md border border-zinc-800 shadow-2xl">
-      <h1 class="text-5xl font-black text-center mb-2 tracking-wider text-indigo-500 uppercase">Kulix</h1>
-      <p class="text-zinc-400 text-center text-sm mb-6 font-medium">Teens Only Hub</p>
-      
-      <form id="auth-form" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold uppercase text-zinc-400 mb-1 tracking-wider">Choose a Nickname</label>
-          <input type="text" id="input-nickname" maxlength="25" required placeholder="e.g., skate_pro" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 focus:outline-none focus:border-indigo-500 transition-colors">
+  <!-- ===================== NAV ===================== -->
+  <header class="sticky top-0 z-40 border-b border-slate-800/70 bg-slate-950/80 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="scrollToTop()">
+        <div class="p-2 bg-gradient-to-tr from-neon to-electric rounded-xl text-white shadow-neon-sm">
+          <i data-lucide="zap" class="w-5 h-5 fill-current"></i>
         </div>
-        
-        <div id="auth-error" class="hidden text-red-400 font-medium text-xs border border-red-900/50 bg-red-950/20 p-2.5 rounded-xl"></div>
+        <div>
+          <span class="font-cyber text-base sm:text-lg font-black tracking-widest bg-gradient-to-r from-neon via-pink-400 to-electric bg-clip-text text-transparent">M.G.Y TENSION</span>
+          <span class="text-[9px] text-slate-500 block -mt-0.5 font-mono tracking-widest hidden sm:block">OFFICIAL PLATFORM</span>
+        </div>
+      </div>
 
-        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98]">
-          Enter Space
+      <nav class="hidden md:flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <a href="#music" class="px-3 py-2 rounded-lg hover:text-neon hover:bg-slate-800/50 transition">Music</a>
+        <a href="#beats" class="px-3 py-2 rounded-lg hover:text-electric hover:bg-slate-800/50 transition">Beats</a>
+        <a href="#videos" class="px-3 py-2 rounded-lg hover:text-neon hover:bg-slate-800/50 transition">Videos</a>
+        <a href="#about" class="px-3 py-2 rounded-lg hover:text-electric hover:bg-slate-800/50 transition">About</a>
+        <a href="#community" class="px-3 py-2 rounded-lg hover:text-neon hover:bg-slate-800/50 transition">Community</a>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <button onclick="focusSearch()" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition" title="Search tracks">
+          <i data-lucide="search" class="w-4 h-4"></i>
+        </button>
+        
+        <!-- Upload Trigger Button -->
+        <button onclick="openUploadModal()" class="hidden sm:inline-flex bg-slate-800 hover:bg-slate-700 border border-slate-700 text-neon font-bold text-xs uppercase px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+          <i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload
+        </button>
+
+        <a href="#beats" class="hidden sm:inline-flex bg-gradient-to-r from-neon to-electric hover:opacity-90 text-white font-bold text-xs uppercase px-4 py-2 rounded-xl transition shadow-neon-sm active:scale-95">
+          Get Beats
+        </a>
+        <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile nav -->
+    <div id="mobileNav" class="hidden md:hidden border-t border-slate-800 bg-slate-950/95 px-4 py-4 space-y-2">
+      <a href="#music" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800/60" onclick="closeMobile()">Music</a>
+      <a href="#beats" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800/60" onclick="closeMobile()">Beats</a>
+      <a href="#videos" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800/60" onclick="closeMobile()">Videos</a>
+      <a href="#about" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800/60" onclick="closeMobile()">About</a>
+      <a href="#community" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800/60" onclick="closeMobile()">Community</a>
+      <button onclick="openUploadModal(); closeMobile();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-bold text-neon bg-slate-900 border border-slate-800 flex items-center gap-2">
+        <i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload Track
+      </button>
+    </div>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="relative overflow-hidden py-14 md:py-24 border-b border-slate-900/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+
+      <div class="lg:col-span-7 text-center lg:text-left">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-neon border border-neon/30 text-[11px] font-mono mb-5 shadow-neon-sm">
+          <span class="w-1.5 h-1.5 rounded-full bg-neon animate-pulse"></span>
+          NEW MUSIC DROPPING
+        </div>
+
+        <h1 class="font-cyber text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-[1.05] mb-5">
+          BUILT FROM<br>
+          <span class="bg-gradient-to-r from-neon via-cyan-400 to-electric bg-clip-text text-transparent">PRESSURE</span>
+        </h1>
+
+        <p class="text-slate-400 text-sm sm:text-base max-w-lg mx-auto lg:mx-0 mb-8 leading-relaxed">
+          Original tracks. Hard-hitting beats. Real stories.  
+          Stream free, download demos, or license instrumentals for your next record.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3">
+          <button onclick="playTrackById(1)" class="flex items-center gap-2 bg-gradient-to-r from-neon to-electric text-white font-cyber font-bold text-xs uppercase px-5 py-3 rounded-xl shadow-neon hover:scale-[1.03] transition-all active:scale-95">
+            <i data-lucide="play" class="w-4 h-4 fill-white"></i> Listen Now
+          </button>
+          <a href="#beats" class="flex items-center gap-2 glass text-slate-200 border border-slate-700 hover:border-electric text-xs font-cyber uppercase px-5 py-3 rounded-xl transition-all">
+            <i data-lucide="disc-3" class="w-4 h-4 text-electric"></i> Beat Store
+          </a>
+          <button onclick="openLyrics(1)" class="flex items-center gap-2 glass text-slate-400 hover:text-white text-xs font-mono uppercase px-4 py-3 rounded-xl border border-slate-800">
+            <i data-lucide="file-text" class="w-4 h-4 text-pink-400"></i> Lyrics
+          </button>
+        </div>
+
+        <div class="mt-10 pt-6 border-t border-slate-800/50 flex flex-wrap items-center justify-center lg:justify-start gap-5 text-xs font-mono text-slate-500">
+          <span class="uppercase tracking-widest text-slate-600">From Lusaka → The World</span>
+          <span class="flex items-center gap-1.5"><span>🇿🇲</span> Zambia</span>
+          <span class="text-slate-700">•</span>
+          <span>Drill • Trap • Afrobeat</span>
+        </div>
+      </div>
+
+      <!-- Featured Card -->
+      <div class="lg:col-span-5 flex justify-center">
+        <div class="relative w-full max-w-sm group">
+          <div class="absolute -inset-1 bg-gradient-to-r from-neon to-electric rounded-3xl blur-2xl opacity-35 group-hover:opacity-60 transition duration-700"></div>
+          <div class="relative glass p-3.5 rounded-3xl border border-slate-700/70">
+            <img id="heroCover" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&auto=format&fit=crop&q=80"
+                 alt="Featured Track"
+                 class="w-full h-72 object-cover rounded-2xl shadow-2xl" />
+            <div class="mt-3.5 p-3 bg-slate-950/80 rounded-xl border border-slate-800 flex items-center justify-between gap-3">
+              <div class="min-w-0">
+                <span class="text-[9px] font-mono text-electric uppercase tracking-wider block">Featured Single</span>
+                <h3 class="font-cyber font-bold text-sm text-white truncate" id="heroTitle">BROKEN INSIDE</h3>
+                <p class="text-[11px] text-slate-500 font-mono">Prod. M.G.Y Tension</p>
+              </div>
+              <button onclick="playTrackById(1)" class="w-11 h-11 shrink-0 rounded-full bg-neon text-white flex items-center justify-center hover:scale-110 transition-transform shadow-neon-sm active:scale-95">
+                <i data-lucide="play" class="w-5 h-5 fill-white ml-0.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== NEW RELEASE HUB ===================== -->
+  <section class="py-8 border-b border-slate-900/80 bg-slate-950/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="glass rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-5 border border-neon/20">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-neon to-electric flex items-center justify-center text-2xl shadow-neon-sm shrink-0">🔥</div>
+          <div>
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="text-[10px] font-mono font-bold text-neon uppercase tracking-wider">New Release</span>
+              <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono">OUT NOW</span>
+            </div>
+            <h3 class="font-cyber font-bold text-lg text-white" id="releaseTitle">BROKEN INSIDE</h3>
+            <p class="text-xs text-slate-500 font-mono" id="releaseMeta">Drill • 140 BPM • C Minor</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <button onclick="playTrackById(1)" class="flex items-center gap-1.5 bg-neon hover:bg-purple-500 text-white text-xs font-cyber font-bold uppercase px-4 py-2.5 rounded-xl transition active:scale-95">
+            <i data-lucide="play" class="w-3.5 h-3.5 fill-white"></i> Play
+          </button>
+          <button onclick="downloadTrack(1)" class="flex items-center gap-1.5 glass border border-slate-700 hover:border-electric text-slate-200 text-xs font-mono uppercase px-4 py-2.5 rounded-xl transition">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i> Demo
+          </button>
+          <button onclick="openLyrics(1)" class="p-2.5 glass border border-slate-700 hover:border-pink-500/50 text-slate-400 hover:text-pink-400 rounded-xl transition" title="Lyrics">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SEARCH + FILTERS ===================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-3" id="music">
+    <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+      <div class="relative w-full md:w-80">
+        <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-500"></i>
+        <input type="text" id="searchInput" placeholder="Search title, genre, key, BPM..."
+          class="w-full pl-10 pr-4 py-2.5 bg-slate-900/80 border border-slate-800 rounded-xl text-slate-200 placeholder-slate-600 text-xs focus:outline-none focus:border-neon transition" />
+      </div>
+
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 font-mono text-xs scrollbar-hide" id="genreFilters">
+        <button data-genre="ALL" class="genre-btn px-3.5 py-2 rounded-xl border border-neon bg-neon/20 text-neon font-bold transition whitespace-nowrap">ALL</button>
+        <button data-genre="Drill" class="genre-btn px-3.5 py-2 rounded-xl border border-slate-800 glass text-slate-400 hover:border-neon/50 transition whitespace-nowrap">Drill</button>
+        <button data-genre="Trap" class="genre-btn px-3.5 py-2 rounded-xl border border-slate-800 glass text-slate-400 hover:border-neon/50 transition whitespace-nowrap">Trap</button>
+        <button data-genre="Afrobeat" class="genre-btn px-3.5 py-2 rounded-xl border border-slate-800 glass text-slate-400 hover:border-neon/50 transition whitespace-nowrap">Afrobeat</button>
+        <button data-genre="Love Songs" class="genre-btn px-3.5 py-2 rounded-xl border border-slate-800 glass text-slate-400 hover:border-neon/50 transition whitespace-nowrap">Love Songs</button>
+        <button data-genre="Beats" class="genre-btn px-3.5 py-2 rounded-xl border border-slate-800 glass text-slate-400 hover:border-neon/50 transition whitespace-nowrap">Beats</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TRACK GRID ===================== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-5">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="font-cyber text-lg sm:text-xl font-bold flex items-center gap-2">
+        <i data-lucide="flame" class="w-5 h-5 text-neon"></i> Music & Beats
+      </h2>
+      <span id="trackCount" class="text-xs font-mono text-slate-500">0 tracks</span>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="trackGrid">
+      <!-- Cards rendered dynamically -->
+    </div>
+  </main>
+
+  <!-- ===================== BEAT STORE ===================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 py-14 border-t border-slate-900" id="beats">
+    <div class="text-center mb-10">
+      <span class="text-[11px] font-mono text-electric uppercase tracking-widest">License Instrumentals</span>
+      <h2 class="font-cyber text-2xl sm:text-3xl font-black text-white mt-1">Beat Store</h2>
+      <p class="text-slate-500 text-sm max-w-md mx-auto mt-2">Instant download after payment. Untagged high-res WAV & stems available.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Basic Lease -->
+      <div class="glass-card p-6 rounded-2xl flex flex-col">
+        <span class="text-[10px] font-mono text-slate-500 uppercase">Basic Lease</span>
+        <h3 class="font-cyber text-3xl font-bold text-white mt-1">$20</h3>
+        <p class="text-xs text-slate-500 mt-2 mb-5">Mixtapes & non-profit streaming</p>
+        <ul class="space-y-2.5 text-xs text-slate-400 font-mono flex-1">
+          <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i> Untagged MP3</li>
+          <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i> Up to 100K streams</li>
+          <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i> Non-exclusive rights</li>
+        </ul>
+        <button onclick="buyLicense('Basic Lease', 20)" class="mt-6 w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-cyber text-xs uppercase rounded-xl transition border border-slate-700">
+          Get Basic
+        </button>
+      </div>
+
+      <!-- Premium Lease -->
+      <div class="glass-card p-6 rounded-2xl flex flex-col border-2 border-neon relative shadow-neon">
+        <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-neon text-white font-cyber text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wide">Most Popular</span>
+        <span class="text-[10px] font-mono text-neon uppercase">Premium Lease</span>
+        <h3 class="font-cyber text-3xl font-bold text-white mt-1">$50</h3>
+        <p class="text-xs text-slate-400 mt-2 mb-5">Spotify, Apple Music, commercial content</p>
+        <ul class="space-y-2.5 text-xs text-slate-300 font-mono flex-1">
+          <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-neon shrink-0"></i> WAV + MP3 files</li>
+          <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-neon shrink-0"></i> Up to 500K streams</li>
+          <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-neon shrink-0"></i> Music video rights</li>
+        </ul>
+        <button onclick="buyLicense('Premium Lease', 50)" class="mt-6 w-full py-3 bg-gradient-to-r from-neon to-electric text-white font-cyber text-xs uppercase font-bold rounded-xl shadow-neon hover:scale-[1.02] transition">
+          Get Premium
+        </button>
+      </div>
+
+      <!-- Unlimited -->
+      <div class="glass-card p-6 rounded-2xl flex flex-col">
+        <span class="text-[10px] font-mono text-electric uppercase">Unlimited + Stems</span>
+        <h3 class="font-cyber text-3xl font-bold text-white mt-1">$100</h3>
+        <p class="text-xs text-slate-500 mt-2 mb-5">Albums, radio, full commercial control</p>
+        <ul class="space-y-2.5 text-xs text-slate-400 font-mono flex-1">
+          <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-electric shrink-0"></i> Full tracked-out stems</li>
+          <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-electric shrink-0"></i> Unlimited streams</li>
+          <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-electric shrink-0"></i> Radio & broadcast rights</li>
+        </ul>
+        <button onclick="buyLicense('Unlimited + Stems', 100)" class="mt-6 w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-cyber text-xs uppercase rounded-xl transition border border-slate-700">
+          Get Unlimited
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== VIDEOS ===================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 py-12 border-t border-slate-900" id="videos">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="font-cyber text-lg sm:text-xl font-bold flex items-center gap-2">
+        <i data-lucide="youtube" class="w-5 h-5 text-red-500"></i> Videos & Studio Sessions
+      </h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="glass p-3.5 rounded-2xl border border-slate-800">
+        <div class="aspect-video w-full rounded-xl overflow-hidden bg-slate-900">
+          <iframe class="w-full h-full" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" title="Official Video" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <h3 class="font-cyber font-bold text-sm text-white mt-3">BROKEN INSIDE (Official Video)</h3>
+        <p class="text-[11px] text-slate-500 font-mono mt-0.5">Music Video</p>
+      </div>
+      <div class="glass p-3.5 rounded-2xl border border-slate-800">
+        <div class="aspect-video w-full rounded-xl overflow-hidden bg-slate-900">
+          <iframe class="w-full h-full" src="https://www.youtube-nocookie.com/embed/L_LUpnjgPso" title="Studio Session" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <h3 class="font-cyber font-bold text-sm text-white mt-3">Studio Cookup — Making the Beat</h3>
+        <p class="text-[11px] text-slate-500 font-mono mt-0.5">Behind the Scenes</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 py-14 border-t border-slate-900" id="about">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <div class="lg:col-span-5">
+        <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&auto=format&fit=crop&q=80"
+             alt="M.G.Y Tension Studio"
+             class="rounded-2xl border border-slate-800 shadow-2xl w-full object-cover aspect-[4/3]" />
+      </div>
+      <div class="lg:col-span-7">
+        <span class="text-[11px] font-mono text-neon uppercase tracking-widest">The Journey</span>
+        <h2 class="font-cyber text-2xl sm:text-3xl font-black text-white mt-1 mb-4">About M.G.Y Tension</h2>
+        <p class="text-slate-300 text-sm leading-relaxed mb-4">
+          Independent artist and producer from Lusaka, Zambia. Blending hard Drill basslines, atmospheric Trap, and vibrant Afrobeat energy.
+        </p>
+        <p class="text-slate-500 text-xs leading-relaxed font-mono mb-6">
+          Every track is tagged with BPM, key, and mood so artists and creators can find the right sound fast. Stream free, download demos, or license instrumentals for commercial release without friction.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1 rounded-full text-[11px] font-mono bg-neon/10 text-neon border border-neon/25">Drill</span>
+          <span class="px-3 py-1 rounded-full text-[11px] font-mono bg-electric/10 text-electric border border-electric/25">Trap</span>
+          <span class="px-3 py-1 rounded-full text-[11px] font-mono bg-pink-500/10 text-pink-400 border border-pink-500/25">Afrobeat</span>
+          <span class="px-3 py-1 rounded-full text-[11px] font-mono bg-slate-800 text-slate-400 border border-slate-700">Producer</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== COMMUNITY ===================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 py-12 border-t border-slate-900" id="community">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <!-- Fan Comments -->
+      <div>
+        <h3 class="font-cyber text-base font-bold text-white mb-4 flex items-center gap-2">
+          <i data-lucide="message-square" class="w-4 h-4 text-neon"></i> Fan Reactions
+        </h3>
+        <div class="space-y-3 max-h-72 overflow-y-auto pr-1" id="commentList">
+          <!-- Dynamically populated from database -->
+        </div>
+        <form id="commentForm" class="mt-4 flex gap-2">
+          <input type="text" id="newComment" placeholder="Leave a message..." required
+            class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-neon transition" />
+          <button type="submit" class="bg-neon hover:bg-purple-600 text-white text-xs font-cyber uppercase px-4 py-2.5 rounded-xl shrink-0 transition">Post</button>
+        </form>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="glass p-7 rounded-2xl border border-slate-800 flex flex-col justify-center">
+        <span class="text-[11px] font-mono text-electric uppercase tracking-widest">Stay in the loop</span>
+        <h3 class="font-cyber text-xl font-bold text-white mt-1">New Drops First</h3>
+        <p class="text-xs text-slate-500 mt-2 mb-5">Get notified when new tracks and beat packs drop.</p>
+        <form id="newsletterForm" class="flex flex-col sm:flex-row gap-2.5">
+          <input type="email" placeholder="Your email address" required
+            class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-electric transition" />
+          <button type="submit" class="bg-electric hover:bg-blue-600 text-white font-cyber text-xs uppercase font-bold px-5 py-3 rounded-xl transition shadow-electric shrink-0">
+            Join
+          </button>
+        </form>
+        <p class="text-[10px] text-slate-600 mt-3 font-mono">No spam. Unsubscribe anytime.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="border-t border-slate-900 bg-slate-950/80 py-10 mt-8" id="contact">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="text-center md:text-left">
+        <span class="font-cyber text-base font-bold text-white">M.G.Y TENSION</span>
+        <p class="text-[11px] text-slate-600 font-mono mt-1">Bookings: mgytension.mgmt@gmail.com</p>
+      </div>
+      <div class="flex items-center gap-5 text-slate-500">
+        <a href="https://youtube.com" target="_blank" rel="noopener" class="hover:text-red-500 transition"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+        <a href="https://instagram.com" target="_blank" rel="noopener" class="hover:text-pink-500 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+        <a href="https://tiktok.com" target="_blank" rel="noopener" class="hover:text-cyan-400 transition"><i data-lucide="music-2" class="w-5 h-5"></i></a>
+        <a href="https://open.spotify.com" target="_blank" rel="noopener" class="hover:text-emerald-400 transition"><i data-lucide="disc-3" class="w-5 h-5"></i></a>
+      </div>
+      <p class="text-[11px] text-slate-700 font-mono">© 2026 M.G.Y Tension</p>
+    </div>
+  </footer>
+
+  <!-- ===================== STICKY PLAYER DOCK ===================== -->
+  <div id="playerDock" class="fixed bottom-0 left-0 right-0 z-50 glass border-t border-slate-800/80 px-3 sm:px-6 py-2.5 shadow-2xl">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 sm:gap-6">
+      
+      <!-- Track Info -->
+      <div class="flex items-center gap-3 min-w-0 flex-1 sm:flex-none sm:w-48 md:w-56">
+        <img id="dockCover" src="" alt="" class="w-11 h-11 rounded-lg object-cover border border-slate-700 shrink-0 bg-slate-800" />
+        <div class="min-w-0">
+          <h4 id="dockTitle" class="text-xs font-cyber font-bold text-white truncate">Select a track</h4>
+          <p id="dockMeta" class="text-[10px] text-slate-500 font-mono truncate">—</p>
+        </div>
+      </div>
+
+      <!-- Playback Controls -->
+      <div class="flex flex-col items-center gap-1 flex-1 max-w-md">
+        <div class="flex items-center gap-4">
+          <button id="prevBtn" onclick="prevTrack()" class="text-slate-400 hover:text-white transition"><i data-lucide="skip-back" class="w-4 h-4"></i></button>
+          <button id="playPauseBtn" onclick="togglePlay()" class="w-9 h-9 rounded-full bg-gradient-to-tr from-neon to-electric text-white flex items-center justify-center hover:scale-110 transition shadow-neon-sm">
+            <i data-lucide="play" class="w-4 h-4 fill-white ml-0.5"></i>
+          </button>
+          <button id="nextBtn" onclick="nextTrack()" class="text-slate-400 hover:text-white transition"><i data-lucide="skip-forward" class="w-4 h-4"></i></button>
+        </div>
+        <div class="w-full flex items-center gap-2 text-[10px] font-mono text-slate-500">
+          <span id="currentTime" class="w-8 text-right">0:00</span>
+          <input type="range" id="progressBar" value="0" min="0" max="100" class="flex-1 h-1 accent-neon bg-slate-800 rounded cursor-pointer" />
+          <span id="durationTime" class="w-8">0:00</span>
+          
+          <!-- Visualizer -->
+          <div id="visualizer" class="hidden sm:flex items-center gap-0.5 h-4 pl-1">
+            <span class="v-bar w-0.5 bg-neon rounded-full"></span>
+            <span class="v-bar w-0.5 bg-electric rounded-full"></span>
+            <span class="v-bar w-0.5 bg-pink-400 rounded-full"></span>
+            <span class="v-bar w-0.5 bg-emerald-400 rounded-full"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Volume & Quick Actions -->
+      <div class="hidden sm:flex items-center gap-4 shrink-0">
+        <!-- Volume Control -->
+        <div class="flex items-center gap-2">
+          <button id="muteBtn" onclick="toggleMute()" class="text-slate-400 hover:text-white transition">
+            <i data-lucide="volume-2" class="w-4 h-4" id="volumeIcon"></i>
+          </button>
+          <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.8" class="w-16 h-1 accent-electric bg-slate-800 rounded cursor-pointer" />
+        </div>
+
+        <button id="dockLyricsBtn" class="text-[11px] font-mono text-slate-400 hover:text-neon flex items-center gap-1 transition">
+          <i data-lucide="file-text" class="w-3.5 h-3.5"></i> <span class="hidden md:inline">Lyrics</span>
+        </button>
+        <button id="dockDownloadBtn" class="bg-slate-800 hover:bg-slate-700 text-electric border border-electric/30 text-[11px] font-cyber font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i> Demo
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== LYRICS MODAL ===================== -->
+  <div id="lyricsModal" class="fixed inset-0 z-[60] bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="glass w-full max-w-lg rounded-2xl border border-slate-800 p-6 relative max-h-[85vh] overflow-y-auto modal-enter">
+      <button onclick="closeLyrics()" class="absolute top-4 right-4 text-slate-500 hover:text-white p-1">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <span class="text-[10px] font-mono text-neon uppercase tracking-wider">Lyrics & Story</span>
+      <h3 id="modalTitle" class="font-cyber text-xl font-bold text-white mt-1">—</h3>
+      <p id="modalMeta" class="text-[11px] font-mono text-slate-500 mb-5">—</p>
+      <div class="mb-5 p-3.5 bg-slate-950/70 rounded-xl border border-slate-800">
+        <h4 class="text-[10px] font-cyber font-bold text-electric uppercase mb-1">Story Behind The Track</h4>
+        <p id="modalStory" class="text-xs text-slate-400 leading-relaxed font-mono">—</p>
+      </div>
+      <div id="modalLyrics" class="text-xs font-mono text-slate-300 leading-relaxed whitespace-pre-line border-t border-slate-800 pt-4">—</div>
+    </div>
+  </div>
+
+  <!-- ===================== LICENSE CHECKOUT MODAL ===================== -->
+  <div id="licenseModal" class="fixed inset-0 z-[60] bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="glass w-full max-w-md rounded-2xl border border-slate-800 p-6 relative modal-enter text-center">
+      <button onclick="closeLicenseModal()" class="absolute top-4 right-4 text-slate-500 hover:text-white p-1">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div class="w-12 h-12 mx-auto rounded-full bg-neon/20 border border-neon/40 flex items-center justify-center text-neon mb-3">
+        <i data-lucide="disc-3" class="w-6 h-6"></i>
+      </div>
+      <span class="text-[10px] font-mono text-neon uppercase tracking-wider block">Instrumental License</span>
+      <h3 id="licenseModalTier" class="font-cyber text-2xl font-bold text-white mt-1">—</h3>
+      <p id="licenseModalPrice" class="font-cyber text-3xl font-black text-electric my-2">$0</p>
+      <p class="text-xs text-slate-400 mb-6 font-mono">Instant delivery: Untagged files & license agreement delivered via email.</p>
+      
+      <div class="space-y-3">
+        <button onclick="completeOrder('Card / PayPal')" class="w-full py-3 bg-gradient-to-r from-neon to-electric text-white font-cyber text-xs uppercase font-bold rounded-xl shadow-neon hover:scale-[1.02] transition">
+          Pay with Card / PayPal
+        </button>
+        <button onclick="completeOrder('Mobile Money')" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-cyber text-xs uppercase rounded-xl transition border border-slate-700">
+          Mobile Money (MTN / Airtel)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== UPLOAD SONG MODAL ===================== -->
+  <div id="uploadModal" class="fixed inset-0 z-[60] bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="glass w-full max-w-lg rounded-2xl border border-slate-800 p-6 relative max-h-[85vh] overflow-y-auto modal-enter">
+      <button onclick="closeUploadModal()" class="absolute top-4 right-4 text-slate-500 hover:text-white p-1">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <span class="text-[10px] font-mono text-neon uppercase tracking-wider">Creator Studio</span>
+      <h3 class="font-cyber text-xl font-bold text-white mt-1 mb-4">Upload New Track</h3>
+
+      <form id="uploadTrackForm" class="space-y-4 text-xs font-mono">
+        <div>
+          <label class="block text-slate-400 mb-1">Track Title</label>
+          <input type="text" id="upTitle" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-neon" placeholder="e.g. LUSAKA NIGHTS">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Genre</label>
+            <select id="upGenre" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-neon">
+              <option value="Drill">Drill</option>
+              <option value="Trap">Trap</option>
+              <option value="Afrobeat">Afrobeat</option>
+              <option value="Love Songs">Love Songs</option>
+              <option value="Beats">Beats</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">BPM</label>
+            <input type="number" id="upBpm" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-neon" placeholder="140">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Key Signature</label>
+            <input type="text" id="upKey" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-neon" placeholder="C Minor">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Duration</label>
+            <input type="text" id="upDuration" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-neon" placeholder="3:15">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Audio File (.mp3, .wav)</label>
+          <input type="file" id="upAudioFile" accept="audio/*" required class="w-full text-slate-400">
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Cover Image (.jpg, .png)</label>
+          <input type="file" id="upCoverFile" accept="image/*" required class="w-full text-slate-400">
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Story / Concept</label>
+          <textarea id="upStory" rows="2" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-neon" placeholder="Inspiration behind the track..."></textarea>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Lyrics</label>
+          <textarea id="upLyrics" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-neon" placeholder="[Chorus]..."></textarea>
+        </div>
+
+        <button type="submit" id="submitUploadBtn" class="w-full py-3 bg-gradient-to-r from-neon to-electric text-white font-cyber text-xs uppercase font-bold rounded-xl shadow-neon hover:scale-[1.02] transition">
+          Publish Track
         </button>
       </form>
     </div>
   </div>
 
-  <div id="app-screen" class="hidden max-w-2xl mx-auto px-4 pt-6">
-    <header class="flex justify-between items-center mb-6 bg-zinc-900/50 p-4 border border-zinc-800 rounded-2xl">
-      <div class="flex items-center space-x-3">
-        <img id="user-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-xl border border-indigo-500 bg-zinc-950" />
-        <div>
-          <h1 class="text-2xl font-black text-indigo-400 tracking-wide uppercase leading-none mb-1">Kulix</h1>
-          <p id="user-display" class="text-xs text-zinc-400 font-bold tracking-tight"></p>
-        </div>
-      </div>
-      <button id="logout-btn" class="text-xs bg-zinc-950 hover:bg-zinc-900 px-3 py-2 rounded-xl border border-zinc-800 font-semibold transition-colors text-zinc-400 hover:text-zinc-200">
-        Exit Hub
-      </button>
-    </header>
+  <!-- Toast -->
+  <div id="toast" class="toast fixed bottom-24 left-1/2 -translate-x-1/2 z-[70] glass px-5 py-2.5 rounded-full text-xs font-medium border border-slate-700 shadow-glass pointer-events-none"></div>
 
-    <div id="tab-feed" class="tab-content space-y-6">
-      <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 shadow-md">
-        <form id="post-form" class="space-y-3">
-          <textarea id="post-content" required placeholder="What's going down?" rows="3" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 resize-none"></textarea>
-          <input type="url" id="post-image" placeholder="Image URL (optional)" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-100 placeholder-zinc-500 text-xs focus:outline-none focus:border-indigo-500">
-          <div class="flex justify-end">
-            <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold text-sm transition-all shadow-md">
-              Share Update
-            </button>
-          </div>
-        </form>
-      </div>
-      <div id="feed-container" class="space-y-4"></div>
-    </div>
+  <!-- Audio Element -->
+  <audio id="audioEngine" preload="metadata"></audio>
 
-    <div id="tab-polls" class="tab-content hidden space-y-6">
-      <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 shadow-md">
-        <h3 class="text-sm font-bold text-zinc-400 mb-3 uppercase tracking-wider">Create a Poll</h3>
-        <form id="poll-form" class="space-y-3">
-          <input type="text" id="poll-question" required placeholder="Where are we hanging out tonight?" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-indigo-500">
-          <input type="text" id="poll-options" required placeholder="Comma separated choices (e.g., Mall, Beach, Park)" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-zinc-100 focus:outline-none focus:border-indigo-500">
-          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 py-2 rounded-xl font-bold text-sm transition-colors">
-            Launch Poll
-          </button>
-        </form>
-      </div>
-      <div id="polls-container" class="space-y-4"></div>
-    </div>
-
-    <div id="tab-bucket" class="tab-content hidden space-y-6">
-      <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 shadow-md">
-        <h3 class="text-sm font-bold text-zinc-400 mb-3 uppercase tracking-wider">Add Group Goal / Event</h3>
-        <form id="bucket-form" class="flex flex-col sm:flex-row gap-2">
-          <input type="text" id="bucket-title" required placeholder="Road Trip / Alex's Birthday" class="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
-          <input type="date" id="bucket-date" required class="bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-sm text-zinc-400 focus:outline-none focus:border-indigo-500">
-          <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-xl font-bold text-sm transition-colors whitespace-nowrap">
-            Add Event
-          </button>
-        </form>
-      </div>
-      <div id="bucket-container" class="space-y-4"></div>
-    </div>
-  </div>
-
-  <nav id="bottom-nav" class="hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 py-3 px-6 flex justify-around items-center z-50">
-    <button id="nav-feed" class="flex flex-col items-center gap-1 text-indigo-500 font-bold text-xs transition-colors">
-      <span>💬</span><span>Feed</span>
-    </button>
-    <button id="nav-polls" class="flex flex-col items-center gap-1 text-zinc-400 font-medium text-xs transition-colors">
-      <span>📊</span><span>Polls</span>
-    </button>
-    <button id="nav-bucket" class="flex flex-col items-center gap-1 text-zinc-400 font-medium text-xs transition-colors">
-      <span>⏳</span><span>Countdowns</span>
-    </button>
-  </nav>
-
+  <!-- ===================== APP LOGIC ===================== -->
   <script>
-    // Configuration object mapping your custom credentials
-    const CONFIG = {
-      supabaseUrl: "https://jfzypvnlbrmpbuxmlhgp.supabase.co",
-      supabaseAnonKey: "sb_publishable_uT8ky5GdL-0LQ305cJIJZw_EfP6IHCM"
-    };
+    // ---------- SUPABASE INITIALIZATION ----------
+    // Replace these credentials with your actual project keys from Supabase Dashboard
+    const SUPABASE_URL = 'https://jfzypvnlbrmpbuxmlhgp.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_uT8ky5GdL-0LQ305cJIJZw_EfP6IHCM';
+    
+    // Initialize Supabase Client
+    let _supabase = null;
+    if (typeof supabase !== 'undefined' && !SUPABASE_URL.includes('YOUR_PROJECT_ID')) {
+      _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
 
-    // FIXED: Accessing the global 'window.supabase' constructor to avoid variable name collisions
-    const supabase = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
-    let currentUser = null;
-
-    const authScreen = document.getElementById('auth-screen');
-    const appScreen = document.getElementById('app-screen');
-    const bottomNav = document.getElementById('bottom-nav');
-    const authForm = document.getElementById('auth-form');
-    const authError = document.getElementById('auth-error');
-    const userDisplay = document.getElementById('user-display');
-
-    // Attach navigation event handlers safely
-    document.getElementById('nav-feed').addEventListener('click', () => switchTab('feed'));
-    document.getElementById('nav-polls').addEventListener('click', () => switchTab('polls'));
-    document.getElementById('nav-bucket').addEventListener('click', () => switchTab('bucket'));
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedSession = localStorage.getItem('kulix_registered_user');
-      if (savedSession) {
-        currentUser = JSON.parse(savedSession);
-        renderAppSpace();
+    // ---------- FALLBACK SEED CATALOG ----------
+    const fallbackCatalog = [
+      {
+        id: 1,
+        title: "BROKEN INSIDE",
+        genre: "Drill",
+        bpm: 140,
+        key: "C Minor",
+        duration: "3:22",
+        cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80",
+        audioUrl: "https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f7336d.mp3?filename=uk-drill-type-beat-12400.mp3",
+        story: "Written late night in Lusaka during studio solitude. About staying true when everything feels heavy.",
+        lyrics: `[Chorus]\nBroken inside but I keep moving forward,\nTurning pain into power, reaching higher toward.\nCyberpunk nights under city lights glowing,\nM.G.Y Tension, hear the rhythm flowing.\n\n[Verse 1]\nFrom the studio session straight into the light,\nMixing up the frequency till everything is right.\nZambia to the world, notice how we rise,\nTruth in every melody, look into my eyes.`
+      },
+      {
+        id: 2,
+        title: "LAGOS TENSION",
+        genre: "Afrobeat",
+        bpm: 108,
+        key: "F# Major",
+        duration: "3:10",
+        cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=80",
+        audioUrl: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=afrobeat-vibes-10200.mp3",
+        story: "Inspired by the energy of African nightlife and live percussion.",
+        lyrics: `[Chorus]\nFeel the Lagos Tension in the atmosphere,\nTurn the speakers up so everybody hear.\nAfrobeat heavy, shaking up the floor,\nOnce the chorus hits they keep asking for more!`
       }
-    });
+    ];
 
-    function renderAppSpace() {
-      authScreen.classList.add('hidden');
-      appScreen.classList.remove('hidden');
-      bottomNav.classList.remove('hidden');
-      
-      document.getElementById('user-avatar').src = currentUser.avatar_url;
-      userDisplay.innerText = `@${currentUser.nickname}`;
-      switchTab('feed');
+    let catalog = [];
+
+    // ---------- STATE ----------
+    let currentIdx = 0;
+    let isPlaying = false;
+    let currentFilter = 'ALL';
+    let hasStarted = false;
+    let previousVolume = 0.8;
+    let activeLicenseTier = 'Premium Lease';
+    let activeLicensePrice = 50;
+
+    // ---------- DOM ELEMENTS ----------
+    const audio = document.getElementById('audioEngine');
+    const trackGrid = document.getElementById('trackGrid');
+    const playerDock = document.getElementById('playerDock');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const progressBar = document.getElementById('progressBar');
+    const currentTimeEl = document.getElementById('currentTime');
+    const durationTimeEl = document.getElementById('durationTime');
+    const dockTitle = document.getElementById('dockTitle');
+    const dockCover = document.getElementById('dockCover');
+    const dockMeta = document.getElementById('dockMeta');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const visualizer = document.getElementById('visualizer');
+
+    // Safe Lucide helper
+    function safeLucide() {
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        lucide.createIcons();
+      }
     }
-// REGISTRY AUTH HANDLER
-authForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
 
-    authError.classList.add('hidden');
-    authError.innerText = '';
-
-    let rawNickname = document
-        .getElementById('input-nickname')
-        .value
-        .trim()
-        .replace(/\s+/g, ' ');
-
-    if (rawNickname.includes('@')) {
-        authError.innerText = 'Nickname cannot contain "@".';
-        authError.classList.remove('hidden');
+    // ---------- FETCH TRACKS FROM DATABASE ----------
+    async function fetchTracksFromDB() {
+      if (!_supabase) {
+        catalog = [...fallbackCatalog];
+        if (catalog.length > 0) loadTrack(0);
+        renderTracks();
         return;
-    }
+      }
 
-    try {
-        const { data: searchUser, error: fetchErr } = await supabase.from('users').select('*').eq('nickname', rawNickname).maybeSingle();
-        
-        if (searchUser) {
-          currentUser = searchUser;
-          localStorage.setItem('kulix_registered_user', JSON.stringify(searchUser));
-          renderAppSpace();
+      try {
+        const { data, error } = await _supabase
+          .from('tracks')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error || !data || data.length === 0) {
+          catalog = [...fallbackCatalog];
         } else {
-          const avatarUrl = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(rawNickname)}`;
-          const { data: newUser, error: insertErr } = await supabase
-            .from('users')
-            .insert([{ nickname: rawNickname, avatar_url: avatarUrl }])
-            .select().single();
-
-          if (insertErr) throw insertErr;
-
-          currentUser = newUser;
-          localStorage.setItem('kulix_registered_user', JSON.stringify(newUser));
-          renderAppSpace();
+          catalog = data.map(t => ({
+            id: t.id,
+            title: t.title,
+            genre: t.genre,
+            bpm: t.bpm,
+            key: t.key_signature,
+            duration: t.duration,
+            cover: t.cover_url,
+            audioUrl: t.audio_demo_url,
+            story: t.story || '',
+            lyrics: t.lyrics || ''
+          }));
         }
+
+        if (catalog.length > 0) {
+          loadTrack(0);
+        }
+        renderTracks();
       } catch (err) {
-        authError.innerText = 'Connection failure or registry name taken. Try again.';
-        authError.classList.remove('hidden');
+        console.error('Fetch tracks failed:', err);
+        catalog = [...fallbackCatalog];
+        renderTracks();
       }
-    });
-
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      localStorage.removeItem('kulix_registered_user');
-      location.reload();
-    });
-
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-      
-      ['feed', 'polls', 'bucket'].forEach(t => {
-        const btn = document.getElementById(`nav-${t}`);
-        if (t === tabId) {
-          btn.classList.replace('text-zinc-400', 'text-indigo-500');
-          btn.classList.replace('font-medium', 'font-bold');
-        } else {
-          btn.classList.replace('text-indigo-500', 'text-zinc-400');
-          btn.classList.replace('font-bold', 'font-medium');
-        }
-      });
-
-      if(tabId === 'feed') fetchFeed();
-      if(tabId === 'polls') fetchPolls();
-      if(tabId === 'bucket') fetchBucketList();
     }
 
-    // ================= MODULE 1: SOCIAL CONSOLE LOGS =================
-    document.getElementById('post-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const content = document.getElementById('post-content').value.trim();
-      const image_url = document.getElementById('post-image').value.trim();
-      
-      await supabase.from('posts').insert([{ user_id: currentUser.id, nickname: currentUser.nickname, content, image_url }]);
-      document.getElementById('post-form').reset();
-      fetchFeed();
-    });
-
-    async function fetchFeed() {
-      const { data: posts } = await supabase.from('posts').select('*, likes(*), comments(*)').order('created_at', { ascending: false });
-      const container = document.getElementById('feed-container');
-      container.innerHTML = '';
-
-      const safePosts = posts || [];
-      if(safePosts.length === 0) {
-        container.innerHTML = `<p class="text-zinc-600 text-center text-xs py-8 font-mono">No updates shared on the wall yet.</p>`;
+    // ---------- FETCH COMMENTS FROM DATABASE ----------
+    async function fetchCommentsFromDB() {
+      const container = document.getElementById('commentList');
+      if (!_supabase) {
+        container.innerHTML = `
+          <div class="glass p-3.5 rounded-xl border border-slate-800">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-semibold text-xs text-neon">Michael S.</span>
+              <span class="text-[10px] text-yellow-400">★★★★★</span>
+            </div>
+            <p class="text-xs text-slate-400">"Broken Inside hit different. Real Zambian energy."</p>
+          </div>`;
         return;
       }
 
-      safePosts.forEach(post => {
-        const safeLikes = post.likes || [];
-        const safeComments = post.comments || [];
-        const hasLiked = safeLikes.some(l => l.user_id === currentUser.id);
-        const imgTag = post.image_url ? `<img src="${escapeHTML(post.image_url)}" class="rounded-xl max-h-72 w-full object-cover my-2 border border-zinc-800" />` : '';
-        
-        const commentsHTML = safeComments.map(c => `
-          <div class="text-xs bg-zinc-950 p-2 rounded-lg border border-zinc-900"><span class="font-bold text-indigo-400">@${escapeHTML(c.nickname)}:</span> ${escapeHTML(c.content)}</div>
-        `).join('');
+      const { data, error } = await _supabase
+        .from('comments')
+        .select('*')
+        .eq('is_approved', true)
+        .order('created_at', { ascending: false });
 
-        const card = document.createElement('div');
-        card.className = "bg-zinc-900 p-4 rounded-2xl border border-zinc-800 space-y-2 shadow-sm";
-        card.innerHTML = `
-          <div class="flex justify-between items-center text-xs text-zinc-500">
-            <span class="font-bold text-zinc-300">@${escapeHTML(post.nickname)}</span>
-            <span>${new Date(post.created_at).toLocaleDateString()}</span>
+      if (error || !data || data.length === 0) return;
+
+      container.innerHTML = '';
+      data.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'glass p-3.5 rounded-xl border border-slate-800';
+        div.innerHTML = `
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-semibold text-xs text-neon">${c.author_name}</span>
+            <span class="text-[10px] text-yellow-400">${'★'.repeat(c.rating || 5)}</span>
           </div>
-          <p class="text-sm text-zinc-100 whitespace-pre-wrap break-words">${escapeHTML(post.content)}</p>
-          ${imgTag}
-          <div class="flex items-center gap-4 py-1 text-xs">
-            <button class="like-toggle-btn ${hasLiked ? 'text-pink-500 font-bold' : 'text-zinc-400'} flex items-center gap-1">
-              ❤️ <span>${safeLikes.length}</span>
+          <p class="text-xs text-slate-400">"${c.comment_text}"</p>`;
+        container.appendChild(div);
+      });
+    }
+
+    // ---------- RENDER TRACKS GRID ----------
+    function getFilteredCatalog() {
+      const q = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+      return catalog.filter(t => {
+        const matchQ = !q || t.title.toLowerCase().includes(q) || t.genre.toLowerCase().includes(q) || t.key.toLowerCase().includes(q) || String(t.bpm).includes(q);
+        const matchG = currentFilter === 'ALL' || t.genre === currentFilter;
+        return matchQ && matchG;
+      });
+    }
+
+    function renderTracks() {
+      const list = getFilteredCatalog();
+      document.getElementById('trackCount').textContent = `${list.length} track${list.length !== 1 ? 's' : ''}`;
+      trackGrid.innerHTML = '';
+
+      if (list.length === 0) {
+        trackGrid.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-500 font-mono">
+            <i data-lucide="disc-3" class="w-10 h-10 mx-auto mb-3 opacity-40 animate-spin"></i>
+            <p class="text-sm">No tracks found matching your search.</p>
+          </div>`;
+        safeLucide();
+        return;
+      }
+
+      list.forEach(track => {
+        const isCurrent = hasStarted && catalog[currentIdx]?.id === track.id;
+        const card = document.createElement('article');
+        card.className = `glass-card p-3.5 rounded-2xl relative group overflow-hidden ${isCurrent && isPlaying ? 'is-playing-card' : ''}`;
+        card.innerHTML = `
+          <div class="relative aspect-square rounded-xl overflow-hidden mb-3 bg-slate-900">
+            <img src="${track.cover}" alt="${track.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+            <div class="absolute inset-0 bg-slate-950/55 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button onclick="playTrackById(${track.id})" class="w-12 h-12 rounded-full bg-neon text-white flex items-center justify-center shadow-neon hover:scale-110 transition">
+                <i data-lucide="${isCurrent && isPlaying ? 'pause' : 'play'}" class="w-5 h-5 fill-white ${isCurrent && isPlaying ? '' : 'ml-0.5'}"></i>
+              </button>
+            </div>
+            <span class="absolute top-2 left-2 text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-slate-950/85 text-neon border border-neon/30 uppercase">${track.genre}</span>
+          </div>
+          <div class="min-w-0">
+            <h3 class="font-cyber font-bold text-sm text-white truncate cursor-pointer hover:text-neon" onclick="playTrackById(${track.id})">${track.title}</h3>
+            <p class="text-[10px] font-mono text-slate-500 mt-0.5">${track.bpm} BPM • ${track.key} • ${track.duration}</p>
+          </div>
+          <div class="mt-3 pt-2.5 border-t border-slate-800/70 flex items-center justify-between">
+            <button onclick="openLyrics(${track.id})" class="text-slate-500 hover:text-pink-400 transition" title="Lyrics & Story">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+            </button>
+            <button onclick="downloadTrack(${track.id})" class="text-electric hover:text-white transition flex items-center gap-1 text-[11px] font-mono" title="Download demo">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Demo
             </button>
           </div>
-          <div class="space-y-1.5 pt-2 border-t border-zinc-950">${commentsHTML}</div>
-          <form class="comment-submission-form flex gap-2 mt-2">
-            <input type="text" placeholder="Write a comment..." required class="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg text-xs px-2 py-1.5 focus:outline-none text-zinc-100">
-            <button class="bg-indigo-600 text-white text-xs px-3 py-1 rounded-lg font-bold">Post</button>
-          </form>
         `;
+        trackGrid.appendChild(card);
+      });
+      safeLucide();
+    }
 
-        card.querySelector('.like-toggle-btn').addEventListener('click', () => toggleLike(post.id, hasLiked));
-        card.querySelector('.comment-submission-form').addEventListener('submit', (e) => {
-          e.preventDefault();
-          const input = e.target.querySelector('input');
-          addComment(post.id, input.value.trim());
-          input.value = '';
-        });
+    // ---------- AUDIO PLAYBACK ----------
+    function loadTrack(idx) {
+      if (!catalog[idx]) return;
+      currentIdx = idx;
+      const t = catalog[currentIdx];
+      audio.src = t.audioUrl;
+      dockTitle.textContent = t.title;
+      dockCover.src = t.cover;
+      dockMeta.textContent = `${t.bpm} BPM • ${t.key}`;
+      document.getElementById('heroCover').src = t.cover;
+      document.getElementById('heroTitle').textContent = t.title;
+      document.getElementById('releaseTitle').textContent = t.title;
+      document.getElementById('releaseMeta').textContent = `${t.genre} • ${t.bpm} BPM • ${t.key}`;
+      document.getElementById('dockDownloadBtn').onclick = () => downloadTrack(t.id);
+      document.getElementById('dockLyricsBtn').onclick = () => openLyrics(t.id);
+    }
 
-        container.appendChild(card);
+    function playTrackById(id) {
+      const idx = catalog.findIndex(t => t.id === id);
+      if (idx === -1) return;
+      if (hasStarted && currentIdx === idx && isPlaying) {
+        pauseAudio();
+        return;
+      }
+      loadTrack(idx);
+      playAudio();
+    }
+
+    function togglePlay() {
+      if (!hasStarted) {
+        if (catalog.length > 0) playTrackById(catalog[0].id);
+        return;
+      }
+      isPlaying ? pauseAudio() : playAudio();
+    }
+
+    function playAudio() {
+      hasStarted = true;
+      playerDock.classList.add('visible');
+      audio.play().then(() => {
+        isPlaying = true;
+        updatePlayIcon();
+        visualizer.classList.add('is-playing-vis');
+        renderTracks();
+      }).catch(err => {
+        showToast('Tap play again to start audio');
       });
     }
 
-    async function toggleLike(postId, hasLiked) {
-      if (hasLiked) {
-        await supabase.from('likes').delete().eq('post_id', postId).eq('user_id', currentUser.id);
+    function pauseAudio() {
+      audio.pause();
+      isPlaying = false;
+      updatePlayIcon();
+      visualizer.classList.remove('is-playing-vis');
+      renderTracks();
+    }
+
+    function prevTrack() {
+      let i = currentIdx - 1;
+      if (i < 0) i = catalog.length - 1;
+      loadTrack(i);
+      playAudio();
+    }
+
+    function nextTrack() {
+      let i = currentIdx + 1;
+      if (i >= catalog.length) i = 0;
+      loadTrack(i);
+      playAudio();
+    }
+
+    function updatePlayIcon() {
+      playPauseBtn.innerHTML = isPlaying
+        ? `<i data-lucide="pause" class="w-4 h-4 fill-white"></i>`
+        : `<i data-lucide="play" class="w-4 h-4 fill-white ml-0.5"></i>`;
+      safeLucide();
+    }
+
+    function toggleMute() {
+      if (audio.volume > 0) {
+        previousVolume = audio.volume;
+        audio.volume = 0;
+        volumeSlider.value = 0;
       } else {
-        await supabase.from('likes').insert([{ post_id: postId, user_id: currentUser.id, nickname: currentUser.nickname }]);
+        audio.volume = previousVolume || 0.8;
+        volumeSlider.value = audio.volume;
       }
-      fetchFeed();
+      updateVolumeIcon();
     }
 
-    async function addComment(postId, commentText) {
-      if(!commentText) return;
-      await supabase.from('comments').insert([{ post_id: postId, user_id: currentUser.id, nickname: currentUser.nickname, content: commentText }]);
-      fetchFeed();
+    function updateVolumeIcon() {
+      const icon = document.getElementById('volumeIcon');
+      if (audio.volume === 0) {
+        icon.setAttribute('data-lucide', 'volume-x');
+      } else if (audio.volume < 0.5) {
+        icon.setAttribute('data-lucide', 'volume-1');
+      } else {
+        icon.setAttribute('data-lucide', 'volume-2');
+      }
+      safeLucide();
     }
 
-    // ================= MODULE 2: LIVE METRICS ENGINE =================
-    document.getElementById('poll-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const question = document.getElementById('poll-question').value.trim();
-      const optionsArr = document.getElementById('poll-options').value.split(',').map(o => o.trim());
+    function formatTime(s) {
+      if (!s || isNaN(s)) return '0:00';
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+    }
+
+    // ---------- DOWNLOAD DEMO ----------
+    function downloadTrack(id) {
+      const t = catalog.find(x => x.id === id);
+      if (!t) return;
+      showToast(`Preparing download: ${t.title}`);
       
-      const initialVotes = {};
-      optionsArr.forEach(opt => initialVotes[opt] = 0);
-
-      await supabase.from('polls').insert([{ question, options: optionsArr, votes: initialVotes }]);
-      document.getElementById('poll-form').reset();
-      fetchPolls();
-    });
-
-    async function fetchPolls() {
-      const { data: polls } = await supabase.from('polls').select('*').order('created_at', { ascending: false });
-      const container = document.getElementById('polls-container');
-      container.innerHTML = '';
-
-      const safePolls = polls || [];
-      if(safePolls.length === 0) {
-        container.innerHTML = `<p class="text-zinc-600 text-center text-xs py-8 font-mono">No surveys launched yet.</p>`;
-        return;
-      }
-
-      safePolls.forEach(poll => {
-        const votesObj = poll.votes || {};
-        let totalVotes = Object.values(votesObj).reduce((a, b) => a + b, 0) || 1;
-
-        const card = document.createElement('div');
-        card.className = "bg-zinc-900 p-4 rounded-2xl border border-zinc-800 space-y-3";
-        card.innerHTML = `<h3 class="text-sm font-bold text-zinc-100">${escapeHTML(poll.question)}</h3><div class="poll-options-box space-y-2"></div>`;
-        
-        const optionsBox = card.querySelector('.poll-options-box');
-
-        (poll.options || []).forEach(opt => {
-          const count = votesObj[opt] || 0;
-          const percentage = Math.round((count / totalVotes) * 100);
-
-          const optBtn = document.createElement('button');
-          optBtn.className = "w-full text-left bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 rounded-xl relative overflow-hidden p-3 transition-all active:scale-[0.99]";
-          optBtn.innerHTML = `
-            <div class="bg-indigo-600/20 absolute top-0 left-0 bottom-0 transition-all duration-500" style="width: ${percentage}%"></div>
-            <div class="relative flex justify-between text-xs font-bold">
-              <span>${escapeHTML(opt)}</span>
-              <span class="text-indigo-400">${count} votes (${percentage}%)</span>
-            </div>
-          `;
-          
-          optBtn.addEventListener('click', () => votePoll(poll.id, opt));
-          optionsBox.appendChild(optBtn);
+      fetch(t.audioUrl)
+        .then(res => res.blob())
+        .then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `MGY_${t.title.toUpperCase().replace(/\s+/g, '_')}_DEMO.mp3`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(url);
+          showToast(`Downloaded ${t.title}`);
+        })
+        .catch(() => {
+          const a = document.createElement('a');
+          a.href = t.audioUrl;
+          a.target = '_blank';
+          a.click();
         });
-
-        container.appendChild(card);
-      });
     }
 
-    async function votePoll(pollId, selectedOption) {
-      const { data: poll } = await supabase.from('polls').select('*').eq('id', pollId).single();
-      if (!poll) return;
-      const updatedVotes = { ...(poll.votes || {}) };
-      updatedVotes[selectedOption] = (updatedVotes[selectedOption] || 0) + 1;
-      
-      await supabase.from('polls').update({ votes: updatedVotes }).eq('id', pollId);
-      fetchPolls();
+    // ---------- UPLOAD TRACK LOGIC ----------
+    function openUploadModal() {
+      document.getElementById('uploadModal').classList.remove('hidden');
+      document.getElementById('uploadModal').classList.add('flex');
+      document.body.style.overflow = 'hidden';
     }
 
-    // ================= MODULE 3: TARGET TRACKERS =================
-    document.getElementById('bucket-form').addEventListener('submit', async (e) => {
+    function closeUploadModal() {
+      document.getElementById('uploadModal').classList.add('hidden');
+      document.getElementById('uploadModal').classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('uploadTrackForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const title = document.getElementById('bucket-title').value.trim();
-      const target_date = document.getElementById('bucket-date').value;
-      
-      await supabase.from('bucket_list').insert([{ title, target_date }]);
-      document.getElementById('bucket-form').reset();
-      fetchBucketList();
-    });
+      const btn = document.getElementById('submitUploadBtn');
+      btn.disabled = true;
+      btn.textContent = 'Uploading to Storage...';
 
-    async function fetchBucketList() {
-      const { data: events } = await supabase.from('bucket_list').select('*').order('target_date', { ascending: true });
-      const container = document.getElementById('bucket-container');
-      container.innerHTML = '';
-
-      const safeEvents = events || [];
-      if(safeEvents.length === 0) {
-        container.innerHTML = `<p class="text-zinc-600 text-center text-xs py-8 font-mono">No upcoming milestones recorded.</p>`;
+      if (!_supabase) {
+        showToast('Demo mode: Add Supabase Keys to enable database uploads!');
+        btn.disabled = false;
+        btn.textContent = 'Publish Track';
+        closeUploadModal();
         return;
       }
 
-      safeEvents.forEach(ev => {
-        const timeDiff = new Date(ev.target_date) - new Date();
-        const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-        let countdownText = daysLeft > 0 ? `⏳ ${daysLeft} days left` : daysLeft === 0 ? "🎉 HAPPENING TODAY!" : "✅ Completed / Past Event";
-        
-        const card = document.createElement('div');
-        card.className = `bg-zinc-900 p-4 rounded-2xl border ${ev.is_completed ? 'border-emerald-900/40 opacity-60' : 'border-zinc-800'} flex justify-between items-center shadow-sm`;
-        card.innerHTML = `
-          <div>
-            <h4 class="text-sm font-bold ${ev.is_completed ? 'line-through text-zinc-500' : 'text-zinc-100'}">${escapeHTML(ev.title)}</h4>
-            <p class="text-[11px] font-medium text-zinc-400 mt-0.5">${countdownText}</p>
-          </div>
-          <button class="status-toggle-action text-sm bg-zinc-950 p-2 rounded-xl border border-zinc-800 font-semibold">
-            ${ev.is_completed ? '🔄 Undo' : '✅ Done'}
-          </button>
-        `;
+      try {
+        const audioFile = document.getElementById('upAudioFile').files[0];
+        const coverFile = document.getElementById('upCoverFile').files[0];
 
-        card.querySelector('.status-toggle-action').addEventListener('click', () => toggleBucketComplete(ev.id, ev.is_completed));
-        container.appendChild(card);
+        // Upload Audio
+        const audioPath = `audio_${Date.now()}_${audioFile.name}`;
+        const { error: audioErr } = await _supabase.storage.from('audio-files').upload(audioPath, audioFile);
+        if (audioErr) throw audioErr;
+
+        // Upload Cover
+        const coverPath = `cover_${Date.now()}_${coverFile.name}`;
+        const { error: coverErr } = await _supabase.storage.from('audio-files').upload(coverPath, coverFile);
+        if (coverErr) throw coverErr;
+
+        // Get Public URLs
+        const audio_demo_url = _supabase.storage.from('audio-files').getPublicUrl(audioPath).data.publicUrl;
+        const cover_url = _supabase.storage.from('audio-files').getPublicUrl(coverPath).data.publicUrl;
+
+        // Save Record to PostgreSQL 'tracks' Table
+        const { error: dbErr } = await _supabase.from('tracks').insert([{
+          title: document.getElementById('upTitle').value,
+          genre: document.getElementById('upGenre').value,
+          bpm: parseInt(document.getElementById('upBpm').value),
+          key_signature: document.getElementById('upKey').value,
+          duration: document.getElementById('upDuration').value,
+          cover_url: cover_url,
+          audio_demo_url: audio_demo_url,
+          story: document.getElementById('upStory').value,
+          lyrics: document.getElementById('upLyrics').value
+        }]);
+
+        if (dbErr) throw dbErr;
+
+        showToast('Track published successfully!');
+        closeUploadModal();
+        document.getElementById('uploadTrackForm').reset();
+        fetchTracksFromDB();
+      } catch (err) {
+        console.error(err);
+        showToast('Upload failed: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Publish Track';
+      }
+    });
+
+    // ---------- MODALS & CHECKOUT ----------
+    function buyLicense(tier, price) {
+      activeLicenseTier = tier;
+      activeLicensePrice = price;
+      document.getElementById('licenseModalTier').textContent = tier;
+      document.getElementById('licenseModalPrice').textContent = `$${price}`;
+      const modal = document.getElementById('licenseModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLicenseModal() {
+      const modal = document.getElementById('licenseModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    async function completeOrder(method) {
+      if (_supabase && catalog[currentIdx]) {
+        await _supabase.from('orders').insert([{
+          track_id: catalog[currentIdx].id,
+          license_type: activeLicenseTier,
+          amount: activeLicensePrice,
+          payment_method: method,
+          customer_email: 'buyer@mgytension.com'
+        }]);
+      }
+      closeLicenseModal();
+      showToast(`Order initiated via ${method}. Check your email.`);
+    }
+
+    function openLyrics(id) {
+      const t = catalog.find(x => x.id === id);
+      if (!t) return;
+      document.getElementById('modalTitle').textContent = t.title;
+      document.getElementById('modalMeta').textContent = `${t.genre} • ${t.bpm} BPM • ${t.key}`;
+      document.getElementById('modalStory').textContent = t.story;
+      document.getElementById('modalLyrics').textContent = t.lyrics;
+      const modal = document.getElementById('lyricsModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLyrics() {
+      const modal = document.getElementById('lyricsModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    // ---------- HELPERS ----------
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2800);
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function focusSearch() {
+      const input = document.getElementById('searchInput');
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => input.focus(), 300);
+    }
+
+    function toggleMobileMenu() {
+      document.getElementById('mobileNav').classList.toggle('hidden');
+    }
+
+    function closeMobile() {
+      document.getElementById('mobileNav').classList.add('hidden');
+    }
+
+    // ---------- EVENT LISTENERS ----------
+    audio.addEventListener('timeupdate', () => {
+      if (!audio.duration) return;
+      progressBar.value = (audio.currentTime / audio.duration) * 100;
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+      durationTimeEl.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener('ended', nextTrack);
+
+    progressBar.addEventListener('input', () => {
+      if (audio.duration) audio.currentTime = (progressBar.value / 100) * audio.duration;
+    });
+
+    volumeSlider.addEventListener('input', (e) => {
+      audio.volume = e.target.value;
+      updateVolumeIcon();
+    });
+
+    document.getElementById('searchInput').addEventListener('input', renderTracks);
+
+    document.querySelectorAll('.genre-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentFilter = btn.dataset.genre;
+        document.querySelectorAll('.genre-btn').forEach(b => {
+          b.classList.remove('border-neon', 'bg-neon/20', 'text-neon', 'font-bold');
+          b.classList.add('border-slate-800', 'text-slate-400');
+        });
+        btn.classList.add('border-neon', 'bg-neon/20', 'text-neon', 'font-bold');
+        btn.classList.remove('border-slate-800', 'text-slate-400');
+        renderTracks();
       });
-    }
+    });
 
-    async function toggleBucketComplete(id, currentStatus) {
-      await supabase.from('bucket_list').update({ is_completed: !currentStatus }).eq('id', id);
-      fetchBucketList();
-    }
+    document.getElementById('commentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('newComment');
+      const val = input.value.trim();
+      if (!val) return;
 
-    function escapeHTML(str) {
-      if(!str) return '';
-      return str.replace(/[&<>'\"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
-    }
+      if (_supabase) {
+        await _supabase.from('comments').insert([{
+          track_id: catalog[currentIdx]?.id || null,
+          author_name: 'Fan User',
+          comment_text: val,
+          rating: 5
+        }]);
+        fetchCommentsFromDB();
+      } else {
+        const div = document.createElement('div');
+        div.className = 'glass p-3.5 rounded-xl border border-slate-800 modal-enter';
+        div.innerHTML = `
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-semibold text-xs text-neon">You</span>
+            <span class="text-[10px] text-yellow-400">★★★★★</span>
+          </div>
+          <p class="text-xs text-slate-400">"${val}"</p>`;
+        document.getElementById('commentList').prepend(div);
+      }
+
+      input.value = '';
+      showToast('Comment posted');
+    });
+
+    document.getElementById('newsletterForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = e.target.querySelector('input[type="email"]');
+      if (_supabase && input.value) {
+        await _supabase.from('newsletter_subscribers').insert([{ email: input.value.trim() }]);
+      }
+      showToast('Subscribed! Check your inbox.');
+      e.target.reset();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeLyrics();
+        closeLicenseModal();
+        closeUploadModal();
+      }
+      if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        togglePlay();
+      }
+    });
+
+    document.getElementById('lyricsModal').addEventListener('click', e => { if (e.target.id === 'lyricsModal') closeLyrics(); });
+    document.getElementById('licenseModal').addEventListener('click', e => { if (e.target.id === 'licenseModal') closeLicenseModal(); });
+    document.getElementById('uploadModal').addEventListener('click', e => { if (e.target.id === 'uploadModal') closeUploadModal(); });
+
+    // ---------- INIT ----------
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchTracksFromDB();
+      fetchCommentsFromDB();
+      safeLucide();
+    });
   </script>
 </body>
 </html>
