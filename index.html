@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -8,21 +10,17 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>M.G.Y Tension— Upload & Download Music</title>
+  <title>Music Hub — Upload & Discover Music</title>
 
   <meta
     name="description"
-    content="Upload, discover, stream and download music."
+    content="Upload, stream and download MP3 music."
   >
 
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
 
-    /* =========================================================
-       RESET
-    ========================================================= */
+  <style>
 
     * {
       box-sizing: border-box;
@@ -30,11 +28,44 @@
       padding: 0;
     }
 
-    html {
-      scroll-behavior: smooth;
+
+    :root {
+      --bg: #05070d;
+      --panel: #0b1120;
+      --panel2: #111827;
+      --border: #1e293b;
+
+      --text: #f8fafc;
+      --muted: #94a3b8;
+
+      --purple: #7c3aed;
+      --blue: #2563eb;
+      --red: #ef4444;
     }
 
+
     body {
+
+      min-height: 100vh;
+
+      background:
+
+        radial-gradient(
+          circle at 10% 0%,
+          rgba(124,58,237,.18),
+          transparent 30%
+        ),
+
+        radial-gradient(
+          circle at 90% 10%,
+          rgba(37,99,235,.15),
+          transparent 30%
+        ),
+
+        var(--bg);
+
+      color: var(--text);
+
       font-family:
         Inter,
         system-ui,
@@ -43,22 +74,8 @@
         "Segoe UI",
         sans-serif;
 
-      background:
-        radial-gradient(
-          circle at top left,
-          #172554 0,
-          transparent 35%
-        ),
-        radial-gradient(
-          circle at top right,
-          #3b0764 0,
-          transparent 35%
-        ),
-        #05070d;
-
-      color: #ffffff;
-      min-height: 100vh;
     }
+
 
     button,
     input,
@@ -66,59 +83,83 @@
       font: inherit;
     }
 
+
     button {
       cursor: pointer;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
 
-
-    /* =========================================================
+    /* ======================================================
        HEADER
-    ========================================================= */
+    ====================================================== */
 
     header {
+
       position: sticky;
+
       top: 0;
+
       z-index: 100;
 
-      background: rgba(5, 7, 13, 0.82);
-      backdrop-filter: blur(20px);
+      background:
+        rgba(5,7,13,.82);
 
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter:
+        blur(20px);
+
+      border-bottom:
+        1px solid rgba(255,255,255,.07);
+
     }
 
+
     .nav {
+
       max-width: 1200px;
-      margin: auto;
 
       height: 70px;
 
+      margin: auto;
+
+      padding:
+        0 20px;
+
       display: flex;
+
       align-items: center;
+
       justify-content: space-between;
 
-      padding: 0 20px;
     }
+
 
     .logo {
+
       display: flex;
+
       align-items: center;
+
       gap: 10px;
 
-      font-weight: 900;
+      color: white;
+
+      text-decoration: none;
+
       font-size: 20px;
-      letter-spacing: -0.5px;
+
+      font-weight: 900;
+
     }
 
+
     .logo-icon {
+
       width: 40px;
+
       height: 40px;
 
       display: grid;
+
       place-items: center;
 
       border-radius: 12px;
@@ -126,86 +167,140 @@
       background:
         linear-gradient(
           135deg,
-          #7c3aed,
-          #2563eb
+          var(--purple),
+          var(--blue)
         );
 
-      box-shadow:
-        0 0 30px rgba(124,58,237,0.4);
     }
 
-    .upload-nav {
+
+    .nav-right {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+    }
+
+
+    .nav-button {
+
       border: none;
 
-      padding: 11px 18px;
+      padding:
+        10px 15px;
 
-      border-radius: 12px;
+      border-radius: 11px;
 
       color: white;
 
       background:
         linear-gradient(
           135deg,
-          #7c3aed,
-          #2563eb
+          var(--purple),
+          var(--blue)
         );
 
       font-weight: 800;
 
-      transition: 0.2s;
-    }
-
-    .upload-nav:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        0 10px 30px rgba(124,58,237,0.3);
     }
 
 
-    /* =========================================================
-       HERO
-    ========================================================= */
+    .admin-button {
 
-    .hero {
-      max-width: 1200px;
-      margin: auto;
+      display: none;
 
-      padding: 80px 20px 50px;
+      border:
+        1px solid #334155;
 
-      text-align: center;
-    }
+      background:
+        #111827;
 
-    .hero-badge {
-      display: inline-block;
+      color:
+        #cbd5e1;
 
-      padding: 7px 13px;
+      padding:
+        10px 13px;
 
-      border-radius: 999px;
-
-      background: rgba(124,58,237,0.12);
-
-      border: 1px solid rgba(124,58,237,0.3);
-
-      color: #c4b5fd;
+      border-radius: 11px;
 
       font-size: 12px;
 
-      margin-bottom: 20px;
     }
 
-    .hero h1 {
-      font-size: clamp(42px, 8vw, 82px);
 
-      line-height: 0.95;
+    .admin-button.visible {
+      display: block;
+    }
 
-      letter-spacing: -4px;
 
-      max-width: 850px;
+    /* ======================================================
+       HERO
+    ====================================================== */
+
+    .hero {
+
+      max-width: 1050px;
 
       margin: auto;
+
+      text-align: center;
+
+      padding:
+        80px 20px 55px;
+
     }
 
-    .gradient-text {
+
+    .badge {
+
+      display: inline-block;
+
+      padding:
+        7px 12px;
+
+      border-radius:
+        999px;
+
+      color:
+        #c4b5fd;
+
+      background:
+        rgba(124,58,237,.12);
+
+      border:
+        1px solid rgba(124,58,237,.25);
+
+      font-size:
+        11px;
+
+      font-weight:
+        800;
+
+      margin-bottom:
+        20px;
+
+    }
+
+
+    .hero h1 {
+
+      font-size:
+        clamp(42px,8vw,80px);
+
+      line-height:
+        .95;
+
+      letter-spacing:
+        -4px;
+
+    }
+
+
+    .gradient {
+
       background:
         linear-gradient(
           90deg,
@@ -214,206 +309,276 @@
           #f0abfc
         );
 
-      -webkit-background-clip: text;
-      background-clip: text;
+      -webkit-background-clip:
+        text;
 
-      color: transparent;
+      background-clip:
+        text;
+
+      color:
+        transparent;
+
     }
+
 
     .hero p {
-      max-width: 650px;
 
-      margin: 25px auto 30px;
+      max-width:
+        650px;
 
-      color: #94a3b8;
+      margin:
+        24px auto 30px;
 
-      line-height: 1.7;
+      color:
+        var(--muted);
+
+      line-height:
+        1.7;
+
     }
 
-    .hero-buttons {
-      display: flex;
 
-      justify-content: center;
+    .hero-actions {
 
-      gap: 12px;
+      display:
+        flex;
 
-      flex-wrap: wrap;
+      justify-content:
+        center;
+
+      gap:
+        10px;
+
+      flex-wrap:
+        wrap;
+
     }
 
-    .primary-btn,
-    .secondary-btn {
-      border-radius: 13px;
 
-      padding: 13px 20px;
+    .primary {
 
-      font-weight: 800;
+      border:
+        none;
 
-      border: none;
-    }
-
-    .primary-btn {
-      color: white;
+      color:
+        white;
 
       background:
         linear-gradient(
           135deg,
-          #7c3aed,
-          #2563eb
+          var(--purple),
+          var(--blue)
         );
+
+      padding:
+        13px 20px;
+
+      border-radius:
+        12px;
+
+      font-weight:
+        850;
+
     }
 
-    .secondary-btn {
-      background: #111827;
 
-      color: #cbd5e1;
+    .secondary {
 
-      border: 1px solid #1e293b;
+      border:
+        1px solid var(--border);
+
+      color:
+        #cbd5e1;
+
+      background:
+        #111827;
+
+      padding:
+        13px 20px;
+
+      border-radius:
+        12px;
+
+      font-weight:
+        800;
+
     }
 
 
-    /* =========================================================
+    /* ======================================================
        MAIN
-    ========================================================= */
+    ====================================================== */
 
     main {
-      max-width: 1200px;
 
-      margin: auto;
+      max-width:
+        1200px;
 
-      padding: 20px;
+      margin:
+        auto;
+
+      padding:
+        10px 20px 80px;
+
     }
 
 
-    /* =========================================================
-       SEARCH
-    ========================================================= */
+    .search {
 
-    .search-area {
-      display: flex;
+      display:
+        flex;
 
-      gap: 10px;
+      gap:
+        10px;
 
-      margin-bottom: 30px;
+      margin-bottom:
+        30px;
 
-      flex-wrap: wrap;
-    }
-
-    .search-box {
-      flex: 1;
-      min-width: 220px;
-
-      position: relative;
-    }
-
-    .search-box input,
-    .genre-select {
-      width: 100%;
-
-      height: 48px;
-
-      background: #0b1120;
-
-      border: 1px solid #1e293b;
-
-      border-radius: 13px;
-
-      color: white;
-
-      outline: none;
-
-      padding: 0 15px;
-    }
-
-    .search-box input:focus,
-    .genre-select:focus {
-      border-color: #7c3aed;
-    }
-
-    .genre-select {
-      width: 180px;
     }
 
 
-    /* =========================================================
-       SECTION HEADER
-    ========================================================= */
+    .search input,
+    .search select {
 
-    .section-head {
-      display: flex;
+      height:
+        48px;
 
-      justify-content: space-between;
+      border:
+        1px solid var(--border);
 
-      align-items: center;
+      background:
+        #0b1120;
 
-      margin-bottom: 20px;
+      color:
+        white;
+
+      border-radius:
+        12px;
+
+      padding:
+        0 14px;
+
+      outline:
+        none;
+
     }
 
-    .section-head h2 {
-      font-size: 24px;
+
+    .search input {
+
+      flex:
+        1;
+
+      min-width:
+        0;
+
     }
 
-    .track-count {
-      color: #64748b;
 
-      font-size: 13px;
+    .search select {
+
+      width:
+        180px;
+
     }
 
 
-    /* =========================================================
+    .section-title {
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        space-between;
+
+      margin-bottom:
+        18px;
+
+    }
+
+
+    .section-title h2 {
+
+      font-size:
+        25px;
+
+    }
+
+
+    .count {
+
+      color:
+        #64748b;
+
+      font-size:
+        12px;
+
+    }
+
+
+    /* ======================================================
        MUSIC GRID
-    ========================================================= */
+    ====================================================== */
 
     .music-grid {
-      display: grid;
+
+      display:
+        grid;
 
       grid-template-columns:
         repeat(
           auto-fill,
-          minmax(250px, 1fr)
+          minmax(250px,1fr)
         );
 
-      gap: 18px;
+      gap:
+        18px;
 
-      padding-bottom: 80px;
     }
 
 
-    /* =========================================================
+    /* ======================================================
        SONG CARD
-    ========================================================= */
+    ====================================================== */
 
     .song-card {
+
+      overflow:
+        hidden;
+
+      border:
+        1px solid var(--border);
+
       background:
-        linear-gradient(
-          180deg,
-          rgba(15,23,42,0.9),
-          rgba(8,12,22,0.95)
-        );
+        rgba(11,17,32,.9);
 
-      border: 1px solid #1e293b;
+      border-radius:
+        18px;
 
-      border-radius: 18px;
+      transition:
+        .2s;
 
-      overflow: hidden;
-
-      transition: 0.25s;
     }
+
 
     .song-card:hover {
-      transform: translateY(-4px);
 
-      border-color: #4c1d95;
+      transform:
+        translateY(-4px);
 
-      box-shadow:
-        0 20px 50px rgba(0,0,0,0.3);
+      border-color:
+        #4c1d95;
+
     }
 
+
     .cover {
-      height: 250px;
 
-      position: relative;
-
-      overflow: hidden;
+      height:
+        240px;
 
       background:
         linear-gradient(
@@ -421,481 +586,828 @@
           #111827,
           #312e81
         );
+
     }
+
 
     .cover img {
-      width: 100%;
-      height: 100%;
 
-      object-fit: cover;
+      width:
+        100%;
+
+      height:
+        100%;
+
+      object-fit:
+        cover;
+
     }
+
 
     .cover-placeholder {
-      width: 100%;
-      height: 100%;
 
-      display: grid;
-      place-items: center;
+      width:
+        100%;
 
-      font-size: 60px;
+      height:
+        100%;
 
-      background:
-        radial-gradient(
-          circle at 30% 30%,
-          #4c1d95,
-          transparent 40%
-        ),
-        linear-gradient(
-          135deg,
-          #111827,
-          #020617
-        );
+      display:
+        grid;
+
+      place-items:
+        center;
+
+      font-size:
+        58px;
+
     }
 
-    .song-info {
-      padding: 16px;
+
+    .song-body {
+
+      padding:
+        16px;
+
     }
+
 
     .song-title {
-      font-size: 17px;
 
-      font-weight: 850;
+      font-weight:
+        900;
 
-      white-space: nowrap;
+      font-size:
+        17px;
 
-      overflow: hidden;
+      white-space:
+        nowrap;
 
-      text-overflow: ellipsis;
+      overflow:
+        hidden;
+
+      text-overflow:
+        ellipsis;
+
     }
+
 
     .artist {
-      color: #94a3b8;
 
-      margin-top: 5px;
+      color:
+        var(--muted);
 
-      font-size: 13px;
+      font-size:
+        13px;
+
+      margin-top:
+        5px;
+
     }
 
-    .genre {
-      display: inline-block;
 
-      margin-top: 10px;
+    .meta {
 
-      padding: 5px 9px;
+      display:
+        flex;
 
-      border-radius: 999px;
+      align-items:
+        center;
 
-      background: rgba(124,58,237,0.1);
+      gap:
+        7px;
 
-      border: 1px solid rgba(124,58,237,0.2);
+      flex-wrap:
+        wrap;
 
-      color: #c4b5fd;
+      margin-top:
+        10px;
 
-      font-size: 10px;
-
-      text-transform: uppercase;
     }
 
-    .player {
-      width: 100%;
 
-      margin-top: 14px;
+    .pill {
 
-      height: 35px;
+      color:
+        #c4b5fd;
+
+      background:
+        rgba(124,58,237,.1);
+
+      border:
+        1px solid rgba(124,58,237,.2);
+
+      padding:
+        5px 8px;
+
+      border-radius:
+        999px;
+
+      font-size:
+        10px;
+
+      text-transform:
+        uppercase;
+
     }
 
-    .card-actions {
-      display: flex;
 
-      gap: 8px;
+    .downloads {
 
-      margin-top: 13px;
+      color:
+        #64748b;
+
+      font-size:
+        10px;
+
     }
 
-    .download-btn {
-      flex: 1;
 
-      border: none;
+    audio {
 
-      border-radius: 10px;
+      width:
+        100%;
 
-      padding: 10px;
+      margin-top:
+        14px;
+
+      height:
+        36px;
+
+    }
+
+
+    .actions {
+
+      display:
+        flex;
+
+      gap:
+        7px;
+
+      margin-top:
+        12px;
+
+    }
+
+
+    .download {
+
+      flex:
+        1;
+
+      border:
+        none;
+
+      color:
+        white;
 
       background:
         linear-gradient(
           135deg,
-          #7c3aed,
-          #2563eb
+          var(--purple),
+          var(--blue)
         );
 
-      color: white;
+      border-radius:
+        10px;
 
-      font-weight: 800;
+      padding:
+        10px;
 
-      font-size: 12px;
+      font-weight:
+        800;
+
+      font-size:
+        12px;
+
     }
 
-    .download-btn:hover {
-      opacity: 0.9;
-    }
 
+    .delete {
 
-    /* =========================================================
-       UPLOAD MODAL
-    ========================================================= */
+      display:
+        none;
 
-    .modal {
-      position: fixed;
-
-      inset: 0;
-
-      z-index: 500;
-
-      display: none;
-
-      align-items: center;
-
-      justify-content: center;
-
-      padding: 20px;
+      border:
+        1px solid rgba(239,68,68,.3);
 
       background:
-        rgba(0,0,0,0.75);
+        rgba(239,68,68,.08);
 
-      backdrop-filter: blur(12px);
+      color:
+        #fca5a5;
+
+      border-radius:
+        10px;
+
+      padding:
+        10px 12px;
+
+      font-weight:
+        800;
+
     }
+
+
+    .delete.visible {
+
+      display:
+        block;
+
+    }
+
+
+    /* ======================================================
+       EMPTY
+    ====================================================== */
+
+    .empty {
+
+      grid-column:
+        1 / -1;
+
+      text-align:
+        center;
+
+      padding:
+        80px 20px;
+
+      color:
+        #64748b;
+
+    }
+
+
+    .empty-icon {
+
+      font-size:
+        55px;
+
+      margin-bottom:
+        12px;
+
+    }
+
+
+    .empty h3 {
+
+      color:
+        #cbd5e1;
+
+      margin-bottom:
+        6px;
+
+    }
+
+
+    /* ======================================================
+       MODALS
+    ====================================================== */
+
+    .modal {
+
+      display:
+        none;
+
+      position:
+        fixed;
+
+      inset:
+        0;
+
+      z-index:
+        500;
+
+      padding:
+        20px;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      background:
+        rgba(0,0,0,.75);
+
+      backdrop-filter:
+        blur(10px);
+
+    }
+
 
     .modal.active {
-      display: flex;
+
+      display:
+        flex;
+
     }
 
+
     .modal-box {
-      width: 100%;
 
-      max-width: 520px;
+      width:
+        100%;
 
-      max-height: 90vh;
+      max-width:
+        500px;
 
-      overflow-y: auto;
+      max-height:
+        90vh;
+
+      overflow-y:
+        auto;
+
+      padding:
+        24px;
 
       background:
         #0b1120;
 
-      border: 1px solid #263247;
+      border:
+        1px solid #263247;
 
-      border-radius: 22px;
+      border-radius:
+        20px;
 
-      padding: 25px;
-
-      box-shadow:
-        0 30px 100px rgba(0,0,0,0.5);
     }
+
 
     .modal-head {
-      display: flex;
 
-      justify-content: space-between;
+      display:
+        flex;
 
-      align-items: center;
+      justify-content:
+        space-between;
 
-      margin-bottom: 25px;
+      align-items:
+        center;
+
+      margin-bottom:
+        22px;
+
     }
+
 
     .modal-head h2 {
-      font-size: 23px;
+
+      font-size:
+        23px;
+
     }
 
-    .close-btn {
-      width: 35px;
-      height: 35px;
 
-      border-radius: 10px;
+    .close {
 
-      border: 1px solid #1e293b;
+      width:
+        35px;
 
-      background: #111827;
+      height:
+        35px;
 
-      color: #94a3b8;
+      border:
+        1px solid var(--border);
+
+      background:
+        #111827;
+
+      color:
+        #94a3b8;
+
+      border-radius:
+        9px;
+
     }
 
-    .form-group {
-      margin-bottom: 16px;
+
+    .field {
+
+      margin-bottom:
+        15px;
+
     }
 
-    .form-group label {
-      display: block;
 
-      color: #cbd5e1;
+    .field label {
 
-      font-size: 13px;
+      display:
+        block;
 
-      font-weight: 700;
+      margin-bottom:
+        7px;
 
-      margin-bottom: 7px;
+      color:
+        #cbd5e1;
+
+      font-size:
+        12px;
+
+      font-weight:
+        800;
+
     }
 
-    .form-group input,
-    .form-group select {
-      width: 100%;
 
-      height: 46px;
+    .field input,
+    .field select {
 
-      padding: 0 13px;
+      width:
+        100%;
 
-      border-radius: 11px;
+      height:
+        46px;
 
-      border: 1px solid #1e293b;
+      border:
+        1px solid var(--border);
 
-      background: #050914;
+      background:
+        #050914;
 
-      color: white;
+      color:
+        white;
 
-      outline: none;
+      border-radius:
+        10px;
+
+      padding:
+        0 12px;
+
+      outline:
+        none;
+
     }
 
-    .form-group input:focus,
-    .form-group select:focus {
-      border-color: #7c3aed;
+
+    .file {
+
+      padding:
+        10px !important;
+
     }
 
-    .file-input {
-      padding: 10px !important;
-    }
 
-    .upload-submit {
-      width: 100%;
+    .submit {
 
-      border: none;
+      width:
+        100%;
 
-      padding: 14px;
+      border:
+        none;
 
-      border-radius: 12px;
+      padding:
+        14px;
+
+      border-radius:
+        11px;
+
+      color:
+        white;
 
       background:
         linear-gradient(
           135deg,
-          #7c3aed,
-          #2563eb
+          var(--purple),
+          var(--blue)
         );
 
-      color: white;
+      font-weight:
+        900;
 
-      font-weight: 900;
-
-      margin-top: 8px;
     }
 
-    .upload-submit:disabled {
-      opacity: 0.5;
 
-      cursor: not-allowed;
+    .submit:disabled {
+
+      opacity:
+        .5;
+
     }
 
-    .upload-progress {
-      display: none;
 
-      margin-top: 15px;
+    .progress {
+
+      display:
+        none;
+
+      margin:
+        15px 0;
+
     }
+
 
     .progress-bar {
-      height: 7px;
 
-      background: #1e293b;
+      height:
+        7px;
 
-      border-radius: 99px;
+      background:
+        #1e293b;
 
-      overflow: hidden;
+      border-radius:
+        99px;
+
+      overflow:
+        hidden;
+
     }
 
-    .progress-fill {
-      width: 0%;
 
-      height: 100%;
+    .progress-fill {
+
+      width:
+        0%;
+
+      height:
+        100%;
 
       background:
         linear-gradient(
           90deg,
-          #7c3aed,
-          #60a5fa
+          var(--purple),
+          var(--blue)
         );
 
-      transition: width 0.2s;
+      transition:
+        .2s;
+
     }
+
 
     .progress-text {
-      color: #64748b;
 
-      font-size: 11px;
+      text-align:
+        center;
 
-      margin-top: 6px;
+      margin-top:
+        6px;
 
-      text-align: center;
+      color:
+        #64748b;
+
+      font-size:
+        11px;
+
     }
 
 
-    /* =========================================================
+    /* ======================================================
+       ADMIN PANEL
+    ====================================================== */
+
+    .admin-status {
+
+      display:
+        none;
+
+      padding:
+        10px;
+
+      margin-bottom:
+        15px;
+
+      border-radius:
+        10px;
+
+      background:
+        rgba(34,197,94,.08);
+
+      border:
+        1px solid rgba(34,197,94,.2);
+
+      color:
+        #86efac;
+
+      font-size:
+        12px;
+
+    }
+
+
+    .admin-status.visible {
+
+      display:
+        block;
+
+    }
+
+
+    .logout {
+
+      width:
+        100%;
+
+      border:
+        1px solid #334155;
+
+      background:
+        #111827;
+
+      color:
+        #cbd5e1;
+
+      padding:
+        11px;
+
+      border-radius:
+        10px;
+
+      margin-top:
+        10px;
+
+    }
+
+
+    /* ======================================================
        TOAST
-    ========================================================= */
+    ====================================================== */
 
     .toast {
-      position: fixed;
 
-      left: 50%;
-      bottom: 25px;
+      position:
+        fixed;
+
+      left:
+        50%;
+
+      bottom:
+        25px;
+
+      z-index:
+        1000;
 
       transform:
-        translate(-50%, 30px);
+        translate(-50%,30px);
 
-      opacity: 0;
+      opacity:
+        0;
 
-      z-index: 1000;
+      pointer-events:
+        none;
 
-      background: #111827;
+      background:
+        #111827;
 
-      border: 1px solid #334155;
+      border:
+        1px solid #334155;
 
-      border-radius: 13px;
+      padding:
+        12px 17px;
 
-      padding: 13px 18px;
+      border-radius:
+        12px;
 
-      color: white;
+      font-size:
+        13px;
 
-      font-size: 13px;
+      transition:
+        .25s;
 
-      pointer-events: none;
-
-      transition: 0.3s;
     }
+
 
     .toast.show {
+
       transform:
-        translate(-50%, 0);
+        translate(-50%,0);
 
-      opacity: 1;
+      opacity:
+        1;
+
     }
 
-
-    /* =========================================================
-       EMPTY STATE
-    ========================================================= */
-
-    .empty {
-      grid-column: 1 / -1;
-
-      text-align: center;
-
-      padding: 80px 20px;
-
-      color: #64748b;
-    }
-
-    .empty-icon {
-      font-size: 50px;
-
-      margin-bottom: 15px;
-    }
-
-    .empty h3 {
-      color: #cbd5e1;
-
-      margin-bottom: 7px;
-    }
-
-
-    /* =========================================================
-       FOOTER
-    ========================================================= */
 
     footer {
-      border-top: 1px solid #111827;
 
-      padding: 30px 20px;
+      padding:
+        30px 20px;
 
-      text-align: center;
+      text-align:
+        center;
 
-      color: #475569;
+      color:
+        #475569;
 
-      font-size: 12px;
+      font-size:
+        12px;
+
+      border-top:
+        1px solid #111827;
+
     }
 
 
-    /* =========================================================
-       MOBILE
-    ========================================================= */
-
-    @media (max-width: 600px) {
+    @media(max-width:600px) {
 
       .nav {
-        height: 62px;
+
+        height:
+          62px;
+
       }
 
       .logo {
-        font-size: 16px;
+
+        font-size:
+          16px;
+
       }
 
       .logo-icon {
-        width: 34px;
-        height: 34px;
-      }
 
-      .upload-nav {
-        padding: 9px 12px;
+        width:
+          34px;
 
-        font-size: 12px;
+        height:
+          34px;
+
       }
 
       .hero {
-        padding-top: 55px;
+
+        padding-top:
+          55px;
+
       }
 
       .hero h1 {
-        letter-spacing: -2px;
+
+        letter-spacing:
+          -2px;
+
       }
 
-      .genre-select {
-        width: 100%;
+      .search {
+
+        flex-direction:
+          column;
+
       }
 
-      .cover {
-        height: 230px;
+      .search select {
+
+        width:
+          100%;
+
       }
 
       .music-grid {
-        grid-template-columns: 1fr;
+
+        grid-template-columns:
+          1fr;
+
+      }
+
+      .cover {
+
+        height:
+          230px;
+
       }
 
     }
 
   </style>
+
 </head>
 
 
 <body>
 
 
-  <!-- =======================================================
-       HEADER
-  ======================================================== -->
+<!-- =========================================================
+     HEADER
+========================================================= -->
 
-  <header>
+<header>
 
-    <div class="nav">
+  <div class="nav">
 
-      <a href="#" class="logo">
+    <a href="#" class="logo">
 
-        <div class="logo-icon">
-          🎵
-        </div>
+      <div class="logo-icon">
+        🎵
+      </div>
 
-        <span>
-          MUSIC HUB
-        </span>
+      MUSIC HUB
 
-      </a>
+    </a>
+
+
+    <div class="nav-right">
+
+      <button
+        id="adminButton"
+        class="admin-button"
+        onclick="openAdmin()"
+      >
+        🔐 Admin
+      </button>
 
 
       <button
-        class="upload-nav"
+        class="nav-button"
         onclick="openUpload()"
       >
         ＋ Upload Song
@@ -903,420 +1415,471 @@
 
     </div>
 
-  </header>
+  </div>
+
+</header>
 
 
 
-  <!-- =======================================================
-       HERO
-  ======================================================== -->
+<!-- =========================================================
+     HERO
+========================================================= -->
 
-  <section class="hero">
+<section class="hero">
 
-    <span class="hero-badge">
-      🌍 OPEN MUSIC COMMUNITY
+  <span class="badge">
+    🌍 OPEN MUSIC COMMUNITY
+  </span>
+
+
+  <h1>
+
+    Upload your music.
+
+    <span class="gradient">
+      Let the world hear it.
     </span>
 
-    <h1>
-      Upload your music.
-      <span class="gradient-text">
-        Let the world hear it.
-      </span>
-    </h1>
-
-    <p>
-      Share your songs with listeners everywhere.
-      Upload an MP3, stream it directly from the website,
-      and let people download your music.
-    </p>
+  </h1>
 
 
-    <div class="hero-buttons">
+  <p>
 
-      <button
-        class="primary-btn"
-        onclick="openUpload()"
-      >
-        🎵 Upload Your Song
-      </button>
+    Upload your MP3, share your sound,
+    discover new artists and download
+    music from the community.
 
-      <button
-        class="secondary-btn"
-        onclick="document.getElementById('music').scrollIntoView()"
-      >
-        Explore Music
-      </button>
-
-    </div>
-
-  </section>
+  </p>
 
 
+  <div class="hero-actions">
 
-  <!-- =======================================================
-       MAIN
-  ======================================================== -->
-
-  <main id="music">
-
-
-    <!-- SEARCH -->
-
-    <div class="search-area">
-
-      <div class="search-box">
-
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Search songs or artists..."
-        >
-
-      </div>
+    <button
+      class="primary"
+      onclick="openUpload()"
+    >
+      🎵 Upload Your Song
+    </button>
 
 
-      <select
-        class="genre-select"
-        id="genreFilter"
-      >
+    <button
+      class="secondary"
+      onclick="scrollToMusic()"
+    >
+      Explore Music
+    </button>
 
-        <option value="all">
-          All genres
-        </option>
+  </div>
 
-        <option value="Afrobeats">
-          Afrobeats
-        </option>
-
-        <option value="Hip Hop">
-          Hip Hop
-        </option>
-
-        <option value="Drill">
-          Drill
-        </option>
-
-        <option value="Trap">
-          Trap
-        </option>
-
-        <option value="Amapiano">
-          Amapiano
-        </option>
-
-        <option value="Gospel">
-          Gospel
-        </option>
-
-        <option value="R&B">
-          R&B
-        </option>
-
-        <option value="Other">
-          Other
-        </option>
-
-      </select>
-
-    </div>
+</section>
 
 
 
-    <!-- SECTION TITLE -->
+<!-- =========================================================
+     MAIN
+========================================================= -->
 
-    <div class="section-head">
-
-      <h2>
-        Latest Music
-      </h2>
-
-      <span
-        class="track-count"
-        id="trackCount"
-      >
-        Loading...
-      </span>
-
-    </div>
+<main id="music">
 
 
+  <div class="search">
 
-    <!-- MUSIC -->
-
-    <div
-      class="music-grid"
-      id="musicGrid"
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="Search songs or artists..."
     >
 
-      <div class="empty">
 
-        <div class="empty-icon">
-          🎵
-        </div>
+    <select id="genreFilter">
 
-        <h3>
-          Loading music...
-        </h3>
+      <option value="all">
+        All Genres
+      </option>
 
-        <p>
-          Fetching the latest uploads.
-        </p>
+      <option value="Afrobeats">
+        Afrobeats
+      </option>
 
-      </div>
+      <option value="Hip Hop">
+        Hip Hop
+      </option>
 
-    </div>
+      <option value="Drill">
+        Drill
+      </option>
 
-  </main>
+      <option value="Trap">
+        Trap
+      </option>
 
+      <option value="Amapiano">
+        Amapiano
+      </option>
 
+      <option value="Gospel">
+        Gospel
+      </option>
 
-  <!-- =======================================================
-       UPLOAD MODAL
-  ======================================================== -->
+      <option value="R&B">
+        R&B
+      </option>
 
-  <div
-    class="modal"
-    id="uploadModal"
-  >
+      <option value="Other">
+        Other
+      </option>
 
-    <div class="modal-box">
-
-
-      <div class="modal-head">
-
-        <h2>
-          Upload Your Song
-        </h2>
-
-        <button
-          class="close-btn"
-          onclick="closeUpload()"
-        >
-          ✕
-        </button>
-
-      </div>
-
-
-
-      <form id="uploadForm">
-
-
-        <!-- ARTIST -->
-
-        <div class="form-group">
-
-          <label>
-            Artist Name *
-          </label>
-
-          <input
-            type="text"
-            id="artist"
-            placeholder="e.g. M.G.Y Tension"
-            maxlength="100"
-            required
-          >
-
-        </div>
-
-
-
-        <!-- TITLE -->
-
-        <div class="form-group">
-
-          <label>
-            Song Title *
-          </label>
-
-          <input
-            type="text"
-            id="title"
-            placeholder="e.g. Lusaka Nights"
-            maxlength="150"
-            required
-          >
-
-        </div>
-
-
-
-        <!-- GENRE -->
-
-        <div class="form-group">
-
-          <label>
-            Genre
-          </label>
-
-          <select id="genre">
-
-            <option>
-              Afrobeats
-            </option>
-
-            <option>
-              Hip Hop
-            </option>
-
-            <option>
-              Drill
-            </option>
-
-            <option>
-              Trap
-            </option>
-
-            <option>
-              Amapiano
-            </option>
-
-            <option>
-              Gospel
-            </option>
-
-            <option>
-              R&B
-            </option>
-
-            <option>
-              Other
-            </option>
-
-          </select>
-
-        </div>
-
-
-
-        <!-- MP3 -->
-
-        <div class="form-group">
-
-          <label>
-            MP3 File *
-          </label>
-
-          <input
-            class="file-input"
-            type="file"
-            id="audioFile"
-            accept=".mp3,audio/mpeg"
-            required
-          >
-
-        </div>
-
-
-
-        <!-- COVER -->
-
-        <div class="form-group">
-
-          <label>
-            Cover Image — Optional
-          </label>
-
-          <input
-            class="file-input"
-            type="file"
-            id="coverFile"
-            accept="image/png,image/jpeg,image/webp"
-          >
-
-        </div>
-
-
-
-        <!-- PROGRESS -->
-
-        <div
-          class="upload-progress"
-          id="uploadProgress"
-        >
-
-          <div class="progress-bar">
-
-            <div
-              class="progress-fill"
-              id="progressFill"
-            ></div>
-
-          </div>
-
-          <div
-            class="progress-text"
-            id="progressText"
-          >
-            Uploading...
-          </div>
-
-        </div>
-
-
-
-        <!-- SUBMIT -->
-
-        <button
-          class="upload-submit"
-          id="uploadButton"
-          type="submit"
-        >
-          🚀 Upload Song
-        </button>
-
-
-      </form>
-
-    </div>
+    </select>
 
   </div>
 
 
 
-  <!-- =======================================================
-       TOAST
-  ======================================================== -->
+  <div class="section-title">
+
+    <h2>
+      Latest Music
+    </h2>
+
+    <span
+      id="trackCount"
+      class="count"
+    >
+      Loading...
+    </span>
+
+  </div>
+
+
 
   <div
-    class="toast"
-    id="toast"
-  ></div>
+    id="musicGrid"
+    class="music-grid"
+  >
+
+    <div class="empty">
+
+      <div class="empty-icon">
+        🎵
+      </div>
+
+      <h3>
+        Loading music...
+      </h3>
+
+      <p>
+        Connecting to Music Hub.
+      </p>
+
+    </div>
+
+  </div>
+
+</main>
 
 
 
-  <!-- =======================================================
-       FOOTER
-  ======================================================== -->
+<!-- =========================================================
+     UPLOAD MODAL
+========================================================= -->
 
-  <footer>
+<div
+  id="uploadModal"
+  class="modal"
+>
 
-    © 2026 Music Hub · Upload music. Discover artists. 🎵
+  <div class="modal-box">
 
-  </footer>
+    <div class="modal-head">
 
+      <h2>
+        Upload Your Song
+      </h2>
 
+      <button
+        class="close"
+        onclick="closeModal('uploadModal')"
+      >
+        ✕
+      </button>
 
-  <!-- =======================================================
-       JAVASCRIPT
-  ======================================================== -->
-
-  <script>
-
-
-    // ========================================================
-    // SUPABASE CONFIG
-    // ========================================================
-
-    const SUPABASE_URL =
-      "https://jfzypvnlbrmpbuxmlhgp.supabase.co";
-
-    const SUPABASE_ANON_KEY =
-      "sb_publishable_uT8ky5GdL-0LQ3O5cJlJZw_EfP6IHCM";
+    </div>
 
 
-    // Create Supabase client
+    <form id="uploadForm">
+
+
+      <div class="field">
+
+        <label>
+          Artist Name *
+        </label>
+
+        <input
+          id="artist"
+          maxlength="100"
+          placeholder="Your artist name"
+          required
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Song Title *
+        </label>
+
+        <input
+          id="title"
+          maxlength="150"
+          placeholder="Your song title"
+          required
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Genre
+        </label>
+
+        <select id="genre">
+
+          <option>Afrobeats</option>
+          <option>Hip Hop</option>
+          <option>Drill</option>
+          <option>Trap</option>
+          <option>Amapiano</option>
+          <option>Gospel</option>
+          <option>R&B</option>
+          <option>Other</option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          MP3 File *
+        </label>
+
+        <input
+          id="audioFile"
+          class="file"
+          type="file"
+          accept=".mp3,audio/mpeg"
+          required
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Cover Image — Optional
+        </label>
+
+        <input
+          id="coverFile"
+          class="file"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+        >
+
+      </div>
+
+
+      <div
+        id="uploadProgress"
+        class="progress"
+      >
+
+        <div class="progress-bar">
+
+          <div
+            id="progressFill"
+            class="progress-fill"
+          ></div>
+
+        </div>
+
+        <div
+          id="progressText"
+          class="progress-text"
+        >
+          Uploading...
+        </div>
+
+      </div>
+
+
+      <button
+        id="uploadButton"
+        class="submit"
+        type="submit"
+      >
+        🚀 Upload Song
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     ADMIN LOGIN
+========================================================= -->
+
+<div
+  id="adminModal"
+  class="modal"
+>
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <h2>
+        🔐 Admin
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeModal('adminModal')"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <div
+      id="adminStatus"
+      class="admin-status"
+    >
+      You are logged in as an administrator.
+    </div>
+
+
+    <form
+      id="adminLoginForm"
+    >
+
+      <div class="field">
+
+        <label>
+          Admin Email
+        </label>
+
+        <input
+          id="adminEmail"
+          type="email"
+          autocomplete="email"
+          placeholder="Admin email"
+          required
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Password
+        </label>
+
+        <input
+          id="adminPassword"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Password"
+          required
+        >
+
+      </div>
+
+
+      <button
+        class="submit"
+        type="submit"
+      >
+        🔐 Login
+      </button>
+
+    </form>
+
+
+    <button
+      id="logoutButton"
+      class="logout"
+      onclick="logoutAdmin()"
+      style="display:none"
+    >
+      Logout Admin
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
+
+
+<footer>
+
+  © 2026 Music Hub · Upload · Discover · Download 🎵
+
+</footer>
+
+
+
+<script>
+
+
+/* ==========================================================
+   SUPABASE CONFIGURATION
+========================================================== */
+
+
+/*
+  IMPORTANT:
+
+  Replace these two values with your Supabase project details.
+
+  Supabase Dashboard
+  → Settings
+  → API
+*/
+
+
+const SUPABASE_URL =
+  "https://jfzypvnlbrmpbuxmlhgp.supabase.co";
+
+
+const SUPABASE_ANON_KEY =
+  "sb_publishable_uT8ky5GdL-0LQ3O5cJlJZw_EfP6IHCM";
+
+
 const supabaseClient =
   supabase.createClient(
     SUPABASE_URL,
@@ -1325,1304 +1888,2044 @@ const supabaseClient =
 
 
 
-    // ========================================================
-    // GLOBAL STATE
-    // ========================================================
+/* ==========================================================
+   STATE
+========================================================== */
 
-    let tracks = [];
+let tracks = [];
 
+let currentUser = null;
 
-
-    // ========================================================
-    // DOM
-    // ========================================================
-
-    const musicGrid =
-      document.getElementById("musicGrid");
-
-    const trackCount =
-      document.getElementById("trackCount");
-
-    const searchInput =
-      document.getElementById("searchInput");
-
-    const genreFilter =
-      document.getElementById("genreFilter");
+let isAdmin = false;
 
 
 
-    // ========================================================
-    // START
-    // ========================================================
+/* ==========================================================
+   DOM
+========================================================== */
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      async () => {
-
-        await loadTracks();
-
-        subscribeToTracks();
-
-      }
-    );
+const musicGrid =
+  document.getElementById(
+    "musicGrid"
+  );
 
 
-
-    // ========================================================
-    // LOAD TRACKS
-    // ========================================================
-
-    async function loadTracks() {
-
-      try {
-
-        const {
-          data,
-          error
-        } = await supabaseClient
-          .from("tracks")
-          .select("*")
-          .order(
-            "created_at",
-            {
-              ascending: false
-            }
-          );
+const trackCount =
+  document.getElementById(
+    "trackCount"
+  );
 
 
-        if (error) {
-          throw error;
-        }
+const searchInput =
+  document.getElementById(
+    "searchInput"
+  );
 
 
-        tracks = data || [];
+const genreFilter =
+  document.getElementById(
+    "genreFilter"
+  );
 
-        renderTracks();
 
-      } catch (error) {
-
-        console.error(error);
-
-        showToast(
-          "Could not load music."
-        );
-
-        musicGrid.innerHTML = `
-          <div class="empty">
-            <div class="empty-icon">⚠️</div>
-            <h3>Unable to load music</h3>
-            <p>Check your Supabase configuration.</p>
-          </div>
-        `;
-
-      }
-
-    }
+const adminButton =
+  document.getElementById(
+    "adminButton"
+  );
 
 
 
-    // ========================================================
-    // REALTIME
-    // ========================================================
+/* ==========================================================
+   START
+========================================================== */
 
-    function subscribeToTracks() {
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
 
-      supabaseClient
-        .channel("public-tracks")
+    await checkAdmin();
 
-        .on(
-          "postgres_changes",
+    await loadTracks();
+
+    subscribeToTracks();
+
+  }
+);
+
+
+
+/* ==========================================================
+   LOAD TRACKS
+========================================================== */
+
+async function loadTracks() {
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+
+        .from("tracks")
+
+        .select("*")
+
+        .order(
+          "created_at",
           {
-            event: "INSERT",
-            schema: "public",
-            table: "tracks"
-          },
-
-          payload => {
-
-            tracks.unshift(
-              payload.new
-            );
-
-            renderTracks();
-
-            showToast(
-              "🎵 New song uploaded!"
-            );
-
+            ascending: false
           }
+        );
 
-        )
 
-        .subscribe();
+    if (error) {
+
+      throw error;
 
     }
 
 
+    tracks =
+      data || [];
 
-    // ========================================================
-    // FILTERING
-    // ========================================================
 
-    searchInput.addEventListener(
-      "input",
-      renderTracks
-    );
+    renderTracks();
 
 
-    genreFilter.addEventListener(
-      "change",
-      renderTracks
-    );
+  } catch (error) {
 
+    console.error(error);
 
 
-    function getFilteredTracks() {
+    musicGrid.innerHTML = `
 
-      const search =
-        searchInput.value
-          .toLowerCase()
-          .trim();
+      <div class="empty">
 
-      const genre =
-        genreFilter.value;
+        <div class="empty-icon">
+          ⚠️
+        </div>
 
+        <h3>
+          Could not load music
+        </h3>
 
-      return tracks.filter(
-        track => {
+        <p>
+          Check your Supabase configuration.
+        </p>
 
-          const matchesSearch =
-            !search ||
+      </div>
 
-            track.title
-              .toLowerCase()
-              .includes(search) ||
+    `;
 
-            track.artist
-              .toLowerCase()
-              .includes(search);
+  }
 
+}
 
-          const matchesGenre =
-            genre === "all" ||
 
-            track.genre === genre;
 
+/* ==========================================================
+   REALTIME
+========================================================== */
 
-          return (
-            matchesSearch &&
-            matchesGenre
-          );
+function subscribeToTracks() {
 
-        }
-      );
+  supabaseClient
 
-    }
+    .channel("music-hub-tracks")
 
+    .on(
 
+      "postgres_changes",
 
-    // ========================================================
-    // RENDER
-    // ========================================================
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "tracks"
+      },
 
-    function renderTracks() {
-
-      const filtered =
-        getFilteredTracks();
-
-
-      trackCount.textContent =
-        `${filtered.length} ${
-          filtered.length === 1
-            ? "song"
-            : "songs"
-        }`;
-
-
-      if (!filtered.length) {
-
-        musicGrid.innerHTML = `
-          <div class="empty">
-
-            <div class="empty-icon">
-              🎧
-            </div>
-
-            <h3>
-              No songs found
-            </h3>
-
-            <p>
-              Be the first person to upload a song.
-            </p>
-
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      musicGrid.innerHTML =
-        filtered
-          .map(
-            createSongCard
-          )
-          .join("");
-
-    }
-
-
-
-    // ========================================================
-    // SONG CARD
-    // ========================================================
-
-    function createSongCard(track) {
-
-      const safeTitle =
-        escapeHTML(track.title);
-
-      const safeArtist =
-        escapeHTML(track.artist);
-
-      const safeGenre =
-        escapeHTML(
-          track.genre || "Other"
-        );
-
-
-      const cover =
-        track.cover_url
-          ? `
-            <img
-              src="${escapeAttribute(track.cover_url)}"
-              alt="${safeTitle}"
-              loading="lazy"
-            >
-          `
-          : `
-            <div class="cover-placeholder">
-              🎵
-            </div>
-          `;
-
-
-      return `
-
-        <article class="song-card">
-
-          <div class="cover">
-
-            ${cover}
-
-          </div>
-
-
-          <div class="song-info">
-
-            <div class="song-title">
-              ${safeTitle}
-            </div>
-
-            <div class="artist">
-              ${safeArtist}
-            </div>
-
-            <span class="genre">
-              ${safeGenre}
-            </span>
-
-
-            <audio
-              class="player"
-              controls
-              preload="none"
-              src="${escapeAttribute(track.audio_url)}"
-            >
-            </audio>
-
-
-            <div class="card-actions">
-
-              <button
-                class="download-btn"
-                onclick="downloadTrack(
-                  '${track.id}',
-                  '${escapeJS(track.audio_url)}',
-                  '${escapeJS(track.title)}'
-                )"
-              >
-                ⬇ Download MP3
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-      `;
-
-    }
-
-
-
-    // ========================================================
-    // DOWNLOAD
-    // ========================================================
-
-    async function downloadTrack(
-      id,
-      audioUrl,
-      title
-    ) {
-
-      try {
-
-        // Increment download count
-
-        const track =
-          tracks.find(
-            t => t.id === id
-          );
-
-
-        if (track) {
-
-          await supabaseClient
-            .from("tracks")
-            .update({
-              downloads:
-                (track.downloads || 0) + 1
-            })
-            .eq(
-              "id",
-              id
-            );
-
-        }
-
-
-        // Force download
-
-        const filename =
-          `${cleanFilename(title)}.mp3`;
-
-
-        const downloadUrl =
-          audioUrl +
-          `?download=${encodeURIComponent(filename)}`;
-
-
-        const link =
-          document.createElement("a");
-
-        link.href =
-          downloadUrl;
-
-        link.download =
-          filename;
-
-        link.target =
-          "_blank";
-
-        document.body.appendChild(
-          link
-        );
-
-        link.click();
-
-        link.remove();
-
-
-      } catch (error) {
-
-        console.error(error);
-
-        window.open(
-          audioUrl,
-          "_blank"
-        );
-
-      }
-
-    }
-
-
-
-    // ========================================================
-    // OPEN UPLOAD
-    // ========================================================
-
-    function openUpload() {
-
-      document
-        .getElementById(
-          "uploadModal"
-        )
-        .classList.add("active");
-
-      document.body.style.overflow =
-        "hidden";
-
-    }
-
-
-
-    // ========================================================
-    // CLOSE UPLOAD
-    // ========================================================
-
-    function closeUpload() {
-
-      document
-        .getElementById(
-          "uploadModal"
-        )
-        .classList.remove("active");
-
-      document.body.style.overflow =
-        "";
-
-    }
-
-
-
-    // ========================================================
-    // UPLOAD
-    // ========================================================
-
-    document
-      .getElementById("uploadForm")
-      .addEventListener(
-        "submit",
-        uploadSong
-      );
-
-
-
-    async function uploadSong(event) {
-
-      event.preventDefault();
-
-
-      const button =
-        document.getElementById(
-          "uploadButton"
-        );
-
-      const progress =
-        document.getElementById(
-          "uploadProgress"
-        );
-
-      const progressFill =
-        document.getElementById(
-          "progressFill"
-        );
-
-      const progressText =
-        document.getElementById(
-          "progressText"
-        );
-
-
-      const artist =
-        document
-          .getElementById("artist")
-          .value
-          .trim();
-
-
-      const title =
-        document
-          .getElementById("title")
-          .value
-          .trim();
-
-
-      const genre =
-        document
-          .getElementById("genre")
-          .value;
-
-
-      const audioFile =
-        document
-          .getElementById("audioFile")
-          .files[0];
-
-
-      const coverFile =
-        document
-          .getElementById("coverFile")
-          .files[0];
-
-
-      // ------------------------------------------------------
-      // VALIDATION
-      // ------------------------------------------------------
-
-      if (!artist) {
-
-        showToast(
-          "Enter the artist name."
-        );
-
-        return;
-
-      }
-
-
-      if (!title) {
-
-        showToast(
-          "Enter the song title."
-        );
-
-        return;
-
-      }
-
-
-      if (!audioFile) {
-
-        showToast(
-          "Choose an MP3 file."
-        );
-
-        return;
-
-      }
-
-
-      // Only MP3
-
-      const isMP3 =
-        audioFile.type === "audio/mpeg" ||
-        audioFile.name
-          .toLowerCase()
-          .endsWith(".mp3");
-
-
-      if (!isMP3) {
-
-        showToast(
-          "Only MP3 files are allowed."
-        );
-
-        return;
-
-      }
-
-
-      // ------------------------------------------------------
-      // SIZE LIMIT
-      // ------------------------------------------------------
-
-      const maxSize =
-        50 * 1024 * 1024;
-
-
-      if (
-        audioFile.size >
-        maxSize
-      ) {
-
-        showToast(
-          "MP3 must be smaller than 50MB."
-        );
-
-        return;
-
-      }
-
-
-
-      // ------------------------------------------------------
-      // START
-      // ------------------------------------------------------
-
-      button.disabled =
-        true;
-
-      button.textContent =
-        "Uploading...";
-
-      progress.style.display =
-        "block";
-
-
-      try {
-
-
-        // ====================================================
-        // AUDIO PATH
-        // ====================================================
-
-        const audioExtension =
-          "mp3";
-
-
-        const audioPath =
-          `${crypto.randomUUID()}.${audioExtension}`;
-
-
-
-        // ====================================================
-        // UPLOAD MP3
-        // ====================================================
-
-        progressText.textContent =
-          "Uploading MP3...";
-
-        progressFill.style.width =
-          "35%";
-
-
-        const {
-          error:
-          audioUploadError
-        } =
-          await supabaseClient
-            .storage
-            .from("songs")
-            .upload(
-              audioPath,
-              audioFile,
-              {
-                contentType:
-                  "audio/mpeg",
-
-                cacheControl:
-                  "3600",
-
-                upsert:
-                  false
-              }
-            );
-
+      payload => {
 
         if (
-          audioUploadError
-        ) {
-
-          throw audioUploadError;
-
-        }
-
-
-
-        // ====================================================
-        // GET MP3 URL
-        // ====================================================
-
-        const {
-          data:
-          audioPublic
-        } =
-          supabaseClient
-            .storage
-            .from("songs")
-            .getPublicUrl(
-              audioPath
-            );
-
-
-        const audioUrl =
-          audioPublic.publicUrl;
-
-
-
-        // ====================================================
-        // COVER
-        // ====================================================
-
-        let coverUrl =
-          null;
-
-        let coverPath =
-          null;
-
-
-        if (coverFile) {
-
-          progressText.textContent =
-            "Uploading cover...";
-
-          progressFill.style.width =
-            "60%";
-
-
-          const extension =
-            getImageExtension(
-              coverFile
-            );
-
-
-          coverPath =
-            `${crypto.randomUUID()}.${extension}`;
-
-
-          const {
-            error:
-            coverUploadError
-          } =
-            await supabaseClient
-              .storage
-              .from("covers")
-              .upload(
-                coverPath,
-                coverFile,
-                {
-                  contentType:
-                    coverFile.type,
-
-                  cacheControl:
-                    "3600",
-
-                  upsert:
-                    false
-                }
-              );
-
-
-          if (
-            coverUploadError
-          ) {
-
-            throw coverUploadError;
-
-          }
-
-
-          const {
-            data:
-            coverPublic
-          } =
-            supabaseClient
-              .storage
-              .from("covers")
-              .getPublicUrl(
-                coverPath
-              );
-
-
-          coverUrl =
-            coverPublic.publicUrl;
-
-        }
-
-
-
-        // ====================================================
-        // GET AUDIO DURATION
-        // ====================================================
-
-        progressText.textContent =
-          "Processing song...";
-
-        progressFill.style.width =
-          "75%";
-
-
-        const duration =
-          await getAudioDuration(
-            audioFile
-          );
-
-
-
-        // ====================================================
-        // DATABASE RECORD
-        // ====================================================
-
-        const {
-          data:
-          insertedTrack,
-          error:
-          databaseError
-        } =
-          await supabaseClient
-            .from("tracks")
-            .insert({
-
-              title,
-
-              artist,
-
-              genre,
-
-              audio_url:
-                audioUrl,
-
-              audio_path:
-                audioPath,
-
-              cover_url:
-                coverUrl,
-
-              cover_path:
-                coverPath,
-
-              duration,
-
-              downloads:
-                0
-
-            })
-            .select()
-            .single();
-
-
-        if (
-          databaseError
-        ) {
-
-          // Remove uploaded MP3
-          await supabaseClient
-            .storage
-            .from("songs")
-            .remove([
-              audioPath
-            ]);
-
-
-          if (coverPath) {
-
-            await supabaseClient
-              .storage
-              .from("covers")
-              .remove([
-                coverPath
-              ]);
-
-          }
-
-
-          throw databaseError;
-
-        }
-
-
-
-        // ====================================================
-        // SUCCESS
-        // ====================================================
-
-        progressFill.style.width =
-          "100%";
-
-        progressText.textContent =
-          "Song uploaded successfully!";
-
-
-        showToast(
-          "🎉 Your song is now live!"
-        );
-
-
-        document
-          .getElementById(
-            "uploadForm"
-          )
-          .reset();
-
-
-        closeUpload();
-
-
-        // Add immediately
-        if (
-          insertedTrack &&
           !tracks.some(
-            t =>
-              t.id ===
-              insertedTrack.id
+            track =>
+              track.id ===
+              payload.new.id
           )
         ) {
 
           tracks.unshift(
-            insertedTrack
+            payload.new
           );
 
           renderTracks();
 
+          showToast(
+            "🎵 New song uploaded!"
+          );
+
         }
 
+      }
 
-      } catch (error) {
+    )
 
-        console.error(
-          "UPLOAD ERROR:",
-          error
-        );
+    .on(
 
+      "postgres_changes",
+
+      {
+        event: "DELETE",
+        schema: "public",
+        table: "tracks"
+      },
+
+      payload => {
+
+        tracks =
+          tracks.filter(
+            track =>
+              track.id !==
+              payload.old.id
+          );
+
+
+        renderTracks();
 
         showToast(
-          "Upload failed: " +
-          (
-            error.message ||
-            "Unknown error"
-          )
-        );
-
-
-      } finally {
-
-        button.disabled =
-          false;
-
-        button.textContent =
-          "🚀 Upload Song";
-
-
-        setTimeout(
-          () => {
-
-            progress.style.display =
-              "none";
-
-            progressFill.style.width =
-              "0%";
-
-          },
-          1500
+          "🗑️ Song removed."
         );
 
       }
 
+    )
+
+    .subscribe();
+
+}
+
+
+
+/* ==========================================================
+   ADMIN CHECK
+========================================================== */
+
+async function checkAdmin() {
+
+  try {
+
+    const {
+      data: {
+        session
+      }
+    } =
+      await supabaseClient
+        .auth
+        .getSession();
+
+
+    currentUser =
+      session?.user || null;
+
+
+    if (!currentUser) {
+
+      isAdmin = false;
+
+      updateAdminUI();
+
+      return;
+
     }
 
 
-
-    // ========================================================
-    // AUDIO DURATION
-    // ========================================================
-
-    function getAudioDuration(
-      file
-    ) {
-
-      return new Promise(
-        resolve => {
-
-          const audio =
-            document.createElement(
-              "audio"
-            );
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .rpc(
+          "is_admin"
+        );
 
 
-          const url =
-            URL.createObjectURL(
-              file
-            );
+    if (error) {
 
-
-          audio.preload =
-            "metadata";
-
-
-          audio.onloadedmetadata =
-            () => {
-
-              URL.revokeObjectURL(
-                url
-              );
-
-
-              resolve(
-                formatDuration(
-                  audio.duration
-                )
-              );
-
-            };
-
-
-          audio.onerror =
-            () => {
-
-              URL.revokeObjectURL(
-                url
-              );
-
-              resolve(
-                "Unknown"
-              );
-
-            };
-
-
-          audio.src =
-            url;
-
-        }
+      console.error(
+        "Admin check:",
+        error
       );
 
+      isAdmin = false;
+
+    } else {
+
+      isAdmin =
+        data === true;
+
     }
 
 
-
-    // ========================================================
-    // FORMAT DURATION
-    // ========================================================
-
-    function formatDuration(
-      seconds
-    ) {
-
-      if (
-        !seconds ||
-        !isFinite(seconds)
-      ) {
-
-        return "Unknown";
-
-      }
+    updateAdminUI();
 
 
-      const minutes =
-        Math.floor(
-          seconds / 60
-        );
+  } catch (error) {
+
+    console.error(error);
+
+    isAdmin = false;
+
+    updateAdminUI();
+
+  }
+
+}
 
 
-      const remaining =
-        Math.floor(
-          seconds % 60
-        );
+
+/* ==========================================================
+   AUTH STATE CHANGES
+========================================================== */
+
+supabaseClient
+  .auth
+  .onAuthStateChange(
+    async (
+      event,
+      session
+    ) => {
+
+      currentUser =
+        session?.user || null;
+
+
+      await checkAdmin();
+
+      renderTracks();
+
+    }
+  );
+
+
+
+/* ==========================================================
+   ADMIN UI
+========================================================== */
+
+function updateAdminUI() {
+
+  if (isAdmin) {
+
+    adminButton
+      .classList
+      .add("visible");
+
+  } else {
+
+    adminButton
+      .classList
+      .remove("visible");
+
+  }
+
+}
+
+
+
+/* ==========================================================
+   FILTER
+========================================================== */
+
+searchInput.addEventListener(
+  "input",
+  renderTracks
+);
+
+
+genreFilter.addEventListener(
+  "change",
+  renderTracks
+);
+
+
+
+function getFilteredTracks() {
+
+  const search =
+    searchInput.value
+      .trim()
+      .toLowerCase();
+
+
+  const genre =
+    genreFilter.value;
+
+
+  return tracks.filter(
+    track => {
+
+      const title =
+        (
+          track.title ||
+          ""
+        ).toLowerCase();
+
+
+      const artist =
+        (
+          track.artist ||
+          ""
+        ).toLowerCase();
+
+
+      const searchMatch =
+        !search ||
+        title.includes(search) ||
+        artist.includes(search);
+
+
+      const genreMatch =
+        genre === "all" ||
+        track.genre === genre;
 
 
       return (
-        minutes +
-        ":" +
-        String(
-          remaining
-        ).padStart(
-          2,
-          "0"
-        )
+        searchMatch &&
+        genreMatch
       );
+
+    }
+  );
+
+}
+
+
+
+/* ==========================================================
+   RENDER
+========================================================== */
+
+function renderTracks() {
+
+  const filtered =
+    getFilteredTracks();
+
+
+  trackCount.textContent =
+    `${filtered.length} ${
+      filtered.length === 1
+        ? "song"
+        : "songs"
+    }`;
+
+
+  if (!filtered.length) {
+
+    musicGrid.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          🎧
+        </div>
+
+        <h3>
+          No music found
+        </h3>
+
+        <p>
+          Be the first artist to upload a song.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  musicGrid.innerHTML =
+    filtered
+      .map(
+        createSongCard
+      )
+      .join("");
+
+}
+
+
+
+/* ==========================================================
+   SONG CARD
+========================================================== */
+
+function createSongCard(
+  track
+) {
+
+  const title =
+    escapeHTML(
+      track.title
+    );
+
+
+  const artist =
+    escapeHTML(
+      track.artist
+    );
+
+
+  const genre =
+    escapeHTML(
+      track.genre ||
+      "Other"
+    );
+
+
+  let cover;
+
+
+  if (track.cover_url) {
+
+    cover = `
+
+      <img
+        src="${escapeAttribute(
+          track.cover_url
+        )}"
+        alt="${title}"
+        loading="lazy"
+      >
+
+    `;
+
+  } else {
+
+    cover = `
+
+      <div class="cover-placeholder">
+        🎵
+      </div>
+
+    `;
+
+  }
+
+
+  const adminDelete =
+    isAdmin
+      ? `
+
+        <button
+          class="delete visible"
+          onclick="deleteTrack(
+            '${track.id}'
+          )"
+        >
+          🗑 Delete
+        </button>
+
+      `
+      : "";
+
+
+  return `
+
+    <article
+      class="song-card"
+    >
+
+      <div class="cover">
+
+        ${cover}
+
+      </div>
+
+
+      <div class="song-body">
+
+        <div class="song-title">
+          ${title}
+        </div>
+
+
+        <div class="artist">
+          ${artist}
+        </div>
+
+
+        <div class="meta">
+
+          <span class="pill">
+            ${genre}
+          </span>
+
+
+          <span class="downloads">
+            ${track.downloads || 0}
+            downloads
+          </span>
+
+        </div>
+
+
+        <audio
+          controls
+          preload="none"
+          src="${escapeAttribute(
+            track.audio_url
+          )}"
+        ></audio>
+
+
+        <div class="actions">
+
+          <button
+            class="download"
+            onclick="downloadTrack(
+              '${track.id}',
+              '${escapeJS(
+                track.audio_url
+              )}',
+              '${escapeJS(
+                track.title
+              )}'
+            )"
+          >
+            ⬇ Download MP3
+          </button>
+
+
+          ${adminDelete}
+
+        </div>
+
+      </div>
+
+    </article>
+
+  `;
+
+}
+
+
+
+/* ==========================================================
+   UPLOAD MODAL
+========================================================== */
+
+function openUpload() {
+
+  document
+    .getElementById(
+      "uploadModal"
+    )
+    .classList.add(
+      "active"
+    );
+
+}
+
+
+function closeModal(
+  id
+) {
+
+  document
+    .getElementById(id)
+    .classList.remove(
+      "active"
+    );
+
+}
+
+
+
+/* ==========================================================
+   UPLOAD
+========================================================== */
+
+document
+  .getElementById(
+    "uploadForm"
+  )
+  .addEventListener(
+    "submit",
+    uploadSong
+  );
+
+
+
+async function uploadSong(
+  event
+) {
+
+  event.preventDefault();
+
+
+  const artist =
+    document
+      .getElementById(
+        "artist"
+      )
+      .value
+      .trim();
+
+
+  const title =
+    document
+      .getElementById(
+        "title"
+      )
+      .value
+      .trim();
+
+
+  const genre =
+    document
+      .getElementById(
+        "genre"
+      )
+      .value;
+
+
+  const audioFile =
+    document
+      .getElementById(
+        "audioFile"
+      )
+      .files[0];
+
+
+  const coverFile =
+    document
+      .getElementById(
+        "coverFile"
+      )
+      .files[0];
+
+
+  const button =
+    document
+      .getElementById(
+        "uploadButton"
+      );
+
+
+  const progress =
+    document
+      .getElementById(
+        "uploadProgress"
+      );
+
+
+  const fill =
+    document
+      .getElementById(
+        "progressFill"
+      );
+
+
+  const text =
+    document
+      .getElementById(
+        "progressText"
+      );
+
+
+  /* --------------------------------------------------------
+     VALIDATION
+  -------------------------------------------------------- */
+
+
+  if (
+    !artist ||
+    !title ||
+    !audioFile
+  ) {
+
+    showToast(
+      "Please complete the required fields."
+    );
+
+    return;
+
+  }
+
+
+  const mp3 =
+    audioFile.name
+      .toLowerCase()
+      .endsWith(".mp3");
+
+
+  if (
+    !mp3 ||
+    (
+      audioFile.type &&
+      audioFile.type !==
+      "audio/mpeg"
+    )
+  ) {
+
+    showToast(
+      "Only MP3 files are allowed."
+    );
+
+    return;
+
+  }
+
+
+  const maxSize =
+    50 * 1024 * 1024;
+
+
+  if (
+    audioFile.size >
+    maxSize
+  ) {
+
+    showToast(
+      "MP3 must be smaller than 50MB."
+    );
+
+    return;
+
+  }
+
+
+  /* --------------------------------------------------------
+     START
+  -------------------------------------------------------- */
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "Uploading...";
+
+  progress.style.display =
+    "block";
+
+
+  try {
+
+
+    /* ======================================================
+       MP3
+    ====================================================== */
+
+    const audioPath =
+      `${crypto.randomUUID()}.mp3`;
+
+
+    text.textContent =
+      "Uploading MP3...";
+
+
+    fill.style.width =
+      "35%";
+
+
+    const {
+      error:
+      audioError
+    } =
+      await supabaseClient
+        .storage
+        .from("songs")
+        .upload(
+          audioPath,
+          audioFile,
+          {
+            contentType:
+              "audio/mpeg",
+
+            cacheControl:
+              "3600",
+
+            upsert:
+              false
+          }
+        );
+
+
+    if (audioError) {
+
+      throw audioError;
 
     }
 
 
+    const {
+      data:
+      audioPublic
+    } =
+      supabaseClient
+        .storage
+        .from("songs")
+        .getPublicUrl(
+          audioPath
+        );
 
-    // ========================================================
-    // IMAGE EXTENSION
-    // ========================================================
 
-    function getImageExtension(
-      file
-    ) {
+    const audioUrl =
+      audioPublic.publicUrl;
+
+
+
+    /* ======================================================
+       COVER
+    ====================================================== */
+
+    let coverPath =
+      null;
+
+    let coverUrl =
+      null;
+
+
+    if (coverFile) {
 
       if (
-        file.type ===
-        "image/png"
+        coverFile.size >
+        5 * 1024 * 1024
       ) {
 
-        return "png";
+        throw new Error(
+          "Cover image must be smaller than 5MB."
+        );
 
       }
 
 
-      if (
-        file.type ===
-        "image/webp"
-      ) {
-
-        return "webp";
-
-      }
+      text.textContent =
+        "Uploading cover...";
 
 
-      return "jpg";
-
-    }
-
+      fill.style.width =
+        "60%";
 
 
-    // ========================================================
-    // CLEAN FILE NAME
-    // ========================================================
-
-    function cleanFilename(
-      name
-    ) {
-
-      return name
-        .replace(
-          /[^a-z0-9\s-_]/gi,
-          ""
-        )
-        .trim()
-        .replace(
-          /\s+/g,
-          "-"
-        )
-        .substring(
-          0,
-          100
-        ) || "song";
-
-    }
-
-
-
-    // ========================================================
-    // ESCAPE HTML
-    // ========================================================
-
-    function escapeHTML(
-      value
-    ) {
-
-      return String(value)
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
-
-    }
-
-
-
-    // ========================================================
-    // ESCAPE ATTRIBUTE
-    // ========================================================
-
-    function escapeAttribute(
-      value
-    ) {
-
-      return String(value)
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
-
-    }
-
-
-
-    // ========================================================
-    // ESCAPE JS
-    // ========================================================
-
-    function escapeJS(
-      value
-    ) {
-
-      return String(value)
-        .replace(
-          /\\/g,
-          "\\\\"
-        )
-        .replace(
-          /'/g,
-          "\\'"
-        )
-        .replace(
-          /\n/g,
-          "\\n"
-        )
-        .replace(
-          /\r/g,
-          "\\r"
-        );
-
-    }
-
-
-
-    // ========================================================
-    // TOAST
-    // ========================================================
-
-    function showToast(
-      message
-    ) {
-
-      const toast =
-        document.getElementById(
-          "toast"
+      const extension =
+        getImageExtension(
+          coverFile
         );
 
 
-      toast.textContent =
-        message;
+      coverPath =
+        `${crypto.randomUUID()}.${extension}`;
 
 
-      toast.classList.add(
-        "show"
-      );
+      const {
+        error:
+        coverError
+      } =
+        await supabaseClient
+          .storage
+          .from("covers")
+          .upload(
+            coverPath,
+            coverFile,
+            {
+              contentType:
+                coverFile.type,
 
+              cacheControl:
+                "3600",
 
-      setTimeout(
-        () => {
-
-          toast.classList.remove(
-            "show"
+              upsert:
+                false
+            }
           );
 
-        },
-        3000
-      );
+
+      if (coverError) {
+
+        throw coverError;
+
+      }
+
+
+      const {
+        data:
+        coverPublic
+      } =
+      supabaseClient
+        .storage
+        .from("covers")
+        .getPublicUrl(
+          coverPath
+        );
+
+
+      coverUrl =
+        coverPublic.publicUrl;
 
     }
 
 
 
-    // ========================================================
-    // CLOSE MODAL WHEN CLICKING BACKDROP
-    // ========================================================
+    /* ======================================================
+       DURATION
+    ====================================================== */
+
+    text.textContent =
+      "Preparing song...";
+
+
+    fill.style.width =
+      "75%";
+
+
+    const duration =
+      await getDuration(
+        audioFile
+      );
+
+
+
+    /* ======================================================
+       DATABASE
+    ====================================================== */
+
+    const {
+      data:
+      newTrack,
+      error:
+      insertError
+    } =
+      await supabaseClient
+        .from("tracks")
+        .insert({
+
+          title,
+
+          artist,
+
+          genre,
+
+          audio_url:
+            audioUrl,
+
+          audio_path:
+            audioPath,
+
+          cover_url:
+            coverUrl,
+
+          cover_path:
+            coverPath,
+
+          duration,
+
+          downloads:
+            0
+
+        })
+        .select()
+        .single();
+
+
+    if (insertError) {
+
+      /*
+        If database insertion fails,
+        remove files that were already uploaded.
+      */
+
+      await supabaseClient
+        .storage
+        .from("songs")
+        .remove([
+          audioPath
+        ]);
+
+
+      if (coverPath) {
+
+        await supabaseClient
+          .storage
+          .from("covers")
+          .remove([
+            coverPath
+          ]);
+
+      }
+
+
+      throw insertError;
+
+    }
+
+
+
+    /* ======================================================
+       SUCCESS
+    ====================================================== */
+
+    fill.style.width =
+      "100%";
+
+
+    text.textContent =
+      "Song is live!";
+
 
     document
       .getElementById(
-        "uploadModal"
+        "uploadForm"
       )
-      .addEventListener(
+      .reset();
+
+
+    closeModal(
+      "uploadModal"
+    );
+
+
+    showToast(
+      "🎉 Song uploaded successfully!"
+    );
+
+
+    if (
+      newTrack &&
+      !tracks.some(
+        track =>
+          track.id ===
+          newTrack.id
+      )
+    ) {
+
+      tracks.unshift(
+        newTrack
+      );
+
+      renderTracks();
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "UPLOAD ERROR:",
+      error
+    );
+
+
+    showToast(
+      error.message ||
+      "Upload failed."
+    );
+
+
+  } finally {
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "🚀 Upload Song";
+
+
+    setTimeout(
+      () => {
+
+        progress.style.display =
+          "none";
+
+        fill.style.width =
+          "0%";
+
+      },
+      1200
+    );
+
+  }
+
+}
+
+
+
+/* ==========================================================
+   DOWNLOAD
+========================================================== */
+
+async function downloadTrack(
+  id,
+  url,
+  title
+) {
+
+  try {
+
+    /*
+      Secure RPC:
+      visitor cannot arbitrarily change the downloads field.
+    */
+
+    await supabaseClient
+      .rpc(
+        "increment_download",
+        {
+          track_id:
+            id
+        }
+      );
+
+
+    const track =
+      tracks.find(
+        item =>
+          item.id === id
+      );
+
+
+    if (track) {
+
+      track.downloads =
+        (track.downloads || 0) + 1;
+
+    }
+
+
+    renderTracks();
+
+
+    /*
+      Browser download.
+    */
+
+    const filename =
+      cleanFilename(
+        title
+      ) + ".mp3";
+
+
+    const link =
+      document.createElement(
+        "a"
+      );
+
+
+    link.href =
+      url +
+      "?download=" +
+      encodeURIComponent(
+        filename
+      );
+
+
+    link.download =
+      filename;
+
+
+    link.target =
+      "_blank";
+
+
+    document.body.appendChild(
+      link
+    );
+
+
+    link.click();
+
+
+    link.remove();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+
+    window.open(
+      url,
+      "_blank"
+    );
+
+  }
+
+}
+
+
+
+/* ==========================================================
+   ADMIN LOGIN
+========================================================== */
+
+function openAdmin() {
+
+  document
+    .getElementById(
+      "adminModal"
+    )
+    .classList.add(
+      "active"
+    );
+
+
+  updateAdminModal();
+
+}
+
+
+
+/* ==========================================================
+   ADMIN MODAL UI
+========================================================== */
+
+function updateAdminModal() {
+
+  const status =
+    document.getElementById(
+      "adminStatus"
+    );
+
+
+  const form =
+    document.getElementById(
+      "adminLoginForm"
+    );
+
+
+  const logout =
+    document.getElementById(
+      "logoutButton"
+    );
+
+
+  if (isAdmin) {
+
+    status.classList.add(
+      "visible"
+    );
+
+
+    form.style.display =
+      "none";
+
+
+    logout.style.display =
+      "block";
+
+  } else {
+
+    status.classList.remove(
+      "visible"
+    );
+
+
+    form.style.display =
+      "block";
+
+
+    logout.style.display =
+      "none";
+
+  }
+
+}
+
+
+
+/* ==========================================================
+   ADMIN LOGIN FORM
+========================================================== */
+
+document
+  .getElementById(
+    "adminLoginForm"
+  )
+  .addEventListener(
+    "submit",
+    loginAdmin
+  );
+
+
+
+async function loginAdmin(
+  event
+) {
+
+  event.preventDefault();
+
+
+  const email =
+    document
+      .getElementById(
+        "adminEmail"
+      )
+      .value
+      .trim();
+
+
+  const password =
+    document
+      .getElementById(
+        "adminPassword"
+      )
+      .value;
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .auth
+        .signInWithPassword({
+
+          email,
+
+          password
+
+        });
+
+
+    if (error) {
+
+      throw error;
+
+    }
+
+
+    if (!data.user) {
+
+      throw new Error(
+        "Login failed."
+      );
+
+    }
+
+
+    const {
+      data:
+      adminResult,
+      error:
+      adminError
+    } =
+      await supabaseClient
+        .rpc(
+          "is_admin"
+        );
+
+
+    if (
+      adminError ||
+      adminResult !== true
+    ) {
+
+      await supabaseClient
+        .auth
+        .signOut();
+
+
+      throw new Error(
+        "This account is not an administrator."
+      );
+
+    }
+
+
+    currentUser =
+      data.user;
+
+
+    isAdmin =
+      true;
+
+
+    updateAdminUI();
+
+    updateAdminModal();
+
+    renderTracks();
+
+
+    showToast(
+      "🔐 Admin login successful."
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    showToast(
+      error.message ||
+      "Admin login failed."
+    );
+
+  }
+
+}
+
+
+
+/* ==========================================================
+   ADMIN LOGOUT
+========================================================== */
+
+async function logoutAdmin() {
+
+  await supabaseClient
+    .auth
+    .signOut();
+
+
+  currentUser =
+    null;
+
+
+  isAdmin =
+    false;
+
+
+  updateAdminUI();
+
+  updateAdminModal();
+
+  renderTracks();
+
+
+  showToast(
+    "Admin logged out."
+  );
+
+}
+
+
+
+/* ==========================================================
+   DELETE SONG
+========================================================== */
+
+async function deleteTrack(
+  id
+) {
+
+  if (!isAdmin) {
+
+    showToast(
+      "Admin access required."
+    );
+
+    return;
+
+  }
+
+
+  const track =
+    tracks.find(
+      item =>
+        item.id === id
+    );
+
+
+  if (!track) {
+
+    return;
+
+  }
+
+
+  const confirmed =
+    confirm(
+      `Delete "${track.title}" by ${track.artist}?\n\nThis will permanently remove the song and its cover image.`
+    );
+
+
+  if (!confirmed) {
+
+    return;
+
+  }
+
+
+  try {
+
+
+    /* ======================================================
+       1. DELETE MP3 FROM STORAGE
+    ====================================================== */
+
+    if (track.audio_path) {
+
+      const {
+        error:
+        audioDeleteError
+      } =
+        await supabaseClient
+          .storage
+          .from("songs")
+          .remove([
+            track.audio_path
+          ]);
+
+
+      if (audioDeleteError) {
+
+        throw new Error(
+          "Could not delete MP3: " +
+          audioDeleteError.message
+        );
+
+      }
+
+    }
+
+
+
+    /* ======================================================
+       2. DELETE COVER FROM STORAGE
+    ====================================================== */
+
+    if (track.cover_path) {
+
+      const {
+        error:
+        coverDeleteError
+      } =
+        await supabaseClient
+          .storage
+          .from("covers")
+          .remove([
+            track.cover_path
+          ]);
+
+
+      if (coverDeleteError) {
+
+        throw new Error(
+          "Could not delete cover: " +
+          coverDeleteError.message
+        );
+
+      }
+
+    }
+
+
+
+    /* ======================================================
+       3. DELETE DATABASE RECORD
+    ====================================================== */
+
+    const {
+      error:
+      databaseError
+    } =
+      await supabaseClient
+        .from("tracks")
+        .delete()
+        .eq(
+          "id",
+          id
+        );
+
+
+    if (databaseError) {
+
+      throw databaseError;
+
+    }
+
+
+
+    /* ======================================================
+       4. REMOVE LOCALLY
+    ====================================================== */
+
+    tracks =
+      tracks.filter(
+        item =>
+          item.id !== id
+      );
+
+
+    renderTracks();
+
+
+    showToast(
+      "🗑️ Song permanently deleted."
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "DELETE ERROR:",
+      error
+    );
+
+
+    showToast(
+      error.message ||
+      "Could not delete song."
+    );
+
+  }
+
+}
+
+
+
+/* ==========================================================
+   AUDIO DURATION
+========================================================== */
+
+function getDuration(
+  file
+) {
+
+  return new Promise(
+    resolve => {
+
+      const audio =
+        document.createElement(
+          "audio"
+        );
+
+
+      const url =
+        URL.createObjectURL(
+          file
+        );
+
+
+      audio.preload =
+        "metadata";
+
+
+      audio.onloadedmetadata =
+        () => {
+
+          URL.revokeObjectURL(
+            url
+          );
+
+
+          if (
+            !isFinite(
+              audio.duration
+            )
+          ) {
+
+            resolve(
+              "Unknown"
+            );
+
+            return;
+
+          }
+
+
+          const minutes =
+            Math.floor(
+              audio.duration /
+              60
+            );
+
+
+          const seconds =
+            Math.floor(
+              audio.duration %
+              60
+            );
+
+
+          resolve(
+            `${minutes}:${String(
+              seconds
+            ).padStart(
+              2,
+              "0"
+            )}`
+          );
+
+        };
+
+
+      audio.onerror =
+        () => {
+
+          URL.revokeObjectURL(
+            url
+          );
+
+          resolve(
+            "Unknown"
+          );
+
+        };
+
+
+      audio.src =
+        url;
+
+    }
+  );
+
+}
+
+
+
+/* ==========================================================
+   IMAGE EXTENSION
+========================================================== */
+
+function getImageExtension(
+  file
+) {
+
+  if (
+    file.type ===
+    "image/png"
+  ) {
+
+    return "png";
+
+  }
+
+
+  if (
+    file.type ===
+    "image/webp"
+  ) {
+
+    return "webp";
+
+  }
+
+
+  return "jpg";
+
+}
+
+
+
+/* ==========================================================
+   CLEAN FILENAME
+========================================================== */
+
+function cleanFilename(
+  name
+) {
+
+  return String(name)
+
+    .replace(
+      /[^a-z0-9\s-_]/gi,
+      ""
+    )
+
+    .trim()
+
+    .replace(
+      /\s+/g,
+      "-"
+    )
+
+    .substring(
+      0,
+      100
+    )
+
+    || "song";
+
+}
+
+
+
+/* ==========================================================
+   SECURITY HELPERS
+========================================================== */
+
+function escapeHTML(
+  value
+) {
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+function escapeAttribute(
+  value
+) {
+
+  return String(value)
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+function escapeJS(
+  value
+) {
+
+  return String(value)
+
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+
+    .replace(
+      /'/g,
+      "\\'"
+    )
+
+    .replace(
+      /\n/g,
+      "\\n"
+    )
+
+    .replace(
+      /\r/g,
+      "\\r"
+    );
+
+}
+
+
+
+/* ==========================================================
+   TOAST
+========================================================== */
+
+function showToast(
+  message
+) {
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+
+  toast.textContent =
+    message;
+
+
+  toast.classList.add(
+    "show"
+  );
+
+
+  setTimeout(
+    () => {
+
+      toast.classList.remove(
+        "show"
+      );
+
+    },
+    3000
+  );
+
+}
+
+
+
+/* ==========================================================
+   SCROLL
+========================================================== */
+
+function scrollToMusic() {
+
+  document
+    .getElementById(
+      "music"
+    )
+    .scrollIntoView({
+      behavior:
+        "smooth"
+    });
+
+}
+
+
+
+/* ==========================================================
+   BACKDROP CLOSE
+========================================================== */
+
+document
+  .querySelectorAll(
+    ".modal"
+  )
+  .forEach(
+    modal => {
+
+      modal.addEventListener(
         "click",
         event => {
 
           if (
-            event.target.id ===
-            "uploadModal"
+            event.target ===
+            modal
           ) {
 
-            closeUpload();
+            modal.classList.remove(
+              "active"
+            );
 
           }
 
         }
       );
 
+    }
+  );
 
 
-  </script>
+</script>
 
 </body>
+
 </html>
