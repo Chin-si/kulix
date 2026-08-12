@@ -207,10 +207,8 @@
 
     }
 
-
-    .admin-button {
-
-      display: none;
+.admin-button {
+  display: block;
 
       border:
         1px solid #334155;
@@ -231,9 +229,6 @@
     }
 
 
-    .admin-button.visible {
-      display: block;
-    }
 
 
     /* ======================================================
@@ -2215,22 +2210,18 @@ supabaseClient
 
 function updateAdminUI() {
 
+  // Always show the Admin button so the administrator
+  // has a way to open the login screen.
+
+  adminButton.classList.add("visible");
+
   if (isAdmin) {
-
-    adminButton
-      .classList
-      .add("visible");
-
+    adminButton.textContent = "🔐 Admin";
   } else {
-
-    adminButton
-      .classList
-      .remove("visible");
-
+    adminButton.textContent = "🔐 Admin Login";
   }
 
 }
-
 
 
 /* ==========================================================
