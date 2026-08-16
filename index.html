@@ -1,422 +1,3935 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#060812">
-  <meta name="description" content="M.G.Y Tension — discover rising artists, stream, upload and download music.">
-  <title>M.G.Y Tension — Music Discovery Network</title>
 
-  <!-- Vercel Analytics / Speed Insights for plain HTML sites -->
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>M.G.Y Tension — Music Platform</title>
+ 
+
+  <!-- Vercel Web Analytics -->
   <script>
-    window.va = window.va || function(){(window.vaq = window.vaq || []).push(arguments)};
-    window.si = window.si || function(){(window.siq = window.siq || []).push(arguments)};
+    window.va = window.va || function () {
+      (window.vaq = window.vaq || []).push(arguments);
+    };
   </script>
-  <script defer src="/_vercel/insights/script.js"></script>
-  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <script
+    defer
+    src="/_vercel/insights/script.js">
+  </script>
+
+  <meta
+    name="description"
+    content="M.G.Y Tension — Upload, discover, stream and download music."
+  >
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
   <style>
-    :root{--bg:#05070d;--panel:#0b1020;--panel2:#11182a;--border:#1b2840;--text:#f8fafc;--muted:#8da0bb;--purple:#8b5cf6;--blue:#3b82f6;--pink:#ec4899;--green:#22c55e;--red:#ef4444;--gold:#f59e0b;--shadow:0 18px 55px rgba(0,0,0,.32)}
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at 10% -10%,rgba(139,92,246,.18),transparent 35%),radial-gradient(circle at 90% 0%,rgba(59,130,246,.14),transparent 33%),linear-gradient(180deg,#05070d,#070a12 60%,#05070d);color:var(--text);min-height:100vh}
-    button,input,select,textarea{font:inherit}button{cursor:pointer}a{text-decoration:none;color:inherit}
-    .container{max-width:1240px;margin:auto;padding:0 18px}.hidden{display:none!important}
-    header{position:sticky;top:0;z-index:90;background:rgba(5,7,13,.82);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}
-    .nav{height:68px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:-.4px}.brand-mark{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--purple),var(--blue));box-shadow:0 0 35px rgba(139,92,246,.35)}.nav-actions{display:flex;gap:8px;align-items:center}.btn{border:1px solid var(--border);background:#0f172a;color:#dbe6f5;border-radius:11px;padding:10px 14px;font-weight:850}.btn.primary{border:none;background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff}.btn.ghost{background:transparent}.btn.small{padding:8px 10px;font-size:12px}.btn.danger{color:#fecaca;border-color:rgba(239,68,68,.28);background:rgba(239,68,68,.06)}
-    .hero{padding:70px 0 28px;text-align:center}.badge{display:inline-flex;gap:7px;align-items:center;border:1px solid rgba(139,92,246,.28);background:rgba(139,92,246,.08);padding:7px 11px;border-radius:999px;color:#d9ccff;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.hero h1{font-size:clamp(42px,8vw,78px);line-height:.95;letter-spacing:-4px;margin:18px auto 16px;max-width:980px}.gradient{background:linear-gradient(90deg,#c4b5fd,#60a5fa,#f9a8d4);background-clip:text;-webkit-background-clip:text;color:transparent}.hero p{max-width:730px;margin:0 auto;color:var(--muted);line-height:1.75}.hero-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:24px}
-    .ticker{border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);background:rgba(11,16,32,.45);overflow:hidden}.ticker-track{display:flex;gap:28px;white-space:nowrap;padding:10px 0;animation:marquee 24s linear infinite;color:#a9b8ce;font-size:12px}.ticker b{color:#d8c9ff}@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-    .toolbar{display:grid;grid-template-columns:1fr auto auto auto;gap:9px;margin:22px 0}.input,.select,.textarea{width:100%;background:#080d19;border:1px solid var(--border);color:#fff;border-radius:11px;padding:12px 13px;outline:0}.input:focus,.select:focus,.textarea:focus{border-color:rgba(139,92,246,.75)}
-    .tabs{display:flex;gap:8px;overflow:auto;padding-bottom:4px;margin-bottom:22px}.tab{border:1px solid var(--border);background:#0d1424;color:#91a2bb;border-radius:999px;padding:8px 13px;font-size:12px;font-weight:850;white-space:nowrap}.tab.active{color:#fff;border-color:rgba(139,92,246,.55);background:rgba(139,92,246,.13)}
-    .section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:22px 0 14px}.section-head h2{font-size:22px}.section-head p{color:#64748b;font-size:12px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}.card{background:linear-gradient(180deg,rgba(12,18,34,.96),rgba(7,11,20,.96));border:1px solid var(--border);border-radius:17px;overflow:hidden;box-shadow:var(--shadow);transition:.2s}.card:hover{transform:translateY(-3px);border-color:#374a6d}.cover{height:235px;background:linear-gradient(135deg,#111827,#312e81);position:relative}.cover img{width:100%;height:100%;object-fit:cover}.placeholder{width:100%;height:100%;display:grid;place-items:center;font-size:56px}.trend-badge,.rank-badge{position:absolute;left:10px;top:10px;padding:6px 8px;border-radius:999px;background:rgba(3,7,18,.78);border:1px solid rgba(255,255,255,.08);font-size:10px;font-weight:900}.rank-badge{right:10px;left:auto;color:#fef3c7}.body{padding:14px}.title{font-size:16px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.artist{font-size:13px;color:var(--muted);margin-top:4px}.meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:9px}.pill{font-size:10px;padding:5px 8px;border-radius:999px;border:1px solid rgba(139,92,246,.25);background:rgba(139,92,246,.08);color:#c9b7ff;text-transform:uppercase}.stat{font-size:10px;color:#64748b}.player{width:100%;margin-top:12px;height:36px}.actions{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:7px;margin-top:11px}.like.on{background:rgba(236,72,153,.12);color:#fbcfe8;border-color:rgba(236,72,153,.25)}.share{color:#cde0ff}.delete{display:none}.admin .delete{display:block}.mini{font-size:11px;color:#7083a1}
-    .feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.feature{padding:15px;border:1px solid var(--border);background:rgba(10,16,30,.7);border-radius:14px}.feature .big{font-size:25px;font-weight:950}.feature p{font-size:11px;color:#72829a;margin-top:4px}
-    .artist-strip{display:flex;gap:10px;overflow:auto;padding-bottom:5px}.artist-chip{min-width:150px;padding:12px;border:1px solid var(--border);background:#0b1120;border-radius:14px}.artist-chip strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.artist-chip span{font-size:10px;color:#6d7f99}
-    .modal{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.76);backdrop-filter:blur(10px)}.modal.active{display:flex}.modal-box{width:100%;max-width:560px;max-height:90vh;overflow:auto;padding:22px;border:1px solid #2b3953;background:#0a1020;border-radius:18px;box-shadow:0 30px 110px rgba(0,0,0,.6)}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.close{width:34px;height:34px;border-radius:9px;background:#111827;border:1px solid var(--border);color:#94a3b8}.field{margin-bottom:13px}.field label{display:block;font-size:12px;font-weight:900;color:#c9d5e5;margin-bottom:6px}.file{padding:10px}.progress{display:none;margin:10px 0}.bar{height:7px;border-radius:99px;background:#152033;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--blue));transition:.2s}.progress p{text-align:center;color:#64748b;font-size:10px;margin-top:5px}.comment-list{display:grid;gap:8px;max-height:280px;overflow:auto;margin:12px 0}.comment{padding:10px;border:1px solid var(--border);background:#0b1120;border-radius:11px}.comment strong{font-size:12px}.comment p{font-size:12px;color:#9aaaca;margin-top:4px;line-height:1.5}.empty{grid-column:1/-1;text-align:center;padding:70px 10px;color:#64748b}.empty b{display:block;color:#cad4e4;margin-bottom:6px}.chart-list{display:grid;gap:9px}.chart-row{display:grid;grid-template-columns:35px 1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--border);background:#0b1120;border-radius:12px}.chart-row .num{font-weight:950;color:#a78bfa}.chart-row small{display:block;color:#6e809a;margin-top:3px}.score{font-size:12px;color:#f8d17a;font-weight:900}.profile-head{display:flex;gap:12px;align-items:center;padding:16px;border:1px solid var(--border);background:#0b1120;border-radius:15px;margin-bottom:14px}.avatar{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg,#312e81,#1d4ed8)}.danger-note{font-size:11px;color:#d9a4a4;line-height:1.55;padding:10px;border-radius:10px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15)}.toast{position:fixed;left:50%;bottom:22px;z-index:999;transform:translate(-50%,25px);opacity:0;pointer-events:none;background:#111827;border:1px solid #334155;padding:12px 16px;border-radius:12px;font-size:12px;transition:.25s}.toast.show{transform:translate(-50%,0);opacity:1}
-    @media(max-width:900px){.toolbar{grid-template-columns:1fr 1fr}.feature-grid{grid-template-columns:1fr 1fr}}@media(max-width:620px){.nav{height:62px}.brand{font-size:16px}.brand-mark{width:34px;height:34px}.hero{padding-top:52px}.hero h1{letter-spacing:-2px}.toolbar{grid-template-columns:1fr}.actions{grid-template-columns:1fr 1fr}.actions .share{display:none}.feature-grid{grid-template-columns:1fr 1fr}.cover{height:220px}}
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+
+    :root {
+      --bg: #05070d;
+      --panel: #0b1120;
+      --panel2: #111827;
+      --border: #1e293b;
+
+      --text: #f8fafc;
+      --muted: #94a3b8;
+
+      --purple: #7c3aed;
+      --blue: #2563eb;
+      --red: #ef4444;
+    }
+
+
+    body {
+
+      min-height: 100vh;
+
+      background:
+
+        radial-gradient(
+          circle at 10% 0%,
+          rgba(124,58,237,.18),
+          transparent 30%
+        ),
+
+        radial-gradient(
+          circle at 90% 10%,
+          rgba(37,99,235,.15),
+          transparent 30%
+        ),
+
+        var(--bg);
+
+      color: var(--text);
+
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    }
+
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+
+    button {
+      cursor: pointer;
+    }
+
+
+    /* ======================================================
+       HEADER
+    ====================================================== */
+
+    header {
+
+      position: sticky;
+
+      top: 0;
+
+      z-index: 100;
+
+      background:
+        rgba(5,7,13,.82);
+
+      backdrop-filter:
+        blur(20px);
+
+      border-bottom:
+        1px solid rgba(255,255,255,.07);
+
+    }
+
+
+    .nav {
+
+      max-width: 1200px;
+
+      height: 70px;
+
+      margin: auto;
+
+      padding:
+        0 20px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+    }
+
+
+    .logo {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      color: white;
+
+      text-decoration: none;
+
+      font-size: 20px;
+
+      font-weight: 900;
+
+    }
+
+
+    .logo-icon {
+
+      width: 40px;
+
+      height: 40px;
+
+      display: grid;
+
+      place-items: center;
+
+      border-radius: 12px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue)
+        );
+
+    }
+
+
+    .nav-right {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+    }
+
+
+    .nav-button {
+
+      border: none;
+
+      padding:
+        10px 15px;
+
+      border-radius: 11px;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue)
+        );
+
+      font-weight: 800;
+
+    }
+
+.admin-button {
+  display: block;
+
+      border:
+        1px solid #334155;
+
+      background:
+        #111827;
+
+      color:
+        #cbd5e1;
+
+      padding:
+        10px 13px;
+
+      border-radius: 11px;
+
+      font-size: 12px;
+
+    }
+
+
+
+
+    /* ======================================================
+       HERO
+    ====================================================== */
+
+    .hero {
+
+      max-width: 1050px;
+
+      margin: auto;
+
+      text-align: center;
+
+      padding:
+        80px 20px 55px;
+
+    }
+
+
+    .badge {
+
+      display: inline-block;
+
+      padding:
+        7px 12px;
+
+      border-radius:
+        999px;
+
+      color:
+        #c4b5fd;
+
+      background:
+        rgba(124,58,237,.12);
+
+      border:
+        1px solid rgba(124,58,237,.25);
+
+      font-size:
+        11px;
+
+      font-weight:
+        800;
+
+      margin-bottom:
+        20px;
+
+    }
+
+
+    .hero h1 {
+
+      font-size:
+        clamp(42px,8vw,80px);
+
+      line-height:
+        .95;
+
+      letter-spacing:
+        -4px;
+
+    }
+
+
+    .gradient {
+
+      background:
+        linear-gradient(
+          90deg,
+          #a78bfa,
+          #60a5fa,
+          #f0abfc
+        );
+
+      -webkit-background-clip:
+        text;
+
+      background-clip:
+        text;
+
+      color:
+        transparent;
+
+    }
+
+
+    .hero p {
+
+      max-width:
+        650px;
+
+      margin:
+        24px auto 30px;
+
+      color:
+        var(--muted);
+
+      line-height:
+        1.7;
+
+    }
+
+
+    .hero-actions {
+
+      display:
+        flex;
+
+      justify-content:
+        center;
+
+      gap:
+        10px;
+
+      flex-wrap:
+        wrap;
+
+    }
+
+
+    .primary {
+
+      border:
+        none;
+
+      color:
+        white;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue)
+        );
+
+      padding:
+        13px 20px;
+
+      border-radius:
+        12px;
+
+      font-weight:
+        850;
+
+    }
+
+
+    .secondary {
+
+      border:
+        1px solid var(--border);
+
+      color:
+        #cbd5e1;
+
+      background:
+        #111827;
+
+      padding:
+        13px 20px;
+
+      border-radius:
+        12px;
+
+      font-weight:
+        800;
+
+    }
+
+
+    /* ======================================================
+       MAIN
+    ====================================================== */
+
+    main {
+
+      max-width:
+        1200px;
+
+      margin:
+        auto;
+
+      padding:
+        10px 20px 80px;
+
+    }
+
+
+    .search {
+
+      display:
+        flex;
+
+      gap:
+        10px;
+
+      margin-bottom:
+        30px;
+
+    }
+
+
+    .search input,
+    .search select {
+
+      height:
+        48px;
+
+      border:
+        1px solid var(--border);
+
+      background:
+        #0b1120;
+
+      color:
+        white;
+
+      border-radius:
+        12px;
+
+      padding:
+        0 14px;
+
+      outline:
+        none;
+
+    }
+
+
+    .search input {
+
+      flex:
+        1;
+
+      min-width:
+        0;
+
+    }
+
+
+    .search select {
+
+      width:
+        180px;
+
+    }
+
+
+    .section-title {
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        space-between;
+
+      margin-bottom:
+        18px;
+
+    }
+
+
+    .section-title h2 {
+
+      font-size:
+        25px;
+
+    }
+
+
+    .count {
+
+      color:
+        #64748b;
+
+      font-size:
+        12px;
+
+    }
+
+
+    /* ======================================================
+       MUSIC GRID
+    ====================================================== */
+
+    .music-grid {
+
+      display:
+        grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fill,
+          minmax(250px,1fr)
+        );
+
+      gap:
+        18px;
+
+    }
+
+
+    /* ======================================================
+       SONG CARD
+    ====================================================== */
+
+    .song-card {
+
+      overflow:
+        hidden;
+
+      border:
+        1px solid var(--border);
+
+      background:
+        rgba(11,17,32,.9);
+
+      border-radius:
+        18px;
+
+      transition:
+        .2s;
+
+    }
+
+
+    .song-card:hover {
+
+      transform:
+        translateY(-4px);
+
+      border-color:
+        #4c1d95;
+
+    }
+
+
+    .cover {
+
+      height:
+        240px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #111827,
+          #312e81
+        );
+
+    }
+
+
+    .cover img {
+
+      width:
+        100%;
+
+      height:
+        100%;
+
+      object-fit:
+        cover;
+
+    }
+
+
+    .cover-placeholder {
+
+      width:
+        100%;
+
+      height:
+        100%;
+
+      display:
+        grid;
+
+      place-items:
+        center;
+
+      font-size:
+        58px;
+
+    }
+
+
+    .song-body {
+
+      padding:
+        16px;
+
+    }
+
+
+    .song-title {
+
+      font-weight:
+        900;
+
+      font-size:
+        17px;
+
+      white-space:
+        nowrap;
+
+      overflow:
+        hidden;
+
+      text-overflow:
+        ellipsis;
+
+    }
+
+
+    .artist {
+
+      color:
+        var(--muted);
+
+      font-size:
+        13px;
+
+      margin-top:
+        5px;
+
+    }
+
+
+    .meta {
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      gap:
+        7px;
+
+      flex-wrap:
+        wrap;
+
+      margin-top:
+        10px;
+
+    }
+
+
+    .pill {
+
+      color:
+        #c4b5fd;
+
+      background:
+        rgba(124,58,237,.1);
+
+      border:
+        1px solid rgba(124,58,237,.2);
+
+      padding:
+        5px 8px;
+
+      border-radius:
+        999px;
+
+      font-size:
+        10px;
+
+      text-transform:
+        uppercase;
+
+    }
+
+
+    .downloads {
+
+      color:
+        #64748b;
+
+      font-size:
+        10px;
+
+    }
+
+
+    audio {
+
+      width:
+        100%;
+
+      margin-top:
+        14px;
+
+      height:
+        36px;
+
+    }
+
+
+    .actions {
+
+      display:
+        flex;
+
+      gap:
+        7px;
+
+      margin-top:
+        12px;
+
+    }
+
+
+    .download {
+
+      flex:
+        1;
+
+      border:
+        none;
+
+      color:
+        white;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue)
+        );
+
+      border-radius:
+        10px;
+
+      padding:
+        10px;
+
+      font-weight:
+        800;
+
+      font-size:
+        12px;
+
+    }
+
+
+    .delete {
+
+      display:
+        none;
+
+      border:
+        1px solid rgba(239,68,68,.3);
+
+      background:
+        rgba(239,68,68,.08);
+
+      color:
+        #fca5a5;
+
+      border-radius:
+        10px;
+
+      padding:
+        10px 12px;
+
+      font-weight:
+        800;
+
+    }
+
+
+    .delete.visible {
+
+      display:
+        block;
+
+    }
+
+
+    /* ======================================================
+       EMPTY
+    ====================================================== */
+
+    .empty {
+
+      grid-column:
+        1 / -1;
+
+      text-align:
+        center;
+
+      padding:
+        80px 20px;
+
+      color:
+        #64748b;
+
+    }
+
+
+    .empty-icon {
+
+      font-size:
+        55px;
+
+      margin-bottom:
+        12px;
+
+    }
+
+
+    .empty h3 {
+
+      color:
+        #cbd5e1;
+
+      margin-bottom:
+        6px;
+
+    }
+
+
+    /* ======================================================
+       MODALS
+    ====================================================== */
+
+    .modal {
+
+      display:
+        none;
+
+      position:
+        fixed;
+
+      inset:
+        0;
+
+      z-index:
+        500;
+
+      padding:
+        20px;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      background:
+        rgba(0,0,0,.75);
+
+      backdrop-filter:
+        blur(10px);
+
+    }
+
+
+    .modal.active {
+
+      display:
+        flex;
+
+    }
+
+
+    .modal-box {
+
+      width:
+        100%;
+
+      max-width:
+        500px;
+
+      max-height:
+        90vh;
+
+      overflow-y:
+        auto;
+
+      padding:
+        24px;
+
+      background:
+        #0b1120;
+
+      border:
+        1px solid #263247;
+
+      border-radius:
+        20px;
+
+    }
+
+
+    .modal-head {
+
+      display:
+        flex;
+
+      justify-content:
+        space-between;
+
+      align-items:
+        center;
+
+      margin-bottom:
+        22px;
+
+    }
+
+
+    .modal-head h2 {
+
+      font-size:
+        23px;
+
+    }
+
+
+    .close {
+
+      width:
+        35px;
+
+      height:
+        35px;
+
+      border:
+        1px solid var(--border);
+
+      background:
+        #111827;
+
+      color:
+        #94a3b8;
+
+      border-radius:
+        9px;
+
+    }
+
+
+    .field {
+
+      margin-bottom:
+        15px;
+
+    }
+
+
+    .field label {
+
+      display:
+        block;
+
+      margin-bottom:
+        7px;
+
+      color:
+        #cbd5e1;
+
+      font-size:
+        12px;
+
+      font-weight:
+        800;
+
+    }
+
+
+    .field input,
+    .field select {
+
+      width:
+        100%;
+
+      height:
+        46px;
+
+      border:
+        1px solid var(--border);
+
+      background:
+        #050914;
+
+      color:
+        white;
+
+      border-radius:
+        10px;
+
+      padding:
+        0 12px;
+
+      outline:
+        none;
+
+    }
+
+
+    .file {
+
+      padding:
+        10px !important;
+
+    }
+
+
+    .submit {
+
+      width:
+        100%;
+
+      border:
+        none;
+
+      padding:
+        14px;
+
+      border-radius:
+        11px;
+
+      color:
+        white;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue)
+        );
+
+      font-weight:
+        900;
+
+    }
+
+
+    .submit:disabled {
+
+      opacity:
+        .5;
+
+    }
+
+
+    .progress {
+
+      display:
+        none;
+
+      margin:
+        15px 0;
+
+    }
+
+
+    .progress-bar {
+
+      height:
+        7px;
+
+      background:
+        #1e293b;
+
+      border-radius:
+        99px;
+
+      overflow:
+        hidden;
+
+    }
+
+
+    .progress-fill {
+
+      width:
+        0%;
+
+      height:
+        100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--purple),
+          var(--blue)
+        );
+
+      transition:
+        .2s;
+
+    }
+
+
+    .progress-text {
+
+      text-align:
+        center;
+
+      margin-top:
+        6px;
+
+      color:
+        #64748b;
+
+      font-size:
+        11px;
+
+    }
+
+
+    /* ======================================================
+       ADMIN PANEL
+    ====================================================== */
+
+    .admin-status {
+
+      display:
+        none;
+
+      padding:
+        10px;
+
+      margin-bottom:
+        15px;
+
+      border-radius:
+        10px;
+
+      background:
+        rgba(34,197,94,.08);
+
+      border:
+        1px solid rgba(34,197,94,.2);
+
+      color:
+        #86efac;
+
+      font-size:
+        12px;
+
+    }
+
+
+    .admin-status.visible {
+
+      display:
+        block;
+
+    }
+
+
+    .logout {
+
+      width:
+        100%;
+
+      border:
+        1px solid #334155;
+
+      background:
+        #111827;
+
+      color:
+        #cbd5e1;
+
+      padding:
+        11px;
+
+      border-radius:
+        10px;
+
+      margin-top:
+        10px;
+
+    }
+
+
+    /* ======================================================
+       TOAST
+    ====================================================== */
+
+    .toast {
+
+      position:
+        fixed;
+
+      left:
+        50%;
+
+      bottom:
+        25px;
+
+      z-index:
+        1000;
+
+      transform:
+        translate(-50%,30px);
+
+      opacity:
+        0;
+
+      pointer-events:
+        none;
+
+      background:
+        #111827;
+
+      border:
+        1px solid #334155;
+
+      padding:
+        12px 17px;
+
+      border-radius:
+        12px;
+
+      font-size:
+        13px;
+
+      transition:
+        .25s;
+
+    }
+
+
+    .toast.show {
+
+      transform:
+        translate(-50%,0);
+
+      opacity:
+        1;
+
+    }
+
+
+    footer {
+
+      padding:
+        30px 20px;
+
+      text-align:
+        center;
+
+      color:
+        #475569;
+
+      font-size:
+        12px;
+
+      border-top:
+        1px solid #111827;
+
+    }
+
+
+    @media(max-width:600px) {
+
+      .nav {
+
+        height:
+          62px;
+
+      }
+
+      .logo {
+
+        font-size:
+          16px;
+
+      }
+
+      .logo-icon {
+
+        width:
+          34px;
+
+        height:
+          34px;
+
+      }
+
+      .hero {
+
+        padding-top:
+          55px;
+
+      }
+
+      .hero h1 {
+
+        letter-spacing:
+          -2px;
+
+      }
+
+      .search {
+
+        flex-direction:
+          column;
+
+      }
+
+      .search select {
+
+        width:
+          100%;
+
+      }
+
+      .music-grid {
+
+        grid-template-columns:
+          1fr;
+
+      }
+
+      .cover {
+
+        height:
+          230px;
+
+      }
+
+    }
+
   </style>
+
 </head>
+
+
 <body>
 
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
 <header>
-  <div class="container nav">
-    <a class="brand" href="#">
-      <span class="brand-mark">🎵</span>
-      <span>M.G.Y TENSION</span>
+
+  <div class="nav">
+
+    <a href="#" class="logo">
+
+      <div class="logo-icon">
+        🎵
+      </div>
+
+       M.G.Y TENSION
+
     </a>
-    <div class="nav-actions">
-      <button id="adminBtn" class="btn small" onclick="openAdmin()">🔐 Admin Login</button>
-      <button class="btn primary" onclick="openUpload()">＋ Upload Song</button>
+
+
+    <div class="nav-right">
+
+      <button
+        id="adminButton"
+        class="admin-button"
+        onclick="openAdmin()"
+      >
+        🔐 Admin
+      </button>
+
+
+      <button
+        class="nav-button"
+        onclick="openUpload()"
+      >
+        ＋ Upload Song
+      </button>
+
     </div>
+
   </div>
+
 </header>
 
-<section class="hero container">
-  <span class="badge">🌍 MUSIC DISCOVERY NETWORK</span>
-  <h1>Discover the music <span class="gradient">before it blows up.</span></h1>
-  <p>Upload original music, find rising artists, share songs, vote in battles, follow creators and download MP3s. Built for discovery, not gatekeeping.</p>
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+  <span class="badge">
+    🌍 OPEN MUSIC COMMUNITY
+  </span>
+
+
+  <h1>
+
+    Upload your music.
+
+    <span class="gradient">
+      Let the world hear it.
+    </span>
+
+  </h1>
+
+
+  <p>
+
+    Upload your MP3, share your sound,
+    discover new artists and download
+    music from the community.
+
+  </p>
+
+
   <div class="hero-actions">
-    <button class="btn primary" onclick="openUpload()">🎤 Upload Your Song</button>
-    <button class="btn" onclick="scrollToMusic()">🔥 Explore Trending</button>
+
+    <button
+      class="primary"
+      onclick="openUpload()"
+    >
+      🎵 Upload Your Song
+    </button>
+
+
+    <button
+      class="secondary"
+      onclick="scrollToMusic()"
+    >
+      Explore Music
+    </button>
+
   </div>
+
 </section>
 
-<div class="ticker">
-  <div class="ticker-track">
-    <span>🔥 <b>Trending now</b> changes in real time</span>
-    <span>⚡ Rising artists</span>
-    <span>🎧 First Listen</span>
-    <span>🏆 Music Battles</span>
-    <span>💜 Follow creators</span>
-    <span>⬇️ MP3 downloads</span>
-    <span>🇿🇲 Zambia → 🌍 Africa → 🌎 Global</span>
-    <span>🔥 <b>Trending now</b> changes in real time</span>
-    <span>⚡ Rising artists</span>
-    <span>🎧 First Listen</span>
-    <span>🏆 Music Battles</span>
-  </div>
-</div>
 
-<main class="container" id="music">
 
-  <div class="feature-grid">
-    <div class="feature"><div class="big" id="statSongs">0</div><p>songs live</p></div>
-    <div class="feature"><div class="big" id="statPlays">0</div><p>plays</p></div>
-    <div class="feature"><div class="big" id="statDownloads">0</div><p>downloads</p></div>
-    <div class="feature"><div class="big" id="statArtists">0</div><p>artists</p></div>
-  </div>
+<!-- =========================================================
+     MAIN
+========================================================= -->
 
-  <div class="toolbar">
-    <input id="searchInput" class="input" placeholder="Search songs, artists, genres…">
-    <select id="genreFilter" class="select">
-      <option value="all">All genres</option><option>Afrobeats</option><option>Hip Hop</option><option>Drill</option><option>Trap</option><option>Amapiano</option><option>Gospel</option><option>R&B</option><option>Other</option>
+<main id="music">
+
+
+  <div class="search">
+
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="Search songs or artists..."
+    >
+
+
+    <select id="genreFilter">
+
+      <option value="all">
+        All Genres
+      </option>
+
+      <option value="Afrobeats">
+        Afrobeats
+      </option>
+
+      <option value="Hip Hop">
+        Hip Hop
+      </option>
+
+      <option value="Drill">
+        Drill
+      </option>
+
+      <option value="Trap">
+        Trap
+      </option>
+
+      <option value="Amapiano">
+        Amapiano
+      </option>
+
+      <option value="Gospel">
+        Gospel
+      </option>
+
+      <option value="R&B">
+        R&B
+      </option>
+
+      <option value="Other">
+        Other
+      </option>
+
     </select>
-    <button class="btn" onclick="refreshAll()">↻ Refresh</button>
-    <button class="btn" onclick="openArtistSearch()">👤 Artists</button>
+
   </div>
 
-  <div class="tabs" id="tabs">
-    <button class="tab active" data-view="trending">🔥 Trending</button>
-    <button class="tab" data-view="rising">⚡ Rising Fast</button>
-    <button class="tab" data-view="latest">🆕 Just Dropped</button>
-    <button class="tab" data-view="first">🎧 First Listen</button>
-    <button class="tab" data-view="charts">🏆 Charts</button>
-    <button class="tab" data-view="battle">🥊 Battle</button>
-    <button class="tab" data-view="challenge">🎤 Challenge</button>
-    <button class="tab" data-view="foryou">💜 For You</button>
-    <button class="tab" data-view="studio">📊 Artist Studio</button>
+
+
+  <div class="section-title">
+
+    <h2>
+      Latest Music
+    </h2>
+
+    <span
+      id="trackCount"
+      class="count"
+    >
+      Loading...
+    </span>
+
   </div>
 
-  <div id="viewTrending" class="view"></div>
-  <div id="viewRising" class="view hidden"></div>
-  <div id="viewLatest" class="view hidden"></div>
-  <div id="viewFirst" class="view hidden"></div>
-  <div id="viewCharts" class="view hidden"></div>
-  <div id="viewBattle" class="view hidden"></div>
-  <div id="viewChallenge" class="view hidden"></div>
-  <div id="viewForyou" class="view hidden"></div>
-  <div id="viewStudio" class="view hidden"></div>
+
+
+  <div
+    id="musicGrid"
+    class="music-grid"
+  >
+
+    <div class="empty">
+
+      <div class="empty-icon">
+        🎵
+      </div>
+
+      <h3>
+        Loading music...
+      </h3>
+
+      <p>
+        Connecting to Music Hub.
+      </p>
+
+    </div>
+
+  </div>
 
 </main>
 
-<footer class="container" style="padding-top:34px;padding-bottom:34px;text-align:center;color:#53627b;font-size:12px">© 2026 M.G.Y Tension · Upload · Discover · Share · Download</footer>
 
-<!-- Upload modal -->
-<div id="uploadModal" class="modal">
+
+<!-- =========================================================
+     UPLOAD MODAL
+========================================================= -->
+
+<div
+  id="uploadModal"
+  class="modal"
+>
+
   <div class="modal-box">
-    <div class="modal-head"><h2>🎵 Publish a Song</h2><button class="close" onclick="closeModal('uploadModal')">✕</button></div>
+
+    <div class="modal-head">
+
+      <h2>
+        Upload Your Song
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeModal('uploadModal')"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
     <form id="uploadForm">
-      <div class="field"><label>Artist name *</label><input id="uploadArtist" class="input" maxlength="100" placeholder="Your artist name" required></div>
-      <div class="field"><label>Song title *</label><input id="uploadTitle" class="input" maxlength="150" placeholder="Your song title" required></div>
-      <div class="field"><label>Genre</label><select id="uploadGenre" class="select"><option>Afrobeats</option><option>Hip Hop</option><option>Drill</option><option>Trap</option><option>Amapiano</option><option>Gospel</option><option>R&B</option><option>Other</option></select></div>
-      <div class="field"><label>Country / region (optional)</label><input id="uploadCountry" class="input" maxlength="80" placeholder="e.g. Zambia"></div>
-      <div class="field"><label>MP3 file * (max 50MB on Supabase Free)</label><input id="uploadAudio" class="input file" type="file" accept=".mp3,audio/mpeg" required></div>
-      <div class="field"><label>Cover image (optional, max 5MB)</label><input id="uploadCover" class="input file" type="file" accept="image/jpeg,image/png,image/webp"></div>
-      <div id="uploadProgress" class="progress"><div class="bar"><div id="uploadFill" class="fill"></div></div><p id="uploadProgressText">Uploading…</p></div>
-      <button id="uploadSubmit" class="btn primary" style="width:100%;padding:13px" type="submit">🚀 Publish Track</button>
+
+
+      <div class="field">
+
+        <label>
+          Artist Name *
+        </label>
+
+        <input
+          id="artist"
+          maxlength="100"
+          placeholder="Your artist name"
+          required
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Song Title *
+        </label>
+
+        <input
+          id="title"
+          maxlength="150"
+          placeholder="Your song title"
+          required
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Genre
+        </label>
+
+        <select id="genre">
+
+          <option>Afrobeats</option>
+          <option>Hip Hop</option>
+          <option>Drill</option>
+          <option>Trap</option>
+          <option>Amapiano</option>
+          <option>Gospel</option>
+          <option>R&B</option>
+          <option>Other</option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          MP3 File *
+        </label>
+
+        <input
+          id="audioFile"
+          class="file"
+          type="file"
+          accept=".mp3,audio/mpeg"
+          required
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Cover Image — Optional
+        </label>
+
+        <input
+          id="coverFile"
+          class="file"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+        >
+
+      </div>
+
+
+      <div
+        id="uploadProgress"
+        class="progress"
+      >
+
+        <div class="progress-bar">
+
+          <div
+            id="progressFill"
+            class="progress-fill"
+          ></div>
+
+        </div>
+
+        <div
+          id="progressText"
+          class="progress-text"
+        >
+          Uploading...
+        </div>
+
+      </div>
+
+
+      <button
+        id="uploadButton"
+        class="submit"
+        type="submit"
+      >
+        🚀 Upload Song
+      </button>
+
     </form>
-    <div class="danger-note" style="margin-top:12px">Upload only music you own or have permission to distribute. Public uploads need moderation before you scale.</div>
+
   </div>
+
 </div>
 
-<!-- Admin modal -->
-<div id="adminModal" class="modal">
+
+
+<!-- =========================================================
+     ADMIN LOGIN
+========================================================= -->
+
+<div
+  id="adminModal"
+  class="modal"
+>
+
   <div class="modal-box">
-    <div class="modal-head"><h2>🔐 Admin Access</h2><button class="close" onclick="closeModal('adminModal')">✕</button></div>
-    <div id="adminLogged" class="hidden"><div class="feature" style="margin-bottom:10px"><strong>Admin session active ✅</strong><p>Delete controls are enabled on songs.</p></div><button class="btn" style="width:100%" onclick="logoutAdmin()">Logout</button></div>
-    <form id="adminForm">
-      <div class="field"><label>Email</label><input id="adminEmail" class="input" type="email" required></div>
-      <div class="field"><label>Password</label><input id="adminPassword" class="input" type="password" required></div>
-      <button class="btn primary" style="width:100%" type="submit">Login</button>
+
+    <div class="modal-head">
+
+      <h2>
+        🔐 Admin
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeModal('adminModal')"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <div
+      id="adminStatus"
+      class="admin-status"
+    >
+      You are logged in as an administrator.
+    </div>
+
+
+    <form
+      id="adminLoginForm"
+    >
+
+      <div class="field">
+
+        <label>
+          Admin Email
+        </label>
+
+        <input
+          id="adminEmail"
+          type="email"
+          autocomplete="email"
+          placeholder="Admin email"
+          required
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Password
+        </label>
+
+        <input
+          id="adminPassword"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Password"
+          required
+        >
+
+      </div>
+
+
+      <button
+        class="submit"
+        type="submit"
+      >
+        🔐 Login
+      </button>
+
     </form>
+
+
+    <button
+      id="logoutButton"
+      class="logout"
+      onclick="logoutAdmin()"
+      style="display:none"
+    >
+      Logout Admin
+    </button>
+
   </div>
+
 </div>
 
-<!-- Comments modal -->
-<div id="commentsModal" class="modal">
-  <div class="modal-box">
-    <div class="modal-head"><h2 id="commentsTitle">Comments</h2><button class="close" onclick="closeModal('commentsModal')">✕</button></div>
-    <div id="commentList" class="comment-list"></div>
-    <form id="commentForm">
-      <div class="field"><label>Your name</label><input id="commentName" class="input" maxlength="60" placeholder="e.g. Jay Zed" required></div>
-      <div class="field"><label>Comment</label><textarea id="commentText" class="textarea" rows="3" maxlength="300" placeholder="Say something real…" required></textarea></div>
-      <button class="btn primary" style="width:100%">Post Comment</button>
-    </form>
-  </div>
-</div>
 
-<!-- Artist modal -->
-<div id="artistModal" class="modal">
-  <div class="modal-box">
-    <div class="modal-head"><h2>👤 Artist</h2><button class="close" onclick="closeModal('artistModal')">✕</button></div>
-    <div id="artistProfile"></div>
-  </div>
-</div>
 
-<!-- Share modal -->
-<div id="shareModal" class="modal">
-  <div class="modal-box">
-    <div class="modal-head"><h2>↗ Share Song</h2><button class="close" onclick="closeModal('shareModal')">✕</button></div>
-    <p id="shareText" style="color:#a0aec0;font-size:13px;line-height:1.6;margin-bottom:12px"></p>
-    <button class="btn primary" style="width:100%;margin-bottom:8px" onclick="nativeShare()">📲 Share</button>
-    <button class="btn" style="width:100%" onclick="copyShareLink()">🔗 Copy Link</button>
-  </div>
-</div>
+<!-- =========================================================
+     TOAST
+========================================================= -->
 
-<div id="toast" class="toast"></div>
+<div
+  id="toast"
+  class="toast"
+></div>
+
+
+
+<footer>
+
+  © 2026 M.G.Y Tension· Upload · Discover · Download 🎵
+
+</footer>
+
+
 
 <script>
-  // ========================= CONFIG =========================
-  const SUPABASE_URL = "jfzypvnlbrmpbuxmlhgp.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_uT8ky5GdL-0LQ3O5cJlJZw_EfP6IHCM";
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // ========================= STATE =========================
-  let tracks=[]; let currentView='trending'; let admin=false; let currentCommentTrack=null; let shareTrack=null; let battlePair=[];
-  const visitorIdKey='mgy_visitor_id_v1';
-  const visitorId=localStorage.getItem(visitorIdKey)||crypto.randomUUID(); localStorage.setItem(visitorIdKey,visitorId);
 
-  // ========================= HELPERS =========================
-  const $=id=>document.getElementById(id);
-  const fmt=n=>new Intl.NumberFormat().format(n||0);
-  const ageHours=t=>Math.max(1,(Date.now()-new Date(t.created_at).getTime())/3600000);
-  const likesCacheKey=id=>`mgy_like_${id}`;
-  const followsCacheKey=name=>`mgy_follow_${name.toLowerCase()}`;
-  const clean=s=>String(s||'').replace(/[^a-z0-9\s-_]/gi,'').trim().replace(/\s+/g,'-').slice(0,90)||'song';
-  function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
-  function escAttr(v){return String(v??'').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
-  function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>$('toast').classList.remove('show'),3000)}
-  function openUpload(){$('uploadModal').classList.add('active')}
-  function closeModal(id){$(id).classList.remove('active')}
-  function scrollToMusic(){document.querySelector('main').scrollIntoView({behavior:'smooth'})}
+/* ==========================================================
+   SUPABASE CONFIGURATION
+========================================================== */
 
-  // ========================= METRICS =========================
-  function tensionScore(t){
-    const base=(t.plays||0)*1 + (t.downloads||0)*3 + (t.likes_count||0)*2 + (t.shares||0)*4 + (t.comments_count||0)*2;
-    const recencyBoost=Math.max(1,72-ageHours(t));
-    return Math.round(Math.log10(base+1)*28 + recencyBoost);
+
+/*
+  IMPORTANT:
+
+  Replace these two values with your Supabase project details.
+
+  Supabase Dashboard
+  → Settings
+  → API
+*/
+
+
+const SUPABASE_URL =
+  "https://jfzypvnlbrmpbuxmlhgp.supabase.co";
+
+
+const SUPABASE_ANON_KEY =
+  "sb_publishable_uT8ky5GdL-0LQ3O5cJlJZw_EfP6IHCM";
+
+
+const supabaseClient =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+
+
+/* ==========================================================
+   STATE
+========================================================== */
+
+let tracks = [];
+
+let currentUser = null;
+
+let isAdmin = false;
+
+
+
+/* ==========================================================
+   DOM
+========================================================== */
+
+const musicGrid =
+  document.getElementById(
+    "musicGrid"
+  );
+
+
+const trackCount =
+  document.getElementById(
+    "trackCount"
+  );
+
+
+const searchInput =
+  document.getElementById(
+    "searchInput"
+  );
+
+
+const genreFilter =
+  document.getElementById(
+    "genreFilter"
+  );
+
+
+const adminButton =
+  document.getElementById(
+    "adminButton"
+  );
+
+
+
+/* ==========================================================
+   START
+========================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
+
+    await checkAdmin();
+
+    await loadTracks();
+
+    subscribeToTracks();
+
   }
-  function risingScore(t){return ((t.plays||0)+(t.downloads||0)*2+(t.likes_count||0)*1.5+(t.shares||0)*2.5)/ageHours(t)}
+);
 
-  function artistStats(){
-    const map=new Map();
-    for(const t of tracks){const k=t.artist.trim();const x=map.get(k)||{artist:k,songs:0,plays:0,downloads:0,likes:0};x.songs++;x.plays+=t.plays||0;x.downloads+=t.downloads||0;x.likes+=t.likes_count||0;map.set(k,x)}
-    return [...map.values()].sort((a,b)=>b.plays+b.downloads*2-a.plays-a.downloads*2);
-  }
 
-  // ========================= RENDER =========================
-  function filtered(){
-    const q=$('searchInput').value.trim().toLowerCase(); const g=$('genreFilter').value;
-    return tracks.filter(t=>(!q || `${t.title} ${t.artist} ${t.genre} ${t.country||''}`.toLowerCase().includes(q)) && (g==='all'||t.genre===g));
-  }
 
-  function card(t,rank){
-    const liked=localStorage.getItem(likesCacheKey(t.id))==='1';
-    const isAdmin=admin?'admin':'';
-    const cover=t.cover_url?`<img src="${escAttr(t.cover_url)}" alt="${esc(t.title)}" loading="lazy">`:`<div class="placeholder">🎵</div>`;
-    return `<article class="card ${isAdmin}">
-      <div class="cover">${cover}${rank?`<span class="rank-badge">#${rank}</span>`:''}<span class="trend-badge">⚡ ${tensionScore(t)}</span></div>
-      <div class="body">
-        <div class="title">${esc(t.title)}</div>
-        <div class="artist">${esc(t.artist)}${t.country?` · ${esc(t.country)}`:''}</div>
-        <div class="meta"><span class="pill">${esc(t.genre)}</span><span class="stat">▶ ${fmt(t.plays)} plays</span><span class="stat">⬇ ${fmt(t.downloads)}</span><span class="stat">💬 ${fmt(t.comments_count)}</span></div>
-        <audio class="player" controls preload="none" data-id="${t.id}" src="${escAttr(t.audio_url)}"></audio>
-        <div class="actions">
-          <button class="btn small download" onclick="downloadTrack('${t.id}')">⬇ MP3</button>
-          <button class="btn small like ${liked?'on':''}" onclick="toggleLike('${t.id}')">❤️ ${fmt(t.likes_count)}</button>
-          <button class="btn small share" onclick="openShare('${t.id}')">↗ Share</button>
+/* ==========================================================
+   LOAD TRACKS
+========================================================== */
+
+async function loadTracks() {
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+
+        .from("tracks")
+
+        .select("*")
+
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        );
+
+
+    if (error) {
+
+      throw error;
+
+    }
+
+
+    tracks =
+      data || [];
+
+
+    renderTracks();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+
+    musicGrid.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          ⚠️
         </div>
-        <div class="actions" style="grid-template-columns:1fr 1fr">
-          <button class="btn small" onclick="openComments('${t.id}')">💬 Comments</button>
-          <button class="btn small" onclick="openArtist('${encodeURIComponent(t.artist)}')">👤 Artist</button>
-        </div>
-        <div class="actions" style="grid-template-columns:1fr 1fr">
-          <button class="btn small" onclick="copySongLink('${t.id}')">🔗 Song link</button>
-          <button class="btn small delete" onclick="deleteTrack('${t.id}')">🗑 Delete</button>
-        </div>
+
+        <h3>
+          Could not load music
+        </h3>
+
+        <p>
+          Check your Supabase configuration.
+        </p>
+
       </div>
-    </article>`;
+
+    `;
+
   }
 
-  function section(title,subtitle,list,limit=12){const rows=list.slice(0,limit);return `<div class="section-head"><div><h2>${title}</h2><p>${subtitle}</p></div><span class="mini">${fmt(rows.length)} shown</span></div><div class="grid">${rows.length?rows.map((t,i)=>card(t,i+1)).join(''):`<div class="empty"><b>No tracks yet.</b>Upload the first song and start the movement.</div>`}</div>`}
+}
 
-  function renderAll(){
-    const base=filtered();
-    $('statSongs').textContent=fmt(tracks.length);
-    $('statPlays').textContent=fmt(tracks.reduce((s,t)=>s+(t.plays||0),0));
-    $('statDownloads').textContent=fmt(tracks.reduce((s,t)=>s+(t.downloads||0),0));
-    $('statArtists').textContent=fmt(new Set(tracks.map(t=>t.artist.toLowerCase())).size);
 
-    const trending=[...base].sort((a,b)=>tensionScore(b)-tensionScore(a));
-    const rising=[...base].sort((a,b)=>risingScore(b)-risingScore(a));
-    const latest=[...base].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
-    const first=latest.filter(t=>ageHours(t)<=24);
 
-    $('viewTrending').innerHTML=section('🔥 Trending Now','Popularity + momentum + recency',trending);
-    $('viewRising').innerHTML=section('⚡ Rising Fast','Tracks getting attention quickly',rising);
-    $('viewLatest').innerHTML=section('🆕 Just Dropped','The newest uploads',latest);
-    $('viewFirst').innerHTML=section('🎧 First Listen','Songs uploaded in the last 24 hours',first);
-    $('viewCharts').innerHTML=charts(base);
-    $('viewBattle').innerHTML=battleView(base);
-    $('viewChallenge').innerHTML=challengeView(base);
-    $('viewForyou').innerHTML=forYouView(base);
-    $('viewStudio').innerHTML=studioView(base);
-    document.body.classList.toggle('admin',admin);
-    attachPlayTracking();
+/* ==========================================================
+   REALTIME
+========================================================== */
+
+function subscribeToTracks() {
+
+  supabaseClient
+
+    .channel("music-hub-tracks")
+
+    .on(
+
+      "postgres_changes",
+
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "tracks"
+      },
+
+      payload => {
+
+        if (
+          !tracks.some(
+            track =>
+              track.id ===
+              payload.new.id
+          )
+        ) {
+
+          tracks.unshift(
+            payload.new
+          );
+
+          renderTracks();
+
+          showToast(
+            "🎵 New song uploaded!"
+          );
+
+        }
+
+      }
+
+    )
+
+    .on(
+
+      "postgres_changes",
+
+      {
+        event: "DELETE",
+        schema: "public",
+        table: "tracks"
+      },
+
+      payload => {
+
+        tracks =
+          tracks.filter(
+            track =>
+              track.id !==
+              payload.old.id
+          );
+
+
+        renderTracks();
+
+        showToast(
+          "🗑️ Song removed."
+        );
+
+      }
+
+    )
+
+    .subscribe();
+
+}
+
+
+
+/* ==========================================================
+   ADMIN CHECK
+========================================================== */
+
+async function checkAdmin() {
+
+  try {
+
+    const {
+      data: {
+        session
+      }
+    } =
+      await supabaseClient
+        .auth
+        .getSession();
+
+
+    currentUser =
+      session?.user || null;
+
+
+    if (!currentUser) {
+
+      isAdmin = false;
+
+      updateAdminUI();
+
+      return;
+
+    }
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .rpc(
+          "is_admin"
+        );
+
+
+    if (error) {
+
+      console.error(
+        "Admin check:",
+        error
+      );
+
+      isAdmin = false;
+
+    } else {
+
+      isAdmin =
+        data === true;
+
+    }
+
+
+    updateAdminUI();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    isAdmin = false;
+
+    updateAdminUI();
+
   }
 
-  function charts(base){
-    const top=[...base].sort((a,b)=>tensionScore(b)-tensionScore(a)).slice(0,20);
-    const regions={}; base.forEach(t=>{const r=t.country||'Global';regions[r]=(regions[r]||0)+1});
-    const artists=artistStats().slice(0,10);
-    return `<div class="section-head"><div><h2>🏆 Charts</h2><p>Community momentum, not pay-to-win placement.</p></div></div>
-      <div class="chart-list">${top.length?top.map((t,i)=>`<button class="chart-row" onclick="focusSong('${t.id}')"><span class="num">#${i+1}</span><span><strong>${esc(t.title)}</strong><small>${esc(t.artist)} · ${fmt(t.plays)} plays · ${fmt(t.downloads)} downloads</small></span><span class="score">⚡ ${tensionScore(t)}</span></button>`).join(''):`<div class="empty"><b>No chart data yet.</b>Upload songs to create the chart.</div>`}</div>
-      <div class="section-head"><div><h2>👤 Artist Momentum</h2><p>Creators bringing energy to the network.</p></div></div>
-      <div class="chart-list">${artists.length?artists.map((a,i)=>`<button class="chart-row" onclick="openArtist('${encodeURIComponent(a.artist)}')"><span class="num">#${i+1}</span><span><strong>${esc(a.artist)}</strong><small>${a.songs} songs · ${fmt(a.plays)} plays · ${fmt(a.downloads)} downloads</small></span><span class="score">${fmt(a.plays+a.downloads*2)}</span></button>`).join(''):''}</div>`;
+}
+
+
+
+/* ==========================================================
+   AUTH STATE CHANGES
+========================================================== */
+
+supabaseClient
+  .auth
+  .onAuthStateChange(
+    async (
+      event,
+      session
+    ) => {
+
+      currentUser =
+        session?.user || null;
+
+
+      await checkAdmin();
+
+      renderTracks();
+
+    }
+  );
+
+
+
+/* ==========================================================
+   ADMIN UI
+========================================================== */
+
+function updateAdminUI() {
+
+  // Always show the Admin button so the administrator
+  // has a way to open the login screen.
+
+  adminButton.classList.add("visible");
+
+  if (isAdmin) {
+    adminButton.textContent = "🔐 Admin";
+  } else {
+    adminButton.textContent = "🔐 Admin Login";
   }
 
-  function battleView(base){
-    battlePair=[...base].sort(()=>Math.random()-.5).slice(0,2);
-    if(battlePair.length<2) return `<div class="empty"><b>Need at least 2 songs for a battle.</b>Invite two artists to upload.</div>`;
-    const [a,b]=battlePair;
-    return `<div class="section-head"><div><h2>🥊 Music Battle</h2><p>Pick the track with the most tension.</p></div></div><div class="grid">
-      <div class="card"><div class="body"><div class="title">${esc(a.title)}</div><div class="artist">${esc(a.artist)}</div><audio class="player" controls src="${escAttr(a.audio_url)}"></audio><button class="btn primary" style="width:100%;margin-top:10px" onclick="voteBattle('${a.id}','${b.id}')">🔥 Vote A</button></div></div>
-      <div class="card"><div class="body"><div class="title">${esc(b.title)}</div><div class="artist">${esc(b.artist)}</div><audio class="player" controls src="${escAttr(b.audio_url)}"></audio><button class="btn primary" style="width:100%;margin-top:10px" onclick="voteBattle('${b.id}','${a.id}')">🔥 Vote B</button></div></div>
-    </div>`;
+}
+
+
+/* ==========================================================
+   FILTER
+========================================================== */
+
+searchInput.addEventListener(
+  "input",
+  renderTracks
+);
+
+
+genreFilter.addEventListener(
+  "change",
+  renderTracks
+);
+
+
+
+function getFilteredTracks() {
+
+  const search =
+    searchInput.value
+      .trim()
+      .toLowerCase();
+
+
+  const genre =
+    genreFilter.value;
+
+
+  return tracks.filter(
+    track => {
+
+      const title =
+        (
+          track.title ||
+          ""
+        ).toLowerCase();
+
+
+      const artist =
+        (
+          track.artist ||
+          ""
+        ).toLowerCase();
+
+
+      const searchMatch =
+        !search ||
+        title.includes(search) ||
+        artist.includes(search);
+
+
+      const genreMatch =
+        genre === "all" ||
+        track.genre === genre;
+
+
+      return (
+        searchMatch &&
+        genreMatch
+      );
+
+    }
+  );
+
+}
+
+
+
+/* ==========================================================
+   RENDER
+========================================================== */
+
+function renderTracks() {
+
+  const filtered =
+    getFilteredTracks();
+
+
+  trackCount.textContent =
+    `${filtered.length} ${
+      filtered.length === 1
+        ? "song"
+        : "songs"
+    }`;
+
+
+  if (!filtered.length) {
+
+    musicGrid.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          🎧
+        </div>
+
+        <h3>
+          No music found
+        </h3>
+
+        <p>
+          Be the first artist to upload a song.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
   }
 
-  function challengeView(base){
-    const rising=[...base].sort((a,b)=>risingScore(b)-risingScore(a)).slice(0,5);
-    return `<div class="section-head"><div><h2>🎤 Weekly Discovery Challenge</h2><p>Upload a song this week and compete for a spot on the Rising list.</p></div></div>
-    <div class="feature-grid"><div class="feature"><div class="big">#1</div><p>Top rising artist</p></div><div class="feature"><div class="big">🔥</div><p>Momentum wins</p></div><div class="feature"><div class="big">🎧</div><p>Fresh songs welcome</p></div><div class="feature"><div class="big">🌍</div><p>Global discovery</p></div></div>
-    <div class="section-head"><div><h2>Current leaders</h2><p>Based on activity per hour.</p></div></div><div class="grid">${rising.map(t=>card(t)).join('')||`<div class="empty"><b>No challengers yet.</b>Be the first.</div>`}</div>`;
+
+  musicGrid.innerHTML =
+    filtered
+      .map(
+        createSongCard
+      )
+      .join("");
+
+}
+
+
+
+/* ==========================================================
+   SONG CARD
+========================================================== */
+
+function createSongCard(
+  track
+) {
+
+  const title =
+    escapeHTML(
+      track.title
+    );
+
+
+  const artist =
+    escapeHTML(
+      track.artist
+    );
+
+
+  const genre =
+    escapeHTML(
+      track.genre ||
+      "Other"
+    );
+
+
+  let cover;
+
+
+  if (track.cover_url) {
+
+    cover = `
+
+      <img
+        src="${escapeAttribute(
+          track.cover_url
+        )}"
+        alt="${title}"
+        loading="lazy"
+      >
+
+    `;
+
+  } else {
+
+    cover = `
+
+      <div class="cover-placeholder">
+        🎵
+      </div>
+
+    `;
+
   }
 
-  function forYouView(base){
-    const likedGenres=new Map();
-    for(const t of tracks){if(localStorage.getItem(likesCacheKey(t.id))==='1')likedGenres.set(t.genre,(likedGenres.get(t.genre)||0)+1)}
-    const preferred=[...likedGenres.entries()].sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
-    let rec=[...base].filter(t=>preferred.includes(t.genre)&&localStorage.getItem(likesCacheKey(t.id))!=='1').sort((a,b)=>tensionScore(b)-tensionScore(a));
-    if(!rec.length)rec=[...base].sort((a,b)=>tensionScore(b)-tensionScore(a));
-    return `<div class="section-head"><div><h2>💜 For You</h2><p>${preferred.length?`Based on your liked genres: ${preferred.slice(0,3).map(esc).join(', ')}`:'Like a few songs and this feed will personalize.'}</p></div></div><div class="grid">${rec.slice(0,12).map(card).join('')||`<div class="empty"><b>Your personal feed is waiting.</b>Like songs to shape it.</div>`}</div>`;
+
+  const adminDelete =
+    isAdmin
+      ? `
+
+        <button
+          class="delete visible"
+          onclick="deleteTrack(
+            '${track.id}'
+          )"
+        >
+          🗑 Delete
+        </button>
+
+      `
+      : "";
+
+
+  return `
+
+    <article
+      class="song-card"
+    >
+
+      <div class="cover">
+
+        ${cover}
+
+      </div>
+
+
+      <div class="song-body">
+
+        <div class="song-title">
+          ${title}
+        </div>
+
+
+        <div class="artist">
+          ${artist}
+        </div>
+
+
+        <div class="meta">
+
+          <span class="pill">
+            ${genre}
+          </span>
+
+
+          <span class="downloads">
+            ${track.downloads || 0}
+            downloads
+          </span>
+
+        </div>
+
+
+        <audio
+          controls
+          preload="none"
+          src="${escapeAttribute(
+            track.audio_url
+          )}"
+        ></audio>
+
+
+        <div class="actions">
+
+          <button
+            class="download"
+            onclick="downloadTrack(
+              '${track.id}',
+              '${escapeJS(
+                track.audio_url
+              )}',
+              '${escapeJS(
+                track.title
+              )}'
+            )"
+          >
+            ⬇ Download MP3
+          </button>
+
+
+          ${adminDelete}
+
+        </div>
+
+      </div>
+
+    </article>
+
+  `;
+
+}
+
+
+
+/* ==========================================================
+   UPLOAD MODAL
+========================================================== */
+
+function openUpload() {
+
+  document
+    .getElementById(
+      "uploadModal"
+    )
+    .classList.add(
+      "active"
+    );
+
+}
+
+
+function closeModal(
+  id
+) {
+
+  document
+    .getElementById(id)
+    .classList.remove(
+      "active"
+    );
+
+}
+
+
+
+/* ==========================================================
+   UPLOAD
+========================================================== */
+
+document
+  .getElementById(
+    "uploadForm"
+  )
+  .addEventListener(
+    "submit",
+    uploadSong
+  );
+
+
+
+async function uploadSong(
+  event
+) {
+
+  event.preventDefault();
+
+
+  const artist =
+    document
+      .getElementById(
+        "artist"
+      )
+      .value
+      .trim();
+
+
+  const title =
+    document
+      .getElementById(
+        "title"
+      )
+      .value
+      .trim();
+
+
+  const genre =
+    document
+      .getElementById(
+        "genre"
+      )
+      .value;
+
+
+  const audioFile =
+    document
+      .getElementById(
+        "audioFile"
+      )
+      .files[0];
+
+
+  const coverFile =
+    document
+      .getElementById(
+        "coverFile"
+      )
+      .files[0];
+
+
+  const button =
+    document
+      .getElementById(
+        "uploadButton"
+      );
+
+
+  const progress =
+    document
+      .getElementById(
+        "uploadProgress"
+      );
+
+
+  const fill =
+    document
+      .getElementById(
+        "progressFill"
+      );
+
+
+  const text =
+    document
+      .getElementById(
+        "progressText"
+      );
+
+
+  /* --------------------------------------------------------
+     VALIDATION
+  -------------------------------------------------------- */
+
+
+  if (
+    !artist ||
+    !title ||
+    !audioFile
+  ) {
+
+    showToast(
+      "Please complete the required fields."
+    );
+
+    return;
+
   }
 
-  function studioView(base){
-    const entered=localStorage.getItem('mgy_artist_name')||'';
-    const name=entered.toLowerCase();
-    const list=name?base.filter(t=>t.artist.toLowerCase()===name):[];
-    if(!name)return `<div class="feature" style="margin-bottom:14px"><h2>📊 Artist Studio</h2><p>See a public snapshot of your music. Enter your artist name to load it.</p><div style="display:flex;gap:8px;margin-top:12px"><input id="studioArtist" class="input" placeholder="Your artist name"><button class="btn primary" onclick="loadStudio()">Open Studio</button></div></div>`;
-    const plays=list.reduce((s,t)=>s+(t.plays||0),0), downloads=list.reduce((s,t)=>s+(t.downloads||0),0), likes=list.reduce((s,t)=>s+(t.likes_count||0),0);
-    return `<div class="feature" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><div><h2>📊 ${esc(entered)}</h2><p>Public artist snapshot</p></div><button class="btn small" onclick="localStorage.removeItem('mgy_artist_name');renderAll()">Change</button></div><div class="feature-grid" style="margin-top:12px"><div class="feature"><div class="big">${fmt(list.length)}</div><p>songs</p></div><div class="feature"><div class="big">${fmt(plays)}</div><p>plays</p></div><div class="feature"><div class="big">${fmt(downloads)}</div><p>downloads</p></div><div class="feature"><div class="big">${fmt(likes)}</div><p>likes</p></div></div></div><div class="section-head"><div><h2>Your uploads</h2><p>Newest first.</p></div></div><div class="grid">${list.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).map(card).join('')||`<div class="empty"><b>No songs found.</b>Upload a song using artist name “${esc(entered)}”.</div>`}</div>`;
+
+  const mp3 =
+    audioFile.name
+      .toLowerCase()
+      .endsWith(".mp3");
+
+
+  if (
+    !mp3 ||
+    (
+      audioFile.type &&
+      audioFile.type !==
+      "audio/mpeg"
+    )
+  ) {
+
+    showToast(
+      "Only MP3 files are allowed."
+    );
+
+    return;
+
   }
 
-  function loadStudio(){const n=($('studioArtist')?.value||'').trim();if(!n)return;localStorage.setItem('mgy_artist_name',n);renderAll()}
 
-  // ========================= PLAY / DOWNLOAD =========================
-  function attachPlayTracking(){
-    document.querySelectorAll('audio[data-id]').forEach(el=>{
-      el.onplay=()=>{
-        const id=el.dataset.id; const k=`mgy_play_${id}`; const last=Number(localStorage.getItem(k)||0); if(Date.now()-last>30*60*1000){localStorage.setItem(k,String(Date.now())); incrementPlay(id)}
-      };
+  const maxSize =
+    50 * 1024 * 1024;
+
+
+  if (
+    audioFile.size >
+    maxSize
+  ) {
+
+    showToast(
+      "MP3 must be smaller than 50MB."
+    );
+
+    return;
+
+  }
+
+
+  /* --------------------------------------------------------
+     START
+  -------------------------------------------------------- */
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "Uploading...";
+
+  progress.style.display =
+    "block";
+
+
+  try {
+
+
+    /* ======================================================
+       MP3
+    ====================================================== */
+
+    const audioPath =
+      `${crypto.randomUUID()}.mp3`;
+
+
+    text.textContent =
+      "Uploading MP3...";
+
+
+    fill.style.width =
+      "35%";
+
+
+    const {
+      error:
+      audioError
+    } =
+      await supabaseClient
+        .storage
+        .from("songs")
+        .upload(
+          audioPath,
+          audioFile,
+          {
+            contentType:
+              "audio/mpeg",
+
+            cacheControl:
+              "3600",
+
+            upsert:
+              false
+          }
+        );
+
+
+    if (audioError) {
+
+      throw audioError;
+
+    }
+
+
+    const {
+      data:
+      audioPublic
+    } =
+      supabaseClient
+        .storage
+        .from("songs")
+        .getPublicUrl(
+          audioPath
+        );
+
+
+    const audioUrl =
+      audioPublic.publicUrl;
+
+
+
+    /* ======================================================
+       COVER
+    ====================================================== */
+
+    let coverPath =
+      null;
+
+    let coverUrl =
+      null;
+
+
+    if (coverFile) {
+
+      if (
+        coverFile.size >
+        5 * 1024 * 1024
+      ) {
+
+        throw new Error(
+          "Cover image must be smaller than 5MB."
+        );
+
+      }
+
+
+      text.textContent =
+        "Uploading cover...";
+
+
+      fill.style.width =
+        "60%";
+
+
+      const extension =
+        getImageExtension(
+          coverFile
+        );
+
+
+      coverPath =
+        `${crypto.randomUUID()}.${extension}`;
+
+
+      const {
+        error:
+        coverError
+      } =
+        await supabaseClient
+          .storage
+          .from("covers")
+          .upload(
+            coverPath,
+            coverFile,
+            {
+              contentType:
+                coverFile.type,
+
+              cacheControl:
+                "3600",
+
+              upsert:
+                false
+            }
+          );
+
+
+      if (coverError) {
+
+        throw coverError;
+
+      }
+
+
+      const {
+        data:
+        coverPublic
+      } =
+      supabaseClient
+        .storage
+        .from("covers")
+        .getPublicUrl(
+          coverPath
+        );
+
+
+      coverUrl =
+        coverPublic.publicUrl;
+
+    }
+
+
+
+    /* ======================================================
+       DURATION
+    ====================================================== */
+
+    text.textContent =
+      "Preparing song...";
+
+
+    fill.style.width =
+      "75%";
+
+
+    const duration =
+      await getDuration(
+        audioFile
+      );
+
+
+
+    /* ======================================================
+       DATABASE
+    ====================================================== */
+
+    const {
+      data:
+      newTrack,
+      error:
+      insertError
+    } =
+      await supabaseClient
+        .from("tracks")
+        .insert({
+
+          title,
+
+          artist,
+
+          genre,
+
+          audio_url:
+            audioUrl,
+
+          audio_path:
+            audioPath,
+
+          cover_url:
+            coverUrl,
+
+          cover_path:
+            coverPath,
+
+          duration,
+
+          downloads:
+            0
+
+        })
+        .select()
+        .single();
+
+
+    if (insertError) {
+
+      /*
+        If database insertion fails,
+        remove files that were already uploaded.
+      */
+
+      await supabaseClient
+        .storage
+        .from("songs")
+        .remove([
+          audioPath
+        ]);
+
+
+      if (coverPath) {
+
+        await supabaseClient
+          .storage
+          .from("covers")
+          .remove([
+            coverPath
+          ]);
+
+      }
+
+
+      throw insertError;
+
+    }
+
+
+
+    /* ======================================================
+       SUCCESS
+    ====================================================== */
+
+    fill.style.width =
+      "100%";
+
+
+    text.textContent =
+      "Song is live!";
+
+
+    document
+      .getElementById(
+        "uploadForm"
+      )
+      .reset();
+
+
+    closeModal(
+      "uploadModal"
+    );
+
+
+    showToast(
+      "🎉 Song uploaded successfully!"
+    );
+
+
+    if (
+      newTrack &&
+      !tracks.some(
+        track =>
+          track.id ===
+          newTrack.id
+      )
+    ) {
+
+      tracks.unshift(
+        newTrack
+      );
+
+      renderTracks();
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "UPLOAD ERROR:",
+      error
+    );
+
+
+    showToast(
+      error.message ||
+      "Upload failed."
+    );
+
+
+  } finally {
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "🚀 Upload Song";
+
+
+    setTimeout(
+      () => {
+
+        progress.style.display =
+          "none";
+
+        fill.style.width =
+          "0%";
+
+      },
+      1200
+    );
+
+  }
+
+}
+
+
+
+/* ==========================================================
+   DOWNLOAD
+========================================================== */
+
+async function downloadTrack(
+  id,
+  url,
+  title
+) {
+
+  try {
+
+    /*
+      Secure RPC:
+      visitor cannot arbitrarily change the downloads field.
+    */
+
+    await supabaseClient
+      .rpc(
+        "increment_download",
+        {
+          track_id:
+            id
+        }
+      );
+
+
+    const track =
+      tracks.find(
+        item =>
+          item.id === id
+      );
+
+
+    if (track) {
+
+      track.downloads =
+        (track.downloads || 0) + 1;
+
+    }
+
+
+    renderTracks();
+
+
+    /*
+      Browser download.
+    */
+
+    const filename =
+      cleanFilename(
+        title
+      ) + ".mp3";
+
+
+    const link =
+      document.createElement(
+        "a"
+      );
+
+
+    link.href =
+      url +
+      "?download=" +
+      encodeURIComponent(
+        filename
+      );
+
+
+    link.download =
+      filename;
+
+
+    link.target =
+      "_blank";
+
+
+    document.body.appendChild(
+      link
+    );
+
+
+    link.click();
+
+
+    link.remove();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+
+    window.open(
+      url,
+      "_blank"
+    );
+
+  }
+
+}
+
+
+
+/* ==========================================================
+   ADMIN LOGIN
+========================================================== */
+
+function openAdmin() {
+
+  document
+    .getElementById(
+      "adminModal"
+    )
+    .classList.add(
+      "active"
+    );
+
+
+  updateAdminModal();
+
+}
+
+
+
+/* ==========================================================
+   ADMIN MODAL UI
+========================================================== */
+
+function updateAdminModal() {
+
+  const status =
+    document.getElementById(
+      "adminStatus"
+    );
+
+
+  const form =
+    document.getElementById(
+      "adminLoginForm"
+    );
+
+
+  const logout =
+    document.getElementById(
+      "logoutButton"
+    );
+
+
+  if (isAdmin) {
+
+    status.classList.add(
+      "visible"
+    );
+
+
+    form.style.display =
+      "none";
+
+
+    logout.style.display =
+      "block";
+
+  } else {
+
+    status.classList.remove(
+      "visible"
+    );
+
+
+    form.style.display =
+      "block";
+
+
+    logout.style.display =
+      "none";
+
+  }
+
+}
+
+
+
+/* ==========================================================
+   ADMIN LOGIN FORM
+========================================================== */
+
+document
+  .getElementById(
+    "adminLoginForm"
+  )
+  .addEventListener(
+    "submit",
+    loginAdmin
+  );
+
+
+
+async function loginAdmin(
+  event
+) {
+
+  event.preventDefault();
+
+
+  const email =
+    document
+      .getElementById(
+        "adminEmail"
+      )
+      .value
+      .trim();
+
+
+  const password =
+    document
+      .getElementById(
+        "adminPassword"
+      )
+      .value;
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .auth
+        .signInWithPassword({
+
+          email,
+
+          password
+
+        });
+
+
+    if (error) {
+
+      throw error;
+
+    }
+
+
+    if (!data.user) {
+
+      throw new Error(
+        "Login failed."
+      );
+
+    }
+
+
+    const {
+      data:
+      adminResult,
+      error:
+      adminError
+    } =
+      await supabaseClient
+        .rpc(
+          "is_admin"
+        );
+
+
+    if (
+      adminError ||
+      adminResult !== true
+    ) {
+
+      await supabaseClient
+        .auth
+        .signOut();
+
+
+      throw new Error(
+        "This account is not an administrator."
+      );
+
+    }
+
+
+    currentUser =
+      data.user;
+
+
+    isAdmin =
+      true;
+
+
+    updateAdminUI();
+
+    updateAdminModal();
+
+    renderTracks();
+
+
+    showToast(
+      "🔐 Admin login successful."
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    showToast(
+      error.message ||
+      "Admin login failed."
+    );
+
+  }
+
+}
+
+
+
+/* ==========================================================
+   ADMIN LOGOUT
+========================================================== */
+
+async function logoutAdmin() {
+
+  await supabaseClient
+    .auth
+    .signOut();
+
+
+  currentUser =
+    null;
+
+
+  isAdmin =
+    false;
+
+
+  updateAdminUI();
+
+  updateAdminModal();
+
+  renderTracks();
+
+
+  showToast(
+    "Admin logged out."
+  );
+
+}
+
+
+
+/* ==========================================================
+   DELETE SONG
+========================================================== */
+
+async function deleteTrack(
+  id
+) {
+
+  if (!isAdmin) {
+
+    showToast(
+      "Admin access required."
+    );
+
+    return;
+
+  }
+
+
+  const track =
+    tracks.find(
+      item =>
+        item.id === id
+    );
+
+
+  if (!track) {
+
+    return;
+
+  }
+
+
+  const confirmed =
+    confirm(
+      `Delete "${track.title}" by ${track.artist}?\n\nThis will permanently remove the song and its cover image.`
+    );
+
+
+  if (!confirmed) {
+
+    return;
+
+  }
+
+
+  try {
+
+
+    /* ======================================================
+       1. DELETE MP3 FROM STORAGE
+    ====================================================== */
+
+    if (track.audio_path) {
+
+      const {
+        error:
+        audioDeleteError
+      } =
+        await supabaseClient
+          .storage
+          .from("songs")
+          .remove([
+            track.audio_path
+          ]);
+
+
+      if (audioDeleteError) {
+
+        throw new Error(
+          "Could not delete MP3: " +
+          audioDeleteError.message
+        );
+
+      }
+
+    }
+
+
+
+    /* ======================================================
+       2. DELETE COVER FROM STORAGE
+    ====================================================== */
+
+    if (track.cover_path) {
+
+      const {
+        error:
+        coverDeleteError
+      } =
+        await supabaseClient
+          .storage
+          .from("covers")
+          .remove([
+            track.cover_path
+          ]);
+
+
+      if (coverDeleteError) {
+
+        throw new Error(
+          "Could not delete cover: " +
+          coverDeleteError.message
+        );
+
+      }
+
+    }
+
+
+
+    /* ======================================================
+       3. DELETE DATABASE RECORD
+    ====================================================== */
+
+    const {
+      error:
+      databaseError
+    } =
+      await supabaseClient
+        .from("tracks")
+        .delete()
+        .eq(
+          "id",
+          id
+        );
+
+
+    if (databaseError) {
+
+      throw databaseError;
+
+    }
+
+
+
+    /* ======================================================
+       4. REMOVE LOCALLY
+    ====================================================== */
+
+    tracks =
+      tracks.filter(
+        item =>
+          item.id !== id
+      );
+
+
+    renderTracks();
+
+
+    showToast(
+      "🗑️ Song permanently deleted."
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "DELETE ERROR:",
+      error
+    );
+
+
+    showToast(
+      error.message ||
+      "Could not delete song."
+    );
+
+  }
+
+}
+
+
+
+/* ==========================================================
+   AUDIO DURATION
+========================================================== */
+
+function getDuration(
+  file
+) {
+
+  return new Promise(
+    resolve => {
+
+      const audio =
+        document.createElement(
+          "audio"
+        );
+
+
+      const url =
+        URL.createObjectURL(
+          file
+        );
+
+
+      audio.preload =
+        "metadata";
+
+
+      audio.onloadedmetadata =
+        () => {
+
+          URL.revokeObjectURL(
+            url
+          );
+
+
+          if (
+            !isFinite(
+              audio.duration
+            )
+          ) {
+
+            resolve(
+              "Unknown"
+            );
+
+            return;
+
+          }
+
+
+          const minutes =
+            Math.floor(
+              audio.duration /
+              60
+            );
+
+
+          const seconds =
+            Math.floor(
+              audio.duration %
+              60
+            );
+
+
+          resolve(
+            `${minutes}:${String(
+              seconds
+            ).padStart(
+              2,
+              "0"
+            )}`
+          );
+
+        };
+
+
+      audio.onerror =
+        () => {
+
+          URL.revokeObjectURL(
+            url
+          );
+
+          resolve(
+            "Unknown"
+          );
+
+        };
+
+
+      audio.src =
+        url;
+
+    }
+  );
+
+}
+
+
+
+/* ==========================================================
+   IMAGE EXTENSION
+========================================================== */
+
+function getImageExtension(
+  file
+) {
+
+  if (
+    file.type ===
+    "image/png"
+  ) {
+
+    return "png";
+
+  }
+
+
+  if (
+    file.type ===
+    "image/webp"
+  ) {
+
+    return "webp";
+
+  }
+
+
+  return "jpg";
+
+}
+
+
+
+/* ==========================================================
+   CLEAN FILENAME
+========================================================== */
+
+function cleanFilename(
+  name
+) {
+
+  return String(name)
+
+    .replace(
+      /[^a-z0-9\s-_]/gi,
+      ""
+    )
+
+    .trim()
+
+    .replace(
+      /\s+/g,
+      "-"
+    )
+
+    .substring(
+      0,
+      100
+    )
+
+    || "song";
+
+}
+
+
+
+/* ==========================================================
+   SECURITY HELPERS
+========================================================== */
+
+function escapeHTML(
+  value
+) {
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+function escapeAttribute(
+  value
+) {
+
+  return String(value)
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+function escapeJS(
+  value
+) {
+
+  return String(value)
+
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+
+    .replace(
+      /'/g,
+      "\\'"
+    )
+
+    .replace(
+      /\n/g,
+      "\\n"
+    )
+
+    .replace(
+      /\r/g,
+      "\\r"
+    );
+
+}
+
+
+
+/* ==========================================================
+   TOAST
+========================================================== */
+
+function showToast(
+  message
+) {
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+
+  toast.textContent =
+    message;
+
+
+  toast.classList.add(
+    "show"
+  );
+
+
+  setTimeout(
+    () => {
+
+      toast.classList.remove(
+        "show"
+      );
+
+    },
+    3000
+  );
+
+}
+
+
+
+/* ==========================================================
+   SCROLL
+========================================================== */
+
+function scrollToMusic() {
+
+  document
+    .getElementById(
+      "music"
+    )
+    .scrollIntoView({
+      behavior:
+        "smooth"
     });
-  }
-  async function incrementPlay(id){
-    const {error}=await supabaseClient.rpc('increment_play',{track_id:id}); if(!error){const t=tracks.find(x=>x.id===id);if(t)t.plays=(t.plays||0)+1;renderAll()}}
-  async function downloadTrack(id){
-    const t=tracks.find(x=>x.id===id);if(!t)return;
-    const {error}=await supabaseClient.rpc('increment_download',{track_id:id});if(!error){t.downloads=(t.downloads||0)+1;}
-    const a=document.createElement('a');a.href=t.audio_url+(t.audio_url.includes('?')?'&':'?')+'download='+encodeURIComponent(clean(t.title)+'.mp3');a.download=clean(t.title)+'.mp3';a.target='_blank';document.body.appendChild(a);a.click();a.remove();toast('⬇ MP3 download started');renderAll();
-  }
 
-  // ========================= LIKES =========================
-  async function toggleLike(id){
-    const {data:removed,error}=await supabaseClient.rpc('toggle_like',{p_track_id:id,p_visitor_id:visitorId});
-    if(error){toast(error.message);return}
-    const t=tracks.find(x=>x.id===id);
-    if(t)t.likes_count=Math.max(0,(t.likes_count||0)+(removed?-1:1));
-    if(removed)localStorage.removeItem(likesCacheKey(id));else localStorage.setItem(likesCacheKey(id),'1');
-    renderAll();
-  }
+}
 
-  // ========================= COMMENTS =========================
-  async function openComments(id){
-    currentCommentTrack=id; const t=tracks.find(x=>x.id===id); $('commentsTitle').textContent=`Comments · ${t?.title||''}`; $('commentsModal').classList.add('active'); await loadComments(id);
-  }
-  async function loadComments(id){
-    const {data,error}=await supabaseClient.from('comments').select('*').eq('track_id',id).order('created_at',{ascending:false}).limit(100);if(error){$('commentList').innerHTML=`<div class="empty">${esc(error.message)}</div>`;return} $('commentList').innerHTML=data.length?data.map(c=>`<div class="comment"><strong>${esc(c.author_name)}</strong><p>${esc(c.text)}</p></div>`).join(''):`<div class="mini">No comments yet. Start the conversation.</div>`;
-  }
-  $('commentForm').addEventListener('submit',async e=>{e.preventDefault();if(!currentCommentTrack)return;const author=$('commentName').value.trim();const text=$('commentText').value.trim();if(!author||!text)return;const {error}=await supabaseClient.rpc('add_comment',{p_track_id:currentCommentTrack,p_visitor_id:visitorId,p_author_name:author,p_text:text});if(error){toast(error.message);return}$('commentForm').reset();const t=tracks.find(x=>x.id===currentCommentTrack);if(t)t.comments_count=(t.comments_count||0)+1;toast('💬 Comment posted');await loadComments(currentCommentTrack);renderAll();});
 
-  // ========================= SHARE =========================
-  function shareUrl(id){return `${location.origin}${location.pathname}#song=${id}`}
-  function openShare(id){shareTrack=tracks.find(x=>x.id===id);if(!shareTrack)return;$('shareText').textContent=`Share “${shareTrack.title}” by ${shareTrack.artist}`;$('shareModal').classList.add('active')}
-  async function nativeShare(){if(!shareTrack)return;const data={title:`${shareTrack.title} — ${shareTrack.artist}`,text:`Listen to ${shareTrack.title} by ${shareTrack.artist} on M.G.Y Tension`,url:shareUrl(shareTrack.id)};try{if(navigator.share){await navigator.share(data);recordShare(shareTrack.id)}else{await navigator.clipboard.writeText(data.url);recordShare(shareTrack.id);toast('🔗 Link copied')}}catch(e){}}
-  async function copyShareLink(){if(!shareTrack)return;await navigator.clipboard.writeText(shareUrl(shareTrack.id));toast('🔗 Song link copied')}
-  async function copySongLink(id){await navigator.clipboard.writeText(shareUrl(id));recordShare(id);toast('🔗 Song link copied')}
-  function focusSong(id){location.hash=`song=${id}`;const el=document.querySelector(`[data-id="${id}"]`);if(el)el.scrollIntoView({behavior:'smooth',block:'center'})}
 
-  // ========================= ARTISTS =========================
-  function openArtistSearch(){openArtist(encodeURIComponent((prompt('Artist name?')||'').trim()))}
-  function openArtist(encoded){const artist=decodeURIComponent(encoded||'').trim();if(!artist)return;const list=tracks.filter(t=>t.artist.toLowerCase()===artist.toLowerCase());if(!list.length){toast('Artist not found');return}const stats={songs:list.length,plays:list.reduce((s,t)=>s+(t.plays||0),0),downloads:list.reduce((s,t)=>s+(t.downloads||0),0)};const followed=localStorage.getItem(followsCacheKey(artist))==='1';$('artistProfile').innerHTML=`<div class="profile-head"><div class="avatar">🎤</div><div><h3>${esc(artist)}</h3><p class="mini">${stats.songs} songs · ${fmt(stats.plays)} plays · ${fmt(stats.downloads)} downloads</p></div><button class="btn small" style="margin-left:auto" onclick="toggleFollow('${encodeURIComponent(artist)}')">${followed?'✓ Following':'+ Follow'}</button></div><div class="grid">${list.sort((a,b)=>tensionScore(b)-tensionScore(a)).map(card).join('')}</div>`;$('artistModal').classList.add('active');attachPlayTracking()}
-  function toggleFollow(encoded){const artist=decodeURIComponent(encoded);const key=followsCacheKey(artist);const on=localStorage.getItem(key)==='1';if(on)localStorage.removeItem(key);else localStorage.setItem(key,'1');openArtist(encodeURIComponent(artist));toast(on?'Unfollowed':'💜 Following '+artist)}
+/* ==========================================================
+   BACKDROP CLOSE
+========================================================== */
 
-  // ========================= BATTLE =========================
-  async function voteBattle(winner,loser){const {error}=await supabaseClient.from('battle_votes').insert({winner_id:winner,loser_id:loser,visitor_id:visitorId});if(error){toast(error.code==='23505'?'You already voted in this battle.':error.message);return}toast('🏆 Vote counted');}
+document
+  .querySelectorAll(
+    ".modal"
+  )
+  .forEach(
+    modal => {
 
-  // ========================= ADMIN =========================
-  async function openAdmin(){$('adminModal').classList.add('active');const {data:{session}}=await supabaseClient.auth.getSession();if(session)await checkAdmin();renderAdminModal()}
-  function renderAdminModal(){if(admin){$('adminForm').classList.add('hidden');$('adminLogged').classList.remove('hidden')}else{$('adminForm').classList.remove('hidden');$('adminLogged').classList.add('hidden')}}
-  async function checkAdmin(){const {data}=await supabaseClient.rpc('is_admin');admin=data===true;renderAdminModal();renderAll()}
-  $('adminForm').addEventListener('submit',async e=>{e.preventDefault();const email=$('adminEmail').value.trim();const password=$('adminPassword').value;const {error}=await supabaseClient.auth.signInWithPassword({email,password});if(error){toast(error.message);return}await checkAdmin();if(!admin){await supabaseClient.auth.signOut();toast('This account is not an administrator.');return}toast('🔐 Admin login successful');closeModal('adminModal')});
-  async function logoutAdmin(){await supabaseClient.auth.signOut();admin=false;renderAdminModal();renderAll();toast('Admin logged out')}
-  async function deleteTrack(id){if(!admin){toast('Admin access required');return}const t=tracks.find(x=>x.id===id);if(!t)return;if(!confirm(`Delete “${t.title}” by ${t.artist}? This permanently removes the MP3, cover and database record.`))return;try{if(t.audio_path){const r=await supabaseClient.storage.from('songs').remove([t.audio_path]);if(r.error)throw r.error}if(t.cover_path){const r=await supabaseClient.storage.from('covers').remove([t.cover_path]);if(r.error)throw r.error}const r=await supabaseClient.from('tracks').delete().eq('id',id);if(r.error)throw r.error;tracks=tracks.filter(x=>x.id!==id);toast('🗑 Song permanently deleted');renderAll()}catch(e){toast('Delete failed: '+e.message)}}
+      modal.addEventListener(
+        "click",
+        event => {
 
-  // ========================= UPLOAD =========================
-  $('uploadForm').addEventListener('submit',async e=>{e.preventDefault();const artist=$('uploadArtist').value.trim();const title=$('uploadTitle').value.trim();const genre=$('uploadGenre').value;const country=$('uploadCountry').value.trim();const audio=$('uploadAudio').files[0];const cover=$('uploadCover').files[0];const submit=$('uploadSubmit');const progress=$('uploadProgress');const fill=$('uploadFill');const ptxt=$('uploadProgressText');if(!artist||!title||!audio){toast('Complete the required fields');return}if(!audio.name.toLowerCase().endsWith('.mp3')||audio.type&&audio.type!=='audio/mpeg'){toast('Only MP3 files are allowed');return}if(audio.size>50*1024*1024){toast('MP3 must be 50MB or smaller');return}if(cover&&cover.size>5*1024*1024){toast('Cover must be 5MB or smaller');return}submit.disabled=true;progress.style.display='block';try{const audioPath=`${crypto.randomUUID()}.mp3`;ptxt.textContent='Uploading MP3…';fill.style.width='35%';let r=await supabaseClient.storage.from('songs').upload(audioPath,audio,{contentType:'audio/mpeg',cacheControl:'3600',upsert:false});if(r.error)throw r.error;const audioUrl=supabaseClient.storage.from('songs').getPublicUrl(audioPath).data.publicUrl;let coverPath=null,coverUrl=null;if(cover){ptxt.textContent='Uploading cover…';fill.style.width='55%';const ext=cover.type==='image/png'?'png':cover.type==='image/webp'?'webp':'jpg';coverPath=`${crypto.randomUUID()}.${ext}`;r=await supabaseClient.storage.from('covers').upload(coverPath,cover,{contentType:cover.type,cacheControl:'3600',upsert:false});if(r.error)throw r.error;coverUrl=supabaseClient.storage.from('covers').getPublicUrl(coverPath).data.publicUrl}ptxt.textContent='Reading audio…';fill.style.width='72%';const duration=await getDuration(audio);ptxt.textContent='Publishing…';fill.style.width='88%';const result=await supabaseClient.from('tracks').insert({title,artist,genre,country:country||null,audio_url:audioUrl,audio_path:audioPath,cover_url:coverUrl,cover_path:coverPath,duration,plays:0,downloads:0,shares:0}).select('*,likes_count').single();if(result.error){await supabaseClient.storage.from('songs').remove([audioPath]);if(coverPath)await supabaseClient.storage.from('covers').remove([coverPath]);throw result.error}fill.style.width='100%';$('uploadForm').reset();closeModal('uploadModal');toast('🎉 Your song is live');if(result.data&&!tracks.some(x=>x.id===result.data.id))tracks.unshift(result.data);renderAll()}catch(err){console.error(err);toast(err.message||'Upload failed')}finally{submit.disabled=false;submit.textContent='🚀 Publish Track';setTimeout(()=>{progress.style.display='none';fill.style.width='0'},900)}})
+          if (
+            event.target ===
+            modal
+          ) {
 
-  function getDuration(file){return new Promise(resolve=>{const a=document.createElement('audio');const u=URL.createObjectURL(file);a.preload='metadata';a.onloadedmetadata=()=>{URL.revokeObjectURL(u);if(!isFinite(a.duration))return resolve('Unknown');resolve(`${Math.floor(a.duration/60)}:${String(Math.floor(a.duration%60)).padStart(2,'0')}`)};a.onerror=()=>{URL.revokeObjectURL(u);resolve('Unknown')};a.src=u})}
+            modal.classList.remove(
+              "active"
+            );
 
-  // ========================= TABS / REFRESH =========================
-  $('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;currentView=b.dataset.view;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(x=>x.classList.add('hidden'));$(`view${currentView[0].toUpperCase()+currentView.slice(1)}`).classList.remove('hidden');renderAll()});
-  $('searchInput').addEventListener('input',renderAll);$('genreFilter').addEventListener('change',renderAll);
-  async function refreshAll(){await loadTracks();toast('↻ Refreshed')}
+          }
 
-  // ========================= REALTIME =========================
-  function subscribe(){
-    supabaseClient.channel('mgy-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'tracks'},payload=>{if(!tracks.some(t=>t.id===payload.new.id)){tracks.unshift(payload.new);renderAll();toast('🎵 New track uploaded') }})
-      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'tracks'},payload=>{const i=tracks.findIndex(t=>t.id===payload.new.id);if(i>=0)tracks[i]=payload.new;renderAll()})
-      .on('postgres_changes',{event:'DELETE',schema:'public',table:'tracks'},payload=>{tracks=tracks.filter(t=>t.id!==payload.old.id);renderAll();toast('🗑 Track removed')})
-      .subscribe();
-  }
+        }
+      );
 
-  // ========================= INIT =========================
-  async function loadTracks(){const {data,error}=await supabaseClient.from('tracks').select('*').order('created_at',{ascending:false});if(error){console.error(error);$('viewTrending').innerHTML=`<div class="empty"><b>Could not load music.</b>${esc(error.message)}</div>`;return}tracks=data||[];renderAll()}
-  async function init(){await checkAdmin();await loadTracks();subscribe();const hash=location.hash;if(hash.startsWith('#song=')){setTimeout(()=>focusSong(hash.slice(6)),700)}}
-  init();
+    }
+  );
 
-  // Close modals by backdrop
-  document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('active')}));
+
 </script>
+
 </body>
+
 </html>
