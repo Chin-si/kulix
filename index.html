@@ -8,7 +8,7 @@
 <title>SEEN — Zambia</title>
 
 
- <!-- Vercel Web Analytics -->
+  <!-- Vercel Web Analytics -->
   <script>
     window.va = window.va || function () {
       (window.vaq = window.vaq || []).push(arguments);
@@ -22,574 +22,3517 @@
    
 
 
-  
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root{
-  --bg:#07070b;--panel:#101018;--panel2:#171722;--text:#fafaff;--muted:#9292a7;
-  --line:#292936;--lime:#c8ff2c;--pink:#ff4fd8;--cyan:#55e6ff;--orange:#ff9f43;
-  --danger:#ff5874;--radius:24px;--shadow:0 20px 70px rgba(0,0,0,.45)
+  --bg:#08090d;
+  --panel:#101218;
+  --panel2:#151821;
+  --border:#252a36;
+  --text:#f5f7fb;
+  --muted:#8d94a6;
+  --accent:#7c5cff;
+  --accent2:#00e5a8;
+  --danger:#ff5577;
+  --shadow:0 15px 45px rgba(0,0,0,.35);
+  --radius:20px;
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
 body{
-  margin:0;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:
-    radial-gradient(circle at 15% -5%,rgba(200,255,44,.13),transparent 28%),
-    radial-gradient(circle at 95% 8%,rgba(255,79,216,.12),transparent 25%),
-    #07070b;
+    radial-gradient(circle at top right,rgba(124,92,255,.12),transparent 35%),
+    radial-gradient(circle at bottom left,rgba(0,229,168,.06),transparent 35%),
+    var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  min-height:100vh;
 }
-button,input,textarea,select{font:inherit}
-button{cursor:pointer;-webkit-tap-highlight-color:transparent}
-.hidden{display:none!important}
-.app{min-height:100vh;max-width:820px;margin:auto;padding-bottom:96px}
-.top{
-  position:sticky;top:0;z-index:20;padding:13px 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  background:rgba(7,7,11,.78);backdrop-filter:blur(22px);
-  border-bottom:1px solid rgba(255,255,255,.07)
+
+button,
+textarea,
+input{
+  font:inherit;
 }
-.logo{font-size:22px;font-weight:1000;letter-spacing:.18em}
-.logo::after{content:".";color:var(--pink)}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* APP */
+
+.app{
+  width:100%;
+  max-width:760px;
+  margin:auto;
+  min-height:100vh;
+  padding-bottom:100px;
+}
+
+/* HEADER */
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 16px;
+  background:rgba(8,9,13,.82);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+.logo{
+  font-size:23px;
+  font-weight:900;
+  letter-spacing:-1px;
+}
+
+.logo span{
+  color:var(--accent);
+}
+
 .status{
-  font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--lime);padding:7px 10px;border:1px solid rgba(200,255,44,.2);
-  border-radius:99px;background:rgba(200,255,44,.07)
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:11px;
+  color:var(--muted);
 }
-main{padding:14px 16px}
-.hero{padding:28px 3px 18px}
+
+.status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--accent2);
+  box-shadow:0 0 12px var(--accent2);
+}
+
+/* VIEW */
+
+.view{
+  display:none;
+  padding:18px 14px;
+}
+
+.view.active{
+  display:block;
+}
+
+/* HERO */
+
+.hero{
+  padding:12px 4px 20px;
+}
+
 .hero h1{
-  margin:0 0 12px;font-size:clamp(42px,11vw,72px);line-height:.9;letter-spacing:-.065em;
-  font-weight:1000;
+  font-size:34px;
+  line-height:1;
+  letter-spacing:-1.7px;
+  margin-bottom:10px;
 }
-.hero p{margin:0;color:var(--muted);line-height:1.6;max-width:620px;font-size:14px}
-.hero h1::selection{background:var(--pink)}
-.card{
-  position:relative;overflow:hidden;margin-bottom:14px;padding:17px;
-  background:linear-gradient(145deg,rgba(23,23,34,.96),rgba(12,12,19,.96));
-  border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);box-shadow:var(--shadow)
+
+.hero h1 span{
+  color:var(--accent);
 }
-.card::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(120deg,rgba(200,255,44,.025),transparent 45%,rgba(255,79,216,.025))
+
+.hero p{
+  color:var(--muted);
+  line-height:1.5;
+  font-size:14px;
 }
-.section-title{
-  margin:2px 0 12px;color:#77778b;font-size:10px;font-weight:1000;
-  letter-spacing:.16em;text-transform:uppercase
+
+/* TABS */
+
+.tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  background:var(--panel);
+  padding:4px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  margin-bottom:15px;
 }
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}
-.vibes{display:flex;gap:8px;flex-wrap:wrap}
+
+.tab{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:11px;
+  border-radius:11px;
+  font-weight:800;
+  font-size:13px;
+}
+
+.tab.active{
+  background:var(--panel2);
+  color:white;
+}
+
+/* VIBES */
+
+.vibes{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-bottom:10px;
+  scrollbar-width:none;
+}
+
+.vibes::-webkit-scrollbar{
+  display:none;
+}
+
 .vibe{
-  border:1px solid rgba(255,255,255,.09);background:#0c0c13;color:#ddddec;
-  padding:10px 13px;border-radius:999px;font-size:12px;font-weight:850;transition:.18s ease;
+  white-space:nowrap;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:var(--muted);
+  border-radius:999px;
+  padding:9px 13px;
+  font-size:12px;
+  font-weight:800;
 }
-.vibe:hover{transform:translateY(-1px);border-color:rgba(200,255,44,.4)}
+
 .vibe.active{
-  border-color:var(--lime);background:var(--lime);color:#0b0c08;
-  box-shadow:0 0 22px rgba(200,255,44,.14)
+  color:white;
+  border-color:var(--accent);
+  background:rgba(124,92,255,.14);
 }
-.field{margin:12px 0}
-.field label{display:block;margin:0 0 7px;color:#8c8c9e;font-size:10px;font-weight:900;letter-spacing:.1em}
-input,textarea,select{
-  width:100%;border:1px solid rgba(255,255,255,.09);background:#09090f;color:var(--text);
-  border-radius:15px;padding:13px 14px;outline:none;transition:.18s
+
+/* CARDS */
+
+.card{
+  background:rgba(16,18,24,.9);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px;
+  margin-bottom:13px;
+  box-shadow:var(--shadow);
 }
-input:focus,textarea:focus,select:focus{border-color:var(--lime);box-shadow:0 0 0 3px rgba(200,255,44,.07)}
-textarea{min-height:112px;resize:vertical}
-.btn{
-  border:0;border-radius:15px;padding:13px 16px;font-weight:1000;
-  background:var(--lime);color:#0a0b08;transition:.18s ease
+
+.post-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:13px;
 }
-.btn:hover{transform:translateY(-1px);filter:brightness(1.04)}
-.btn.secondary{background:#191923;color:var(--text);border:1px solid rgba(255,255,255,.09)}
-.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
-.small{font-size:12px;color:var(--muted);line-height:1.55}
-.post{padding:17px}
-.post-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.identity{display:flex;gap:11px;align-items:center;min-width:0}
+
+.user{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
 .avatar{
-  flex:0 0 43px;width:43px;height:43px;border-radius:15px;display:grid;place-items:center;
-  background:linear-gradient(135deg,var(--lime),var(--cyan));color:#090b08;font-weight:1000;
-  box-shadow:0 8px 28px rgba(85,230,255,.1)
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#2b214e);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  flex:none;
 }
-.nick{font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px}
-.meta{font-size:10px;color:#7d7d90;margin-top:3px}
-.tag{
-  flex:0 0 auto;font-size:10px;font-weight:900;padding:7px 9px;border-radius:999px;
-  background:#191923;color:var(--pink);border:1px solid rgba(255,79,216,.18)
+
+.user-info{
+  min-width:0;
 }
-.post-body{font-size:16px;line-height:1.6;margin:16px 0;white-space:pre-wrap;overflow-wrap:anywhere}
-.post-media{
-  width:100%;border-radius:18px;display:block;margin-top:10px;max-height:430px;object-fit:cover;
-  border:1px solid rgba(255,255,255,.07)
+
+.nickname{
+  font-weight:850;
+  font-size:14px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
-.audio{width:100%;margin-top:10px}
-.actions{display:flex;gap:7px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.07);padding-top:12px}
+
+.meta{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:3px;
+}
+
+.more{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  font-size:20px;
+}
+
+.post-body{
+  font-size:15px;
+  line-height:1.55;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
+.post-image{
+  width:100%;
+  max-height:480px;
+  object-fit:cover;
+  border-radius:15px;
+  margin-top:13px;
+  border:1px solid var(--border);
+}
+
+.voice{
+  width:100%;
+  margin-top:13px;
+  border-radius:13px;
+}
+
+/* ACTIONS */
+
+.actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+
 .action{
-  border:1px solid rgba(255,255,255,.08);background:#0b0b11;color:#eeeef8;
-  padding:9px 11px;border-radius:13px;font-size:11px;font-weight:900;transition:.15s
+  border:1px solid var(--border);
+  background:var(--panel2);
+  color:var(--muted);
+  border-radius:12px;
+  padding:8px 11px;
+  font-size:12px;
+  font-weight:800;
 }
-.action:hover{border-color:rgba(200,255,44,.35);transform:translateY(-1px)}
-.action:disabled{opacity:.5}
-.count{color:#77778a;font-size:10px;margin-left:auto;align-self:center}
-.replybox{display:flex;gap:7px;margin-top:10px}
-.replybox input{padding:10px}
-.replybox button{flex:0 0 auto}
-.replies{margin-top:10px;padding-top:8px;border-top:1px dashed #292936}
-.reply{font-size:12px;line-height:1.5;padding:7px 0}.reply b{color:var(--lime)}
-.empty{text-align:center;padding:46px 18px;color:var(--muted);line-height:1.6}
-.loader{text-align:center;padding:28px;color:var(--muted);font-size:12px}
-.nav{
-  position:fixed;bottom:0;left:0;right:0;z-index:30;
-  background:rgba(8,8,12,.88);backdrop-filter:blur(22px);border-top:1px solid rgba(255,255,255,.08);
+
+.action:hover{
+  color:white;
+  border-color:#414858;
 }
-.nav-inner{width:min(820px,100%);margin:auto;display:flex;gap:6px;padding:8px 12px env(safe-area-inset-bottom)}
-.nav button{
-  flex:1;background:transparent;border:0;color:#77778a;padding:9px 5px;border-radius:15px;
-  font-size:10px;font-weight:950;line-height:1.45;transition:.18s
+
+.seen-count{
+  margin-left:auto;
+  font-size:11px;
+  color:var(--muted);
 }
-.nav button.active{background:#181821;color:var(--lime);box-shadow:inset 0 0 0 1px rgba(200,255,44,.08)}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:50;display:grid;place-items:center;padding:16px}
-.modal-box{
-  width:min(570px,100%);max-height:91vh;overflow:auto;background:#111119;
-  border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:21px;box-shadow:0 30px 100px rgba(0,0,0,.6)
+
+/* REPLIES */
+
+.replies{
+  margin-top:13px;
+  padding-top:10px;
+  border-top:1px solid rgba(255,255,255,.05);
 }
-.modal-box h2{margin:8px 0 7px;font-size:28px;letter-spacing:-.04em}
-.notice{padding:11px 12px;border-radius:14px;background:#15151f;border:1px solid rgba(255,255,255,.08);font-size:11px;color:var(--muted);margin:10px 0}
-.error{color:#ff92a4;background:#241019;border-color:#54202d}
-.success{color:#d9ff8d;background:#162008;border-color:#385500}
-.counter{text-align:right;font-size:10px;color:#707083;margin-top:5px}
+
+.reply{
+  padding:9px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+
+.reply:last-child{
+  border-bottom:0;
+}
+
+.reply-name{
+  font-size:11px;
+  color:var(--accent2);
+  font-weight:800;
+}
+
+.reply-body{
+  font-size:13px;
+  color:#d8dbe4;
+  line-height:1.45;
+  margin-top:3px;
+}
+
+.reply-form{
+  display:flex;
+  gap:7px;
+  margin-top:10px;
+}
+
+.reply-input{
+  flex:1;
+  min-width:0;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  color:white;
+  border-radius:12px;
+  padding:10px 11px;
+  outline:none;
+}
+
+.reply-input:focus{
+  border-color:var(--accent);
+}
+
+.reply-send{
+  border:0;
+  background:var(--accent);
+  color:white;
+  border-radius:12px;
+  padding:0 13px;
+  font-weight:900;
+}
+
+/* BUTTONS */
+
+.btn{
+  width:100%;
+  border:0;
+  border-radius:14px;
+  padding:13px 15px;
+  font-weight:900;
+  color:white;
+  background:var(--accent);
+}
+
+.btn.secondary{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  color:#dfe3ec;
+}
+
+.btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+/* CREATE */
+
+.composer{
+  margin-top:8px;
+}
+
+textarea{
+  width:100%;
+  min-height:150px;
+  resize:vertical;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:17px;
+  color:white;
+  padding:15px;
+  outline:none;
+  line-height:1.5;
+}
+
+textarea:focus{
+  border-color:var(--accent);
+}
+
+.compose-tools{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:10px;
+}
+
+.tool{
+  background:var(--panel);
+  border:1px solid var(--border);
+  color:#dfe3ec;
+  border-radius:13px;
+  padding:12px;
+  font-weight:800;
+}
+
+.tool.active{
+  border-color:var(--danger);
+  color:#ff7892;
+}
+
+.preview{
+  margin-top:10px;
+  position:relative;
+}
+
+.preview img{
+  width:100%;
+  border-radius:15px;
+  max-height:350px;
+  object-fit:cover;
+}
+
+.remove-preview{
+  position:absolute;
+  top:8px;
+  right:8px;
+  border:0;
+  background:rgba(0,0,0,.75);
+  color:white;
+  border-radius:50%;
+  width:34px;
+  height:34px;
+}
+
+/* ROOMS */
+
 .room{
-  display:flex;align-items:center;justify-content:space-between;padding:15px;
-  border:1px solid rgba(255,255,255,.08);border-radius:17px;background:#0d0d14;margin-bottom:8px
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:15px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:17px;
+  margin-bottom:10px;
 }
-.room strong{display:block;font-size:13px}.room span{font-size:10px;color:#77778a}
-footer{padding:20px 5px;text-align:center;color:#5e5e70;font-size:10px}
-@media(max-width:520px){
-  main{padding:11px 12px}.hero{padding-top:24px}.card{border-radius:20px}
-  .hero h1{font-size:48px}.count{width:100%;margin-left:0}.actions .count{order:9}
+
+.room-icon{
+  width:44px;
+  height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:14px;
+  background:var(--panel2);
+  font-size:20px;
+}
+
+.room-info{
+  flex:1;
+}
+
+.room-name{
+  font-weight:900;
+}
+
+.room-count{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:3px;
+}
+
+.room-arrow{
+  color:var(--muted);
+}
+
+/* PROFILE */
+
+.profile-card{
+  text-align:center;
+}
+
+.profile-avatar{
+  width:82px;
+  height:82px;
+  border-radius:50%;
+  margin:0 auto 12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--accent),#33245e);
+  font-size:30px;
+  font-weight:900;
+}
+
+.profile-name{
+  font-size:22px;
+  font-weight:900;
+}
+
+.profile-city{
+  color:var(--muted);
+  margin-top:4px;
+  font-size:13px;
+}
+
+.profile-about{
+  color:#c7cbd5;
+  margin-top:13px;
+  line-height:1.5;
+  font-size:14px;
+}
+
+.profile-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  margin-top:18px;
+}
+
+.stat{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  padding:13px 7px;
+  border-radius:14px;
+}
+
+.stat strong{
+  display:block;
+  font-size:17px;
+}
+
+.stat span{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-top:3px;
+}
+
+/* MODAL */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(10px);
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+
+.modal-box{
+  width:100%;
+  max-width:440px;
+  background:#11141b;
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:20px;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+
+.modal-box h2{
+  font-size:22px;
+  margin-bottom:7px;
+}
+
+.modal-box p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+  margin-bottom:15px;
+}
+
+.field{
+  margin-bottom:11px;
+}
+
+.field label{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.field input,
+.field textarea{
+  min-height:auto;
+  background:var(--panel);
+  border:1px solid var(--border);
+  padding:12px;
+  border-radius:12px;
+}
+
+.modal-actions{
+  display:flex;
+  gap:8px;
+  margin-top:13px;
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:25px;
+  transform:translate(-50%,20px);
+  opacity:0;
+  pointer-events:none;
+  z-index:200;
+  background:#171a22;
+  border:1px solid var(--border);
+  color:white;
+  padding:12px 16px;
+  border-radius:13px;
+  font-size:12px;
+  font-weight:800;
+  transition:.25s ease;
+  max-width:90%;
+  text-align:center;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav{
+  position:fixed;
+  left:50%;
+  bottom:0;
+  transform:translateX(-50%);
+  width:min(760px,100%);
+  z-index:60;
+  padding:9px 10px calc(9px + env(safe-area-inset-bottom));
+  background:rgba(8,9,13,.9);
+  backdrop-filter:blur(20px);
+  border-top:1px solid rgba(255,255,255,.07);
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+}
+
+.nav-btn{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:9px;
+  border-radius:13px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.nav-btn.active{
+  color:white;
+  background:var(--panel2);
+}
+
+/* LOADING */
+
+.loader{
+  text-align:center;
+  padding:30px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.empty{
+  text-align:center;
+  padding:45px 20px;
+  color:var(--muted);
+}
+
+.empty strong{
+  display:block;
+  color:white;
+  font-size:16px;
+  margin-bottom:6px;
+}
+
+/* RESPONSIVE */
+
+@media(min-width:700px){
+  .view{
+    padding-left:20px;
+    padding-right:20px;
+  }
+}
+
+@media(max-width:430px){
+  .hero h1{
+    font-size:30px;
+  }
+
+  .card{
+    padding:14px;
+  }
 }
 </style>
 </head>
+
 <body>
+
 <div class="app">
-<header class="top">
-  <div class="logo">SEEN</div>
-  <div class="status" id="connectionStatus">CONNECTING…</div>
-</header>
 
-<main>
-<section id="homeView">
-  <div class="hero">
-    <h1>Say it.<br>Feel seen.</h1>
-    <p>No likes. No followers. No fake popularity. Just real people in Zambia finding the feeling behind the post.</p>
-  </div>
+  <!-- HEADER -->
+  <header class="topbar">
+    <div class="logo">SEEN<span>.</span></div>
 
-  <div class="card" style="padding:12px 14px;background:linear-gradient(90deg,rgba(200,255,44,.08),rgba(255,79,216,.06));">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
-      <div><strong style="font-size:12px;">⚡ THE REAL-TIME FEELING FEED</strong><div class="small">Fresh thoughts. Local vibes. No clout chase.</div></div>
-      <span style="font-size:18px;">👀</span>
+    <div class="status">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">CONNECTING</span>
     </div>
-  </div>
-  <div class="tabs">
-    <button class="btn" id="feedTab">FEED</button>
-    <button class="btn secondary" id="roomsTab">VIBE ROOMS</button>
-  </div>
+  </header>
 
-  <div id="feedArea">
-    <div class="card">
-      <div class="section-title">Filter by vibe</div>
-      <div class="vibes" id="feedVibes"></div>
+  <!-- HOME -->
+  <main id="homeView" class="view active">
+
+    <section class="hero">
+      <h1>Say it.<br><span>Be SEEN.</span></h1>
+      <p>
+        A low-data space for real voices in Zambia.
+        No likes. No followers. Just real replies.
+      </p>
+    </section>
+
+    <div class="tabs">
+      <button class="tab active" id="feedTab">FEED</button>
+      <button class="tab" id="roomsTab">VIBE ROOMS</button>
     </div>
-    <div id="feed"></div>
-    <button class="btn secondary" id="loadMore" style="width:100%">TAP TO LOAD 10 MORE</button>
-  </div>
 
-  <div id="roomsArea" class="hidden">
-    <div class="card">
-      <div class="section-title">20 people max · resets daily</div>
+    <section id="feedPanel">
+
+      <div class="vibes" id="vibes">
+        <button class="vibe active" data-vibe="all">🌍 ALL</button>
+        <button class="vibe" data-vibe="hype">🔥 HYPE</button>
+        <button class="vibe" data-vibe="crush">💘 CRUSH</button>
+        <button class="vibe" data-vibe="heartbreak">💔 HEARTBREAK</button>
+        <button class="vibe" data-vibe="healing">🌱 HEALING</button>
+        <button class="vibe" data-vibe="stressed">😮‍💨 STRESSED</button>
+      </div>
+
+      <div id="feed"></div>
+
+      <button class="btn secondary" id="loadMore">
+        TAP TO LOAD 10 MORE
+      </button>
+
+    </section>
+
+    <section id="roomsPanel" class="hidden">
       <div id="rooms"></div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<section id="createView" class="hidden">
-  <div class="hero"><h1>Say something<br>real.</h1><p>One thought. One feeling. One chance to be heard.</p></div>
-  <div class="card">
-    <div class="field">
-      <label>WHAT YOU MAKING?</label>
-      <select id="making">
-        <option>Song</option><option>Art</option><option>Fit</option><option>Edit</option><option>Nothing</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>WHAT YOU FEELING?</label>
-      <div class="vibes" id="createVibes"></div>
-    </div>
-    <div class="field">
-      <label>WHAT DO YOU NEED?</label>
-      <select id="need"><option>Hype</option><option>Advice</option><option>Listen</option><option>Collab</option></select>
-    </div>
-    <div class="field">
-      <label>YOUR MESSAGE</label>
-      <textarea id="postText" maxlength="280" placeholder="What's on your mind?"></textarea>
-      <div class="counter"><span id="charCount">0</span>/280</div>
-    </div>
-    <div class="row">
-      <button class="btn secondary" id="photoBtn">📷 Photo</button>
-      <button class="btn secondary" id="voiceBtn">🎤 Voice</button>
-    </div>
-    <input id="photoInput" type="file" accept="image/*" class="hidden">
-    <div id="mediaPreview"></div>
-    <div class="notice">Data Saver is ON. Photos are compressed before upload. No video autoplay.</div>
-    <button class="btn" id="publishBtn" style="width:100%">POST TO SEEN</button>
-    <div id="publishMsg" class="notice hidden"></div>
-  </div>
-</section>
+  </main>
 
-<section id="profileView" class="hidden">
-  <div class="hero"><h1>Your SEEN<br>profile.</h1><p>No follower count. No popularity score. Just you.</p></div>
-  <div class="card">
-    <div class="field"><label>NICKNAME</label><input id="profileNick" maxlength="24"></div>
-    <div class="field"><label>CITY</label>
-      <select id="profileCity"><option>Kitwe</option><option>Lusaka</option><option>Other</option></select>
+  <!-- CREATE -->
+  <main id="createView" class="view">
+
+    <section class="hero">
+      <h1>Drop it.<br><span>No filter.</span></h1>
+      <p>Your name doesn't have to be attached to every thought.</p>
+    </section>
+
+    <div class="card composer">
+
+      <textarea
+        id="postBody"
+        maxlength="1000"
+        placeholder="What's really on your mind?"
+      ></textarea>
+
+      <div style="margin-top:8px;text-align:right;color:var(--muted);font-size:11px;">
+        <span id="charCount">0</span>/1000
+      </div>
+
+      <div class="compose-tools">
+
+        <button class="tool" id="photoBtn">
+          📷 ADD PHOTO
+        </button>
+
+        <button class="tool" id="voiceBtn">
+          🎙️ RECORD VOICE
+        </button>
+
+      </div>
+
+      <input
+        id="photoInput"
+        type="file"
+        accept="image/*"
+        class="hidden"
+      >
+
+      <div id="photoPreview" class="preview hidden"></div>
+
+      <div id="voiceStatus"
+           class="hidden"
+           style="margin-top:10px;color:#ff7892;font-size:12px;font-weight:800;">
+      </div>
+
+      <div style="margin-top:12px;">
+        <div style="font-size:11px;color:var(--muted);font-weight:800;margin-bottom:7px;">
+          CHOOSE YOUR VIBE
+        </div>
+
+        <div class="vibes" id="createVibes">
+          <button class="vibe active" data-create-vibe="hype">🔥 HYPE</button>
+          <button class="vibe" data-create-vibe="crush">💘 CRUSH</button>
+          <button class="vibe" data-create-vibe="heartbreak">💔 HEARTBREAK</button>
+          <button class="vibe" data-create-vibe="healing">🌱 HEALING</button>
+          <button class="vibe" data-create-vibe="stressed">😮‍💨 STRESSED</button>
+        </div>
+      </div>
+
+      <button class="btn" id="publishBtn" style="margin-top:12px;">
+        POST TO SEEN
+      </button>
+
     </div>
-    <div class="field"><label>YOUR VIBE</label><div class="vibes" id="profileVibes"></div></div>
-    <div class="field"><label>WHAT YOU ABOUT?</label><input id="profileAbout" maxlength="100" placeholder="One line about you"></div>
-    <button class="btn" id="saveProfile" style="width:100%">SAVE PROFILE</button>
-    <div id="profileMsg" class="notice hidden"></div>
-  </div>
-  <div class="card">
-    <div class="section-title">Privacy</div>
-    <p class="small">SEEN only displays the city you choose. Don't post your school, phone number, home address, passwords, or other private information.</p>
-    <button class="btn danger" id="signOutBtn">RESET THIS DEVICE SESSION</button>
-  </div>
-</section>
 
-<footer>SEEN · Zambia · Built for real conversation</footer>
-</main>
+  </main>
 
-<nav class="nav">
-  <div class="nav-inner">
-    <button class="active" data-view="homeView">👀<br>SEEN</button>
-    <button data-view="createView">＋<br>POST</button>
-    <button data-view="profileView">◉<br>ME</button>
-  </div>
+  <!-- PROFILE -->
+  <main id="profileView" class="view">
+
+    <section class="hero">
+      <h1>Your<br><span>SEEN profile.</span></h1>
+    </section>
+
+    <div id="profileContent"></div>
+
+    <button class="btn secondary" id="signOutBtn" style="margin-top:12px;">
+      RESET SESSION
+    </button>
+
+  </main>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+
+  <button class="nav-btn active" data-view="home">
+    🏠<br>HOME
+  </button>
+
+  <button class="nav-btn" data-view="create">
+    ＋<br>CREATE
+  </button>
+
+  <button class="nav-btn" data-view="profile">
+    👤<br>PROFILE
+  </button>
+
 </nav>
+
+<!-- PROFILE MODAL -->
+<div class="modal hidden" id="profileModal">
+
+  <div class="modal-box">
+
+    <h2>Welcome to SEEN 👋</h2>
+
+    <p>
+      Create your simple profile. Your profile helps people know
+      who is speaking without turning SEEN into a follower game.
+    </p>
+
+    <div class="field">
+      <label>NICKNAME</label>
+      <input
+        id="nicknameInput"
+        maxlength="30"
+        placeholder="e.g. Kai"
+      >
+    </div>
+
+    <div class="field">
+      <label>CITY</label>
+      <input
+        id="cityInput"
+        maxlength="40"
+        placeholder="e.g. Lusaka"
+      >
+    </div>
+
+    <div class="field">
+      <label>ABOUT</label>
+      <textarea
+        id="aboutInput"
+        maxlength="160"
+        placeholder="Tell people a little about you..."
+      ></textarea>
+    </div>
+
+    <div class="modal-actions">
+
+      <button class="btn secondary" id="cancelProfileBtn">
+        LATER
+      </button>
+
+      <button class="btn" id="saveProfileBtn">
+        ENTER SEEN
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
 
-<div id="onboarding" class="modal hidden">
+<!-- REPORT MODAL -->
+<div class="modal hidden" id="reportModal">
+
   <div class="modal-box">
-    <div class="logo">SEEN</div>
-    <h2>You're here. 👀</h2>
-    <p class="small">30 seconds. Pick a nickname and vibe. No email or phone number required.</p>
-    <div class="field"><label>NICKNAME</label><input id="onNick" maxlength="24" placeholder="e.g. StarBoy"></div>
-    <div class="field"><label>CITY</label><select id="onCity"><option>Kitwe</option><option>Lusaka</option><option>Other</option></select></div>
-    <div class="field"><label>WHAT YOU FEELING TODAY?</label><div class="vibes" id="onVibes"></div></div>
-    <div class="field"><label>WHAT YOU ABOUT?</label><input id="onAbout" maxlength="100" placeholder="Music, art, school, life…"></div>
-    <button class="btn" id="joinBtn" style="width:100%">JOIN SEEN</button>
-    <div id="onMsg" class="notice hidden"></div>
+
+    <h2>Report this post</h2>
+
+    <p>
+      Help keep SEEN safe. Tell us why this post should be reviewed.
+    </p>
+
+    <div class="field">
+      <label>REASON</label>
+      <textarea
+        id="reportReason"
+        maxlength="300"
+        placeholder="What's wrong with this post?"
+      ></textarea>
+    </div>
+
+    <div class="modal-actions">
+
+      <button class="btn secondary" id="cancelReportBtn">
+        CANCEL
+      </button>
+
+      <button class="btn" id="submitReportBtn">
+        REPORT
+      </button>
+
+    </div>
+
   </div>
+
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
+"use strict";
+
 /* =========================================================
-   ONLY EDIT THESE TWO VALUES
-   ========================================================= */
+   SUPABASE
+========================================================= */
 
 const SUPABASE_URL =
   "https://jfzypvnlbrmpbuxmlhgp.supabase.co";
 
-
 const SUPABASE_ANON_KEY =
   "sb_publishable_uT8ky5GdL-0LQ3O5cJlJZw_EfP6IHCM";
-/* ========================================================= */
 
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
 
-const VIBES = [
-  ["hype","🔥 Hype"],["crush","💚 Crush"],["heartbreak","💔 Heartbreak"],
-  ["healing","🌱 Healing"],["stressed","🫠 Stressed"]
-];
-let currentUser = null, profile = null, selectedVibe = "hype";
-let feedVibe = "all", page = 0, recording = null, chunks = [], voiceBlob = null, photoBlob = null;
+/* =========================================================
+   HELPERS
+========================================================= */
+
 const $ = id => document.getElementById(id);
 
-function vibeButtons(container, initial, onChange){
-  container.innerHTML = "";
-  VIBES.forEach(([value,label])=>{
-    const b=document.createElement("button");
-    b.className="vibe"+(value===initial?" active":"");
-    b.textContent=label;
-    b.onclick=()=>{container.querySelectorAll(".vibe").forEach(x=>x.classList.remove("active"));b.classList.add("active");onChange(value)};
-    container.appendChild(b);
+const escapeHtml = value => {
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+};
+
+const escapeAttr = value => {
+  return escapeHtml(value).replace(/`/g,"&#096;");
+};
+
+function showToast(message){
+  const toast = $("toast");
+
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  clearTimeout(showToast.timer);
+
+  showToast.timer = setTimeout(() => {
+    toast.classList.remove("show");
+  },3000);
+}
+
+function setStatus(online,text){
+  $("statusDot").style.background =
+    online ? "var(--accent2)" : "var(--danger)";
+
+  $("statusDot").style.boxShadow =
+    online
+      ? "0 0 12px var(--accent2)"
+      : "0 0 12px var(--danger)";
+
+  $("statusText").textContent = text;
+}
+
+function timeAgo(date){
+
+  const seconds =
+    Math.floor(
+      (Date.now() - new Date(date).getTime()) / 1000
+    );
+
+  if(seconds < 10) return "just now";
+  if(seconds < 60) return seconds + "s";
+  if(seconds < 3600) return Math.floor(seconds / 60) + "m";
+  if(seconds < 86400) return Math.floor(seconds / 3600) + "h";
+  if(seconds < 604800) return Math.floor(seconds / 86400) + "d";
+
+  return new Date(date).toLocaleDateString();
+}
+
+function initials(name){
+
+  const value =
+    String(name || "S").trim();
+
+  if(!value) return "S";
+
+  return value
+    .split(/\s+/)
+    .slice(0,2)
+    .map(x => x[0])
+    .join("")
+    .toUpperCase();
+}
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentUser = null;
+let profile = null;
+
+let currentVibe = "all";
+let createVibe = "hype";
+
+let page = 0;
+const PAGE_SIZE = 10;
+
+let feedLoading = false;
+let hasMore = true;
+
+const loadedPostIds = new Set();
+
+let recording = null;
+let recordingStream = null;
+let recordingTimer = null;
+let recordingStopTimeout = null;
+let recordingSeconds = 0;
+
+let selectedPhoto = null;
+
+let realtimeChannels = [];
+
+let reportPostId = null;
+
+/* =========================================================
+   VIEW NAVIGATION
+========================================================= */
+
+function switchView(view){
+
+  document.querySelectorAll(".view")
+    .forEach(el => el.classList.remove("active"));
+
+  document.querySelectorAll(".nav-btn")
+    .forEach(el => el.classList.remove("active"));
+
+  const target = $(view + "View");
+
+  if(target){
+    target.classList.add("active");
+  }
+
+  const nav =
+    document.querySelector(
+      `.nav-btn[data-view="${view}"]`
+    );
+
+  if(nav){
+    nav.classList.add("active");
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
   });
-}
-vibeButtons($("feedVibes"), "hype", v=>{feedVibe=v;page=0;loadFeed(true)});
-const allBtn=document.createElement("button"); allBtn.className="vibe active"; allBtn.textContent="🌍 All";
-allBtn.onclick=()=>{ $("feedVibes").querySelectorAll(".vibe").forEach(x=>x.classList.remove("active"));allBtn.classList.add("active");feedVibe="all";page=0;loadFeed(true)};
-$("feedVibes").prepend(allBtn);
-vibeButtons($("createVibes"), selectedVibe, v=>selectedVibe=v);
-vibeButtons($("profileVibes"), "hype", v=>profileVibe=v);
-vibeButtons($("onVibes"), "hype", v=>onVibe=v);
-let profileVibe="hype", onVibe="hype";
 
-function showView(id){
-  ["homeView","createView","profileView"].forEach(x=>$(x).classList.toggle("hidden",x!==id));
-  window.scrollTo({top:0,behavior:"smooth"});
-  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
-  if(id==="homeView") loadFeed(true);
-  if(id==="profileView") fillProfile();
+  if(view === "profile"){
+    renderProfile();
+  }
 }
-document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>showView(b.dataset.view));
-$("feedTab").onclick=()=>{$("feedArea").classList.remove("hidden");$("roomsArea").classList.add("hidden");$("feedTab").className="btn";$("roomsTab").className="btn secondary"};
-$("roomsTab").onclick=()=>{$("feedArea").classList.add("hidden");$("roomsArea").classList.remove("hidden");$("feedTab").className="btn secondary";$("roomsTab").className="btn";loadRooms()};
 
-$("postText").addEventListener("input",()=>$("charCount").textContent=$("postText").value.length);
-$("photoBtn").onclick=()=>$("photoInput").click();
-$("photoInput").onchange=async e=>{
-  const f=e.target.files[0]; if(!f)return;
-  try{photoBlob=await compressImage(f,100*1024);$("mediaPreview").innerHTML='<div class="notice success">📷 Photo ready — compressed for Data Saver.</div>'}
-  catch(err){showMsg($("publishMsg"),err.message,true)}
+document.querySelectorAll(".nav-btn")
+.forEach(btn => {
+
+  btn.addEventListener("click",() => {
+
+    switchView(
+      btn.dataset.view
+    );
+
+  });
+
+});
+
+/* =========================================================
+   TABS
+========================================================= */
+
+$("feedTab").onclick = () => {
+
+  $("feedTab").classList.add("active");
+  $("roomsTab").classList.remove("active");
+
+  $("feedPanel").classList.remove("hidden");
+  $("roomsPanel").classList.add("hidden");
+
 };
 
-async function compressImage(file,maxBytes){
-  const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error("Could not read image."));i.src=URL.createObjectURL(file)});
-  let scale=Math.min(1,900/Math.max(img.width,img.height));
-  for(let attempt=0;attempt<8;attempt++){
-    const c=document.createElement("canvas");c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));
-    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
-    const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",Math.max(.35,.82-attempt*.07)));
-    if(blob.size<=maxBytes)return blob;
-    scale*=.78;
-  }
-  throw new Error("That photo is too large to compress under 100KB.");
-}
+$("roomsTab").onclick = () => {
 
-$("voiceBtn").onclick=async()=>{
-  if(recording){recording.stop();return}
-  if(!navigator.mediaDevices?.getUserMedia){showMsg($("publishMsg"),"Voice recording is not supported in this browser.",true);return}
-  try{
-    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-    chunks=[]; recording=new MediaRecorder(stream);
-    recording.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
-    recording.onstop=()=>{stream.getTracks().forEach(t=>t.stop());voiceBlob=new Blob(chunks,{type:recording.mimeType||"audio/webm"});recording=null;$("voiceBtn").textContent="🎤 Voice ready";showMsg($("publishMsg"),"15-second voice note ready.",false)};
-    recording.start(); $("voiceBtn").textContent="⏹ Stop recording (15s)";
-    setTimeout(()=>{if(recording)recording.stop()},15000);
-  }catch(e){showMsg($("publishMsg"),"Microphone permission was denied.",true)}
+  $("roomsTab").classList.add("active");
+  $("feedTab").classList.remove("active");
+
+  $("roomsPanel").classList.remove("hidden");
+  $("feedPanel").classList.add("hidden");
+
+  loadRooms();
+
 };
 
-async function init(){
-  if(SUPABASE_URL.includes("PASTE-")||SUPABASE_ANON_KEY.includes("PASTE-")){
-    $("connectionStatus").textContent="ADD KEYS"; return;
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function openProfileModal(){
+
+  $("profileModal")
+    .classList.remove("hidden");
+
+}
+
+function closeProfileModal(){
+
+  $("profileModal")
+    .classList.add("hidden");
+
+}
+
+$("cancelProfileBtn").onclick =
+  closeProfileModal;
+
+$("saveProfileBtn").onclick =
+  saveProfile;
+
+async function saveProfile(){
+
+  if(!currentUser){
+    showToast("Connecting...");
+    return;
   }
+
+  const nickname =
+    $("nicknameInput").value.trim();
+
+  const city =
+    $("cityInput").value.trim();
+
+  const about =
+    $("aboutInput").value.trim();
+
+  if(!nickname){
+    showToast("Enter a nickname first.");
+    return;
+  }
+
+  const btn = $("saveProfileBtn");
+
+  btn.disabled = true;
+  btn.textContent = "SAVING...";
+
   try{
-    const {data,error}=await supabaseClient.auth.getSession();
-    if(error)throw error;
-    if(data.session)currentUser=data.session.user;
-    else{
-      const r=await supabaseClient.auth.signInAnonymously();
-      if(r.error)throw r.error;
-      currentUser=r.data.user;
-    }
-    $("connectionStatus").textContent="ONLINE";
-    $("connectionStatus").style.color="var(--accent)";
-    await loadProfile();
-    subscribeRealtime();
-    await loadFeed(true);
-  }catch(e){
-    console.error(e);$("connectionStatus").textContent="OFFLINE";$("connectionStatus").style.color="#ff8b9b";
-    showMsg($("onMsg"),"Could not connect. Check your Supabase URL, public key, and Anonymous Sign-Ins.",true);
-    $("onboarding").classList.remove("hidden");
+
+    const { data,error } =
+      await supabaseClient
+        .from("profiles")
+        .upsert({
+          id:currentUser.id,
+          nickname,
+          city:city || "Zambia",
+          vibe:createVibe,
+          about
+        },{
+          onConflict:"id"
+        })
+        .select()
+        .single();
+
+    if(error) throw error;
+
+    profile = data;
+
+    closeProfileModal();
+
+    renderProfile();
+
+    showToast("Welcome to SEEN 🔥");
+
+  }catch(error){
+
+    console.error("Profile error:",error);
+
+    showToast(
+      "Could not save profile. Check Supabase."
+    );
+
+  }finally{
+
+    btn.disabled = false;
+    btn.textContent = "ENTER SEEN";
+
   }
+
 }
-async function ensureCityColumn(){
-  // The current SEEN SQL includes city. This function is intentionally harmless
-  // and simply keeps the frontend logic clear.
-  return true;
-}
+
 async function loadProfile(){
-  const {data,error}=await supabaseClient.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
-  if(error)throw error;
-  profile=data;
-  if(!profile)$("onboarding").classList.remove("hidden"); else fillProfile();
-}
-function fillProfile(){
-  if(!profile)return;
-  $("profileNick").value=profile.nickname||"";
-  $("profileCity").value=profile.city||"Other";
-  $("profileAbout").value=profile.about||"";
-  profileVibe=profile.vibe||"hype";
-  vibeButtons($("profileVibes"),profileVibe,v=>profileVibe=v);
-}
-function showMsg(el,msg,error=false){el.textContent=msg;el.className="notice "+(error?"error":"success");el.classList.remove("hidden")}
 
-$("joinBtn").onclick=async()=>{
-  const nickname=$("onNick").value.trim(), city=$("onCity").value, about=$("onAbout").value.trim();
-  if(nickname.length<2)return showMsg($("onMsg"),"Choose a nickname with at least 2 characters.",true);
-  $("joinBtn").disabled=true;
-  const {data,error}=await supabaseClient.from("profiles").insert({id:currentUser.id,nickname,city,vibe:onVibe,about}).select().single();
-  $("joinBtn").disabled=false;
-  if(error){showMsg($("onMsg"),error.message,true);return}
-  profile=data;$("onboarding").classList.add("hidden");fillProfile();loadFeed(true);
-};
+  if(!currentUser) return;
 
-$("saveProfile").onclick=async()=>{
-  if(!profile)return;
-  const nickname=$("profileNick").value.trim();
-  if(nickname.length<2)return showMsg($("profileMsg"),"Nickname is too short.",true);
-  const {data,error}=await supabaseClient.from("profiles").update({
-    nickname,city:$("profileCity").value,vibe:profileVibe,about:$("profileAbout").value.trim()
-  }).eq("id",currentUser.id).select().single();
-  if(error)return showMsg($("profileMsg"),error.message,true);
-  profile=data;showMsg($("profileMsg"),"Profile saved.");
-};
-
-$("publishBtn").onclick=async()=>{
-  if(!profile)return $("onboarding").classList.remove("hidden");
-  const body=$("postText").value.trim();
-  if(!body)return showMsg($("publishMsg"),"Write something first.",true);
-  $("publishBtn").disabled=true;$("publishBtn").textContent="POSTING…";
   try{
-    let image_url=null,audio_url=null;
-    if(photoBlob){
-      const path=`${currentUser.id}/${crypto.randomUUID()}.jpg`;
-      const up=await supabaseClient.storage.from("images").upload(path,photoBlob,{contentType:"image/jpeg",upsert:false});
-      if(up.error)throw up.error;
-      image_url=supabaseClient.storage.from("images").getPublicUrl(path).data.publicUrl;
+
+    const { data,error } =
+      await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id",currentUser.id)
+        .maybeSingle();
+
+    if(error){
+      console.error("Profile load:",error);
+      return;
     }
-    if(voiceBlob){
-      const ext=voiceBlob.type.includes("ogg")?"ogg":"webm";
-      const path=`${currentUser.id}/${crypto.randomUUID()}.${ext}`;
-      const up=await supabaseClient.storage.from("audio").upload(path,voiceBlob,{contentType:voiceBlob.type,upsert:false});
-      if(up.error)throw up.error;
-      audio_url=supabaseClient.storage.from("audio").getPublicUrl(path).data.publicUrl;
+
+    profile = data || null;
+
+    renderProfile();
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+}
+
+function renderProfile(){
+
+  const container =
+    $("profileContent");
+
+  if(!profile){
+
+    container.innerHTML = `
+      <div class="card empty">
+        <strong>No profile yet.</strong>
+        Create your SEEN profile to start posting.
+        <button
+          class="btn"
+          style="margin-top:15px;"
+          onclick="openProfileModal()"
+        >
+          CREATE PROFILE
+        </button>
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="card profile-card">
+
+      <div class="profile-avatar">
+        ${escapeHtml(initials(profile.nickname))}
+      </div>
+
+      <div class="profile-name">
+        ${escapeHtml(profile.nickname)}
+      </div>
+
+      <div class="profile-city">
+        📍 ${escapeHtml(profile.city || "Zambia")}
+      </div>
+
+      <div class="profile-about">
+        ${escapeHtml(profile.about || "No bio yet.")}
+      </div>
+
+      <div class="profile-stats">
+
+        <div class="stat">
+          <strong id="myPostCount">—</strong>
+          <span>POSTS</span>
+        </div>
+
+        <div class="stat">
+          <strong id="myReplyCount">—</strong>
+          <span>REPLIES</span>
+        </div>
+
+        <div class="stat">
+          <strong id="mySeenCount">—</strong>
+          <span>SEEN</span>
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+  loadProfileStats();
+}
+
+async function loadProfileStats(){
+
+  if(!currentUser) return;
+
+  try{
+
+    const postResult =
+      await supabaseClient
+        .from("posts")
+        .select("id",{
+          count:"exact",
+          head:true
+        })
+        .eq("author_id",currentUser.id);
+
+    const replyResult =
+      await supabaseClient
+        .from("replies")
+        .select("id",{
+          count:"exact",
+          head:true
+        })
+        .eq("author_id",currentUser.id);
+
+    const reactionResult =
+      await supabaseClient
+        .from("reactions")
+        .select("id",{
+          count:"exact",
+          head:true
+        })
+        .eq("user_id",currentUser.id);
+
+    $("myPostCount").textContent =
+      postResult.count ?? 0;
+
+    $("myReplyCount").textContent =
+      replyResult.count ?? 0;
+
+    $("mySeenCount").textContent =
+      reactionResult.count ?? 0;
+
+  }catch(error){
+
+    console.error("Profile stats:",error);
+
+  }
+}
+
+/* =========================================================
+   FEED
+========================================================= */
+
+function resetFeed(){
+
+  page = 0;
+  hasMore = true;
+  loadedPostIds.clear();
+
+  $("feed").innerHTML = "";
+
+}
+
+async function loadFeed(reset = false){
+
+  if(feedLoading) return;
+
+  if(!hasMore && !reset) return;
+
+  if(reset){
+    resetFeed();
+  }
+
+  feedLoading = true;
+
+  if(page === 0){
+
+    $("feed").innerHTML =
+      `<div class="loader">LOADING SEEN...</div>`;
+
+  }
+
+  try{
+
+    let query =
+      supabaseClient
+        .from("posts")
+        .select(`
+          id,
+          author_id,
+          body,
+          vibe,
+          image_url,
+          audio_url,
+          created_at,
+          profiles!posts_author_id_fkey(
+            nickname,
+            city,
+            about
+          )
+        `)
+        .order("created_at",{
+          ascending:false
+        })
+        .range(
+          page * PAGE_SIZE,
+          page * PAGE_SIZE + PAGE_SIZE - 1
+        );
+
+    if(currentVibe !== "all"){
+
+      query =
+        query.eq(
+          "vibe",
+          currentVibe
+        );
+
     }
-    const {error}=await supabaseClient.from("posts").insert({author_id:currentUser.id,body,vibe:selectedVibe,image_url,audio_url});
-    if(error)throw error;
-    $("postText").value="";$("charCount").textContent="0";photoBlob=null;voiceBlob=null;$("mediaPreview").innerHTML="";
-    showMsg($("publishMsg"),"Posted. Someone will see you. 👀");
-    showView("homeView");
-  }catch(e){console.error(e);showMsg($("publishMsg"),e.message||"Could not publish.",true)}
-  finally{$("publishBtn").disabled=false;$("publishBtn").textContent="POST TO SEEN"}
+
+    const { data,error } =
+      await query;
+
+    if(error){
+
+      console.error("Feed error:",error);
+
+      if(page === 0){
+
+        $("feed").innerHTML = `
+          <div class="card empty">
+            <strong>Feed could not load.</strong>
+            ${escapeHtml(error.message)}
+          </div>
+        `;
+
+      }
+
+      throw error;
+    }
+
+    const posts = data || [];
+
+    if(page === 0){
+      $("feed").innerHTML = "";
+    }
+
+    const newPosts =
+      posts.filter(
+        post => !loadedPostIds.has(post.id)
+      );
+
+    newPosts.forEach(post => {
+
+      loadedPostIds.add(post.id);
+
+      $("feed").insertAdjacentHTML(
+        "beforeend",
+        postElement(post)
+      );
+
+    });
+
+    if(posts.length < PAGE_SIZE){
+      hasMore = false;
+      $("loadMore").textContent =
+        "NO MORE POSTS";
+      $("loadMore").disabled = true;
+    }else{
+      page++;
+
+      $("loadMore").textContent =
+        "TAP TO LOAD 10 MORE";
+
+      $("loadMore").disabled = false;
+    }
+
+    if(loadedPostIds.size === 0){
+
+      $("feed").innerHTML = `
+        <div class="card empty">
+          <strong>It's quiet here 👀</strong>
+          Be the first person to say something.
+        </div>
+      `;
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+  }finally{
+
+    feedLoading = false;
+
+  }
+
+}
+
+/* =========================================================
+   LOAD MORE FIX
+========================================================= */
+
+$("loadMore").onclick = () => {
+
+  if(!feedLoading && hasMore){
+
+    loadFeed(false);
+
+  }
+
 };
 
-async function loadFeed(reset=false){
-  if(!currentUser||!profile)return;
-  if(reset){page=0;$("feed").innerHTML='<div class="loader">Loading SEEN…</div>'}
-  const from=page*10,to=from+9;
-  let q=supabaseClient.from("posts").select(`
-    id,author_id,body,vibe,image_url,audio_url,seen_count,created_at,
-    profiles!posts_author_id_fkey(nickname,city,about)
-  `).eq("status","active").order("created_at",{ascending:false}).range(from,to);
-  if(feedVibe!=="all")q=q.eq("vibe",feedVibe);
-  const {data,error}=await q;
-  if(error){
-    // fallback for projects where the generated relationship name differs
-    const q2=await supabaseClient.from("posts").select("id,author_id,body,vibe,image_url,audio_url,seen_count,created_at").eq("status","active").order("created_at",{ascending:false}).range(from,to);
-    if(q2.error){$("feed").innerHTML='<div class="card notice error">'+escapeHtml(q2.error.message)+'</div>';return}
-    renderPosts(q2.data||[],reset);return;
-  }
-  renderPosts(data||[],reset);
-  $("loadMore").disabled=(data||[]).length<10;
-  page++;
-}
-$("loadMore").onclick=()=>loadFeed(false);
+/* =========================================================
+   POST HTML
+========================================================= */
 
-function renderPosts(posts,reset){
-  if(reset)$("feed").innerHTML="";
-  if(!posts.length&&reset){$("feed").innerHTML='<div class="card empty">Nothing here yet.<br><br>Be the first person to say something real. 👀</div>';return}
-  posts.forEach(p=>$("feed").appendChild(postElement(p)));
+function postElement(post){
+
+  const author =
+    post.profiles || {};
+
+  const nickname =
+    author.nickname || "Someone";
+
+  const city =
+    author.city || "Zambia";
+
+  const body =
+    post.body || "";
+
+  const avatar =
+    initials(nickname);
+
+  const vibe =
+    post.vibe || "all";
+
+  const vibeEmoji = {
+    hype:"🔥",
+    crush:"💘",
+    heartbreak:"💔",
+    healing:"🌱",
+    stressed:"😮‍💨"
+  }[vibe] || "💬";
+
+  return `
+    <article
+      class="card post-card"
+      data-id="${escapeAttr(post.id)}"
+    >
+
+      <div class="post-head">
+
+        <div class="user">
+
+          <div class="avatar">
+            ${escapeHtml(avatar)}
+          </div>
+
+          <div class="user-info">
+
+            <div class="nickname">
+              ${escapeHtml(nickname)}
+            </div>
+
+            <div class="meta">
+              ${escapeHtml(city)}
+              ·
+              ${timeAgo(post.created_at)}
+              ·
+              ${vibeEmoji} ${escapeHtml(vibe)}
+            </div>
+
+          </div>
+
+        </div>
+
+        <button
+          class="more report-btn"
+          data-id="${escapeAttr(post.id)}"
+          aria-label="Report"
+        >
+          ⋯
+        </button>
+
+      </div>
+
+      <div class="post-body">
+        ${escapeHtml(body)}
+      </div>
+
+      ${
+        post.image_url
+        ?
+        `
+        <img
+          class="post-image"
+          src="${escapeAttr(post.image_url)}"
+          loading="lazy"
+          alt="Post image"
+        >
+        `
+        :
+        ""
+      }
+
+      ${
+        post.audio_url
+        ?
+        `
+        <audio
+          class="voice"
+          controls
+          preload="none"
+          src="${escapeAttr(post.audio_url)}"
+        ></audio>
+        `
+        :
+        ""
+      }
+
+      <div class="actions">
+
+        <button
+          class="action seen-btn"
+          data-id="${escapeAttr(post.id)}"
+        >
+          👀 SEEN
+        </button>
+
+        <button
+          class="action replies-btn"
+          data-id="${escapeAttr(post.id)}"
+        >
+          💬 REPLY
+        </button>
+
+        <span class="seen-count">
+          Seen by <span class="seen-number">0</span>
+        </span>
+
+      </div>
+
+      <div
+        class="replies hidden"
+        id="replies-${escapeAttr(post.id)}"
+      ></div>
+
+    </article>
+  `;
 }
-function postElement(p){
-  const d=document.createElement("article");d.className="card post";d.dataset.id=p.id;
-  const pr=p.profiles||{};
-  const label=VIBES.find(x=>x[0]===p.vibe)?.[1]||p.vibe;
-  d.innerHTML=`
-    <div class="post-head">
-      <div class="identity"><div class="avatar">${escapeHtml((pr.nickname||"?").slice(0,1).toUpperCase())}</div>
-      <div><div class="nick">${escapeHtml(pr.nickname||"Someone")}</div><div class="meta">${escapeHtml(pr.city||"Zambia")} · ${timeAgo(p.created_at)}</div></div></div>
-      <div class="tag">${escapeHtml(label)}</div>
-    </div>
-    <div class="post-body">${escapeHtml(p.body)}</div>
-    ${p.image_url?`<img class="post-media" src="${escapeAttr(p.image_url)}" loading="lazy" alt="Shared photo">`:""}
-    ${p.audio_url?`<audio class="audio" controls preload="none" src="${escapeAttr(p.audio_url)}"></audio>`:""}
-    <div class="actions">
-      <button class="action" data-act="seen">👀 I SEE YOU</button>
-      <button class="action" data-act="same">✊ SAME</button>
-      <button class="action" data-act="reply">💬 REPLY</button>
-      <button class="action" data-act="report">⚠ REPORT</button>
-      <span class="count">Seen by ${Number(p.seen_count||0)}</span>
-    </div>
-    <div class="replybox hidden"><input maxlength="280" placeholder="Say something kind…"><button class="btn">SEND</button></div>
-    <div class="replies"></div>`;
-  d.querySelector('[data-act="seen"]').onclick=()=>react(p.id,"seen",d);
-  d.querySelector('[data-act="same"]').onclick=()=>react(p.id,"same",d);
-  d.querySelector('[data-act="reply"]').onclick=()=>d.querySelector(".replybox").classList.toggle("hidden");
-  d.querySelector('[data-act="report"]').onclick=()=>reportPost(p.id);
-  d.querySelector(".replybox button").onclick=()=>sendReply(p.id,d);
-  d.addEventListener("dblclick",()=>react(p.id,"seen",d));
-  d.querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>{btn.style.transform="scale(.97)";setTimeout(()=>btn.style.transform="",120)}));
-  loadReplies(p.id,d);
-  return d;
-}
-async function react(postId,reaction,d){
-  if(!currentUser)return;
-  const {error}=await supabaseClient.rpc("record_reaction",{p_post_id:postId,p_user_id:currentUser.id,p_reaction:reaction});
-  if(error){
-    // fallback direct upsert if RPC is unavailable
-    const r=await supabaseClient.from("reactions").upsert({post_id:postId,user_id:currentUser.id,reaction},{onConflict:"post_id,user_id"});
-    if(r.error){alert(r.error.message);return}
+
+/* =========================================================
+   EVENT DELEGATION
+========================================================= */
+
+$("feed").addEventListener("click",async event => {
+
+  const seenBtn =
+    event.target.closest(".seen-btn");
+
+  if(seenBtn){
+
+    await react(
+      seenBtn.dataset.id,
+      "seen",
+      seenBtn
+    );
+
+    return;
   }
-  const btn=d.querySelector(`[data-act="${reaction}"]`);
-  btn.textContent=reaction==="seen"?"👀 SEEN ✓":"✊ SAME ✓";
-  btn.disabled=true;
-  if(reaction==="seen"){
-    const c=d.querySelector(".count");c.textContent="Seen by "+(Number((c.textContent.match(/\d+/)||[0])[0])+1);
+
+  const repliesBtn =
+    event.target.closest(".replies-btn");
+
+  if(repliesBtn){
+
+    const postCard =
+      repliesBtn.closest(".post-card");
+
+    const replies =
+      postCard.querySelector(".replies");
+
+    if(replies.classList.contains("hidden")){
+
+      replies.classList.remove("hidden");
+
+      await loadReplies(
+        repliesBtn.dataset.id,
+        postCard
+      );
+
+    }else{
+
+      replies.classList.add("hidden");
+
+    }
+
+    return;
   }
+
+  const reportBtn =
+    event.target.closest(".report-btn");
+
+  if(reportBtn){
+
+    reportPostId =
+      reportBtn.dataset.id;
+
+    $("reportReason").value = "";
+
+    $("reportModal")
+      .classList.remove("hidden");
+
+  }
+
+});
+
+/* =========================================================
+   DOUBLE CLICK / DOUBLE TAP
+========================================================= */
+
+$("feed").addEventListener("dblclick",async event => {
+
+  const post =
+    event.target.closest(".post-card");
+
+  if(!post) return;
+
+  const button =
+    post.querySelector(".seen-btn");
+
+  if(button){
+
+    await react(
+      post.dataset.id,
+      "seen",
+      button
+    );
+
+  }
+
+});
+
+/* =========================================================
+   REACTIONS
+========================================================= */
+
+async function react(postId,reaction,button){
+
+  if(!currentUser){
+
+    showToast("Still connecting...");
+    return;
+
+  }
+
+  button.disabled = true;
+
+  try{
+
+    let usedRpc = true;
+
+    const rpcResult =
+      await supabaseClient.rpc(
+        "record_reaction",
+        {
+          p_post_id:postId,
+          p_user_id:currentUser.id,
+          p_reaction:reaction
+        }
+      );
+
+    if(rpcResult.error){
+
+      console.warn(
+        "Reaction RPC failed:",
+        rpcResult.error
+      );
+
+      usedRpc = false;
+
+      const { error } =
+        await supabaseClient
+          .from("reactions")
+          .upsert({
+            post_id:postId,
+            user_id:currentUser.id,
+            reaction
+          },{
+            onConflict:"post_id,user_id,reaction"
+          });
+
+      if(error) throw error;
+
+    }
+
+    const card =
+      document.querySelector(
+        `.post-card[data-id="${CSS.escape(postId)}"]`
+      );
+
+    if(card){
+
+      const countEl =
+        card.querySelector(".seen-number");
+
+      const current =
+        Number(countEl.textContent || 0);
+
+      /*
+       * If the RPC returns a number, use it.
+       * Otherwise only update locally if this
+       * was the first visible interaction.
+       */
+
+      if(
+        usedRpc &&
+        typeof rpcResult.data === "number"
+      ){
+
+        countEl.textContent =
+          rpcResult.data;
+
+      }else{
+
+        countEl.textContent =
+          Math.max(1,current + 1);
+
+      }
+
+      button.textContent =
+        "✓ SEEN";
+
+      button.style.color =
+        "var(--accent2)";
+
+    }
+
+  }catch(error){
+
+    console.error("Reaction error:",error);
+
+    showToast(
+      "Could not mark this post as seen."
+    );
+
+  }finally{
+
+    button.disabled = false;
+
+  }
+
 }
-async function sendReply(postId,d){
-  const input=d.querySelector(".replybox input"),body=input.value.trim();
-  if(!body)return;
-  const {error}=await supabaseClient.from("replies").insert({post_id:postId,author_id:currentUser.id,body});
-  if(error){alert(error.message);return}
-  input.value="";loadReplies(postId,d);
+
+/* =========================================================
+   REPLIES
+========================================================= */
+
+async function loadReplies(postId,postCard){
+
+  const container =
+    postCard.querySelector(".replies");
+
+  if(!container) return;
+
+  container.innerHTML =
+    `<div class="loader">LOADING REPLIES...</div>`;
+
+  try{
+
+    const { data,error } =
+      await supabaseClient
+        .from("replies")
+        .select(`
+          id,
+          body,
+          created_at,
+          profiles(nickname)
+        `)
+        .eq("post_id",postId)
+        .order("created_at",{
+          ascending:true
+        });
+
+    if(error) throw error;
+
+    const replies =
+      data || [];
+
+    container.innerHTML = `
+
+      ${
+        replies.length
+        ?
+        replies.map(reply => `
+          <div class="reply">
+
+            <div class="reply-name">
+              ${escapeHtml(
+                reply.profiles?.nickname || "Someone"
+              )}
+              ·
+              ${timeAgo(reply.created_at)}
+            </div>
+
+            <div class="reply-body">
+              ${escapeHtml(reply.body)}
+            </div>
+
+          </div>
+        `).join("")
+        :
+        `
+        <div style="color:var(--muted);font-size:12px;padding:8px 0;">
+          No replies yet. Be the first.
+        </div>
+        `
+      }
+
+      <div class="reply-form">
+
+        <input
+          class="reply-input"
+          maxlength="500"
+          placeholder="Say something..."
+        >
+
+        <button
+          class="reply-send"
+          data-post-id="${escapeAttr(postId)}"
+        >
+          SEND
+        </button>
+
+      </div>
+    `;
+
+  }catch(error){
+
+    console.error("Replies:",error);
+
+    container.innerHTML = `
+      <div style="color:var(--danger);font-size:12px;">
+        Could not load replies.
+      </div>
+    `;
+
+  }
+
 }
-async function loadReplies(postId,d){
-  const {data,error}=await supabaseClient.from("replies").select("id,body,created_at,profiles(nickname)").eq("post_id",postId).order("created_at",{ascending:true}).limit(10);
-  if(error||!data?.length)return;
-  d.querySelector(".replies").innerHTML=data.map(r=>`<div class="reply"><b>${escapeHtml(r.profiles?.nickname||"Someone")}:</b> ${escapeHtml(r.body)}</div>`).join("");
+
+$("feed").addEventListener("click",async event => {
+
+  const sendBtn =
+    event.target.closest(".reply-send");
+
+  if(!sendBtn) return;
+
+  const postId =
+    sendBtn.dataset.postId;
+
+  const container =
+    sendBtn.closest(".replies");
+
+  const input =
+    container.querySelector(".reply-input");
+
+  const body =
+    input.value.trim();
+
+  if(!body) return;
+
+  if(!currentUser){
+
+    showToast("Still connecting...");
+    return;
+
+  }
+
+  sendBtn.disabled = true;
+  sendBtn.textContent = "...";
+
+  try{
+
+    const { error } =
+      await supabaseClient
+        .from("replies")
+        .insert({
+          post_id:postId,
+          author_id:currentUser.id,
+          body
+        });
+
+    if(error) throw error;
+
+    input.value = "";
+
+    await loadReplies(
+      postId,
+      sendBtn.closest(".post-card")
+    );
+
+  }catch(error){
+
+    console.error("Reply error:",error);
+
+    showToast(
+      "Could not send reply."
+    );
+
+  }finally{
+
+    sendBtn.disabled = false;
+    sendBtn.textContent = "SEND";
+
+  }
+
+});
+
+/* =========================================================
+   REALTIME FIX — POSTS + REPLIES
+========================================================= */
+
+async function subscribeRealtime(){
+
+  /*
+   * Remove old channels first.
+   */
+  realtimeChannels.forEach(channel => {
+
+    try{
+      supabaseClient.removeChannel(channel);
+    }catch(e){}
+
+  });
+
+  realtimeChannels = [];
+
+  /* POSTS */
+
+  const postsChannel =
+    supabaseClient
+      .channel("seen-posts-live")
+      .on(
+        "postgres_changes",
+        {
+          event:"INSERT",
+          schema:"public",
+          table:"posts"
+        },
+        async payload => {
+
+          const newPost =
+            payload.new;
+
+          if(!newPost?.id) return;
+
+          if(
+            loadedPostIds.has(newPost.id)
+          ){
+            return;
+          }
+
+          /*
+           * Respect selected vibe.
+           */
+          if(
+            currentVibe !== "all" &&
+            newPost.vibe !== currentVibe
+          ){
+            return;
+          }
+
+          /*
+           * FIX:
+           * Fetch the author's real profile.
+           */
+          let authorProfile = null;
+
+          try{
+
+            const { data } =
+              await supabaseClient
+                .from("profiles")
+                .select(
+                  "nickname,city,about"
+                )
+                .eq(
+                  "id",
+                  newPost.author_id
+                )
+                .maybeSingle();
+
+            authorProfile = data || null;
+
+          }catch(error){
+
+            console.warn(
+              "Could not fetch realtime profile:",
+              error
+            );
+
+          }
+
+          loadedPostIds.add(
+            newPost.id
+          );
+
+          const element =
+            postElement({
+              ...newPost,
+              profiles:
+                authorProfile || {
+                  nickname:"Someone",
+                  city:"Zambia"
+                }
+            });
+
+          const feed =
+            $("feed");
+
+          /*
+           * Remove empty state.
+           */
+          const empty =
+            feed.querySelector(".empty");
+
+          if(empty){
+            empty.remove();
+          }
+
+          /*
+           * Realtime post goes to the top.
+           */
+          feed.insertAdjacentHTML(
+            "afterbegin",
+            element
+          );
+
+        }
+      )
+      .subscribe(status => {
+
+        if(status === "SUBSCRIBED"){
+
+          setStatus(
+            true,
+            "LIVE"
+          );
+
+        }
+
+      });
+
+  realtimeChannels.push(
+    postsChannel
+  );
+
+  /* REPLIES */
+
+  const repliesChannel =
+    supabaseClient
+      .channel("seen-replies-live")
+      .on(
+        "postgres_changes",
+        {
+          event:"INSERT",
+          schema:"public",
+          table:"replies"
+        },
+        async payload => {
+
+          const postId =
+            payload.new?.post_id;
+
+          if(!postId) return;
+
+          const postCard =
+            document.querySelector(
+              `.post-card[data-id="${CSS.escape(postId)}"]`
+            );
+
+          if(!postCard) return;
+
+          const replies =
+            postCard.querySelector(".replies");
+
+          /*
+           * Only refresh visible reply sections.
+           */
+          if(
+            replies &&
+            !replies.classList.contains("hidden")
+          ){
+
+            await loadReplies(
+              postId,
+              postCard
+            );
+
+          }
+
+        }
+      )
+      .subscribe();
+
+  realtimeChannels.push(
+    repliesChannel
+  );
+
 }
-async function reportPost(postId){
-  const reason=prompt("Why are you reporting this post? (Keep it short)");
-  if(!reason)return;
-  const {error}=await supabaseClient.from("reports").insert({reporter_id:currentUser.id,post_id:postId,reason:reason.slice(0,200)});
-  alert(error?"Could not send report.":"Report sent. Thanks for helping keep SEEN safe.");
-}
+
+/* =========================================================
+   VIBES
+========================================================= */
+
+$("vibes").addEventListener(
+  "click",
+  event => {
+
+    const button =
+      event.target.closest(".vibe");
+
+    if(!button) return;
+
+    document
+      .querySelectorAll("#vibes .vibe")
+      .forEach(el =>
+        el.classList.remove("active")
+      );
+
+    button.classList.add("active");
+
+    currentVibe =
+      button.dataset.vibe;
+
+    loadFeed(true);
+
+  }
+);
+
+$("createVibes").addEventListener(
+  "click",
+  event => {
+
+    const button =
+      event.target.closest(".vibe");
+
+    if(!button) return;
+
+    document
+      .querySelectorAll("#createVibes .vibe")
+      .forEach(el =>
+        el.classList.remove("active")
+      );
+
+    button.classList.add("active");
+
+    createVibe =
+      button.dataset.createVibe;
+
+  }
+);
+
+/* =========================================================
+   ROOMS
+========================================================= */
+
+const roomInfo = {
+  hype:{
+    emoji:"🔥",
+    name:"Hype Room"
+  },
+  crush:{
+    emoji:"💘",
+    name:"Crush Room"
+  },
+  heartbreak:{
+    emoji:"💔",
+    name:"Heartbreak Room"
+  },
+  healing:{
+    emoji:"🌱",
+    name:"Healing Room"
+  },
+  stressed:{
+    emoji:"😮‍💨",
+    name:"Stressed Room"
+  }
+};
+
 async function loadRooms(){
-  const counts={};
-  for(const [v,label] of VIBES)counts[v]=0;
-  const {data}=await supabaseClient.from("posts").select("vibe").eq("status","active").gte("created_at",new Date(Date.now()-86400000).toISOString());
-  (data||[]).forEach(x=>{if(counts[x.vibe]!=null)counts[x.vibe]++});
-  $("rooms").innerHTML=VIBES.map(([v,label])=>`<div class="room"><div><strong>${label}</strong><span>${Math.min(20,counts[v]||0)}/20 active voices</span></div><button class="action" onclick="filterRoom('${v}')">ENTER</button></div>`).join("");
-}
-window.filterRoom=v=>{feedVibe=v;$("feedTab").click();$("feedVibes").querySelectorAll(".vibe").forEach(x=>x.classList.remove("active"));[...$("feedVibes").children].find(x=>x.textContent.includes(VIBES.find(y=>y[0]===v)[1].slice(2)))?.classList.add("active");loadFeed(true)};
 
-function subscribeRealtime(){
-  supabaseClient.channel("seen-live").on("postgres_changes",{event:"INSERT",schema:"public",table:"posts"},()=>{if(!$("homeView").classList.contains("hidden"))loadFeed(true)})
-  .on("postgres_changes",{event:"INSERT",schema:"public",table:"replies"},()=>{}).subscribe();
-}
-function timeAgo(s){const n=(Date.now()-new Date(s).getTime())/1000;if(n<60)return"now";if(n<3600)return Math.floor(n/60)+"m";if(n<86400)return Math.floor(n/3600)+"h";return Math.floor(n/86400)+"d"}
-function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function escapeAttr(s){return escapeHtml(s).replace(/`/g,"&#096;")}
+  const container =
+    $("rooms");
 
-$("signOutBtn").onclick=async()=>{
-  if(!confirm("Reset this device's SEEN session? Your profile and posts remain in the database."))return;
-  await supabaseClient.auth.signOut();localStorage.clear();location.reload();
+  container.innerHTML =
+    `<div class="loader">LOADING ROOMS...</div>`;
+
+  try{
+
+    const { data,error } =
+      await supabaseClient
+        .from("posts")
+        .select("vibe")
+        .gte(
+          "created_at",
+          new Date(
+            Date.now() - 24*60*60*1000
+          ).toISOString()
+        );
+
+    if(error) throw error;
+
+    const counts = {};
+
+    (data || []).forEach(post => {
+
+      counts[post.vibe] =
+        (counts[post.vibe] || 0) + 1;
+
+    });
+
+    container.innerHTML =
+      Object.entries(roomInfo)
+        .map(([vibe,info]) => {
+
+          const count =
+            counts[vibe] || 0;
+
+          return `
+            <div
+              class="room"
+              data-room-vibe="${vibe}"
+            >
+
+              <div class="room-icon">
+                ${info.emoji}
+              </div>
+
+              <div class="room-info">
+
+                <div class="room-name">
+                  ${info.name}
+                </div>
+
+                <div class="room-count">
+                  ${count}
+                  ${count === 1 ? "voice" : "voices"}
+                  active recently
+                </div>
+
+              </div>
+
+              <div class="room-arrow">
+                →
+              </div>
+
+            </div>
+          `;
+
+        })
+        .join("");
+
+  }catch(error){
+
+    console.error("Rooms:",error);
+
+    container.innerHTML = `
+      <div class="card empty">
+        <strong>Rooms unavailable.</strong>
+        Please try again.
+      </div>
+    `;
+
+  }
+
+}
+
+$("rooms").addEventListener(
+  "click",
+  event => {
+
+    const room =
+      event.target.closest(".room");
+
+    if(!room) return;
+
+    const vibe =
+      room.dataset.roomVibe;
+
+    currentVibe = vibe;
+
+    document
+      .querySelectorAll("#vibes .vibe")
+      .forEach(button => {
+
+        button.classList.toggle(
+          "active",
+          button.dataset.vibe === vibe
+        );
+
+      });
+
+    $("feedTab").click();
+
+    loadFeed(true);
+
+  }
+);
+
+/* =========================================================
+   PHOTO
+========================================================= */
+
+$("photoBtn").onclick = () => {
+  $("photoInput").click();
 };
 
-init();
+$("photoInput").addEventListener(
+  "change",
+  async event => {
+
+    const file =
+      event.target.files?.[0];
+
+    if(!file) return;
+
+    try{
+
+      selectedPhoto =
+        await compressImage(file);
+
+      showPhotoPreview(
+        selectedPhoto
+      );
+
+    }catch(error){
+
+      console.error(error);
+
+      selectedPhoto = null;
+
+      showToast(
+        "Could not process this image."
+      );
+
+    }finally{
+
+      /*
+       * FIX:
+       * Allows selecting the same file again.
+       */
+      $("photoInput").value = "";
+
+    }
+
+  }
+);
+
+function showPhotoPreview(file){
+
+  const preview =
+    $("photoPreview");
+
+  const url =
+    URL.createObjectURL(file);
+
+  preview.classList.remove("hidden");
+
+  preview.innerHTML = `
+    <img
+      src="${escapeAttr(url)}"
+      alt="Selected photo"
+    >
+
+    <button
+      class="remove-preview"
+      id="removePhotoBtn"
+    >
+      ×
+    </button>
+  `;
+
+  $("removePhotoBtn").onclick = () => {
+
+    selectedPhoto = null;
+
+    preview.innerHTML = "";
+
+    preview.classList.add(
+      "hidden"
+    );
+
+    URL.revokeObjectURL(url);
+
+  };
+
+}
+
+async function compressImage(file){
+
+  /*
+   * Keep images small for low-data users.
+   */
+  const MAX_BYTES = 100 * 1024;
+
+  if(file.size <= MAX_BYTES){
+    return file;
+  }
+
+  const bitmap =
+    await createImageBitmap(file);
+
+  const maxDimension = 1280;
+
+  let width = bitmap.width;
+  let height = bitmap.height;
+
+  if(width > maxDimension || height > maxDimension){
+
+    const scale =
+      Math.min(
+        maxDimension / width,
+        maxDimension / height
+      );
+
+    width =
+      Math.round(width * scale);
+
+    height =
+      Math.round(height * scale);
+
+  }
+
+  const canvas =
+    document.createElement("canvas");
+
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx =
+    canvas.getContext("2d");
+
+  ctx.drawImage(
+    bitmap,
+    0,
+    0,
+    width,
+    height
+  );
+
+  bitmap.close();
+
+  let quality = .78;
+
+  for(let i=0;i<8;i++){
+
+    const blob =
+      await new Promise(resolve =>
+        canvas.toBlob(
+          resolve,
+          "image/jpeg",
+          quality
+        )
+      );
+
+    if(!blob) break;
+
+    if(blob.size <= MAX_BYTES){
+
+      return new File(
+        [blob],
+        "seen-image.jpg",
+        {
+          type:"image/jpeg"
+        }
+      );
+
+    }
+
+    quality -= .08;
+
+  }
+
+  const finalBlob =
+    await new Promise(resolve =>
+      canvas.toBlob(
+        resolve,
+        "image/jpeg",
+        .35
+      )
+    );
+
+  return new File(
+    [finalBlob],
+    "seen-image.jpg",
+    {
+      type:"image/jpeg"
+    }
+  );
+
+}
+
+/* =========================================================
+   VOICE RECORDING
+========================================================= */
+
+$("voiceBtn").onclick = () => {
+
+  if(recording){
+
+    stopRecording();
+
+  }else{
+
+    startRecording();
+
+  }
+
+};
+
+function getSupportedMime(){
+
+  const options = [
+    "audio/webm;codecs=opus",
+    "audio/webm",
+    "audio/ogg;codecs=opus",
+    "audio/ogg",
+    "audio/mp4"
+  ];
+
+  return options.find(
+    type =>
+      MediaRecorder.isTypeSupported(type)
+  ) || "";
+
+}
+
+async function startRecording(){
+
+  if(!navigator.mediaDevices?.getUserMedia){
+
+    showToast(
+      "Voice recording is not supported here."
+    );
+
+    return;
+
+  }
+
+  try{
+
+    recordingStream =
+      await navigator.mediaDevices
+        .getUserMedia({
+          audio:true
+        });
+
+    const mimeType =
+      getSupportedMime();
+
+    recording =
+      mimeType
+      ?
+      new MediaRecorder(
+        recordingStream,
+        {mimeType}
+      )
+      :
+      new MediaRecorder(
+        recordingStream
+      );
+
+    const chunks = [];
+
+    recording.ondataavailable =
+      event => {
+
+        if(event.data?.size){
+
+          chunks.push(
+            event.data
+          );
+
+        }
+
+      };
+
+    recording.onstop = () => {
+
+      const blob =
+        new Blob(
+          chunks,
+          {
+            type:
+              recording?.mimeType ||
+              mimeType ||
+              "audio/webm"
+          }
+        );
+
+      handleVoiceBlob(blob);
+
+      cleanupRecording();
+
+    };
+
+    recording.onerror =
+      event => {
+
+        console.error(
+          "Recorder error:",
+          event.error
+        );
+
+        showToast(
+          "Voice recording failed."
+        );
+
+        cleanupRecording();
+
+      };
+
+    recording.start();
+
+    recordingSeconds = 0;
+
+    $("voiceBtn").classList.add(
+      "active"
+    );
+
+    $("voiceBtn").textContent =
+      "⏹️ STOP RECORDING";
+
+    $("voiceStatus")
+      .classList.remove("hidden");
+
+    updateRecordingTimer();
+
+    /*
+     * FIX:
+     * Store timeout so it can be cancelled.
+     */
+    recordingStopTimeout =
+      setTimeout(() => {
+
+        if(recording){
+
+          stopRecording();
+
+        }
+
+      },15000);
+
+  }catch(error){
+
+    console.error(
+      "Microphone error:",
+      error
+    );
+
+    showToast(
+      "Microphone permission was denied."
+    );
+
+    cleanupRecording();
+
+  }
+
+}
+
+function updateRecordingTimer(){
+
+  if(!recording) return;
+
+  $("voiceStatus").textContent =
+    `Recording ${recordingSeconds}s / 15s`;
+
+  recordingSeconds++;
+
+  recordingTimer =
+    setTimeout(
+      updateRecordingTimer,
+      1000
+    );
+
+}
+
+function stopRecording(){
+
+  if(!recording) return;
+
+  try{
+
+    if(
+      recording.state !== "inactive"
+    ){
+
+      recording.stop();
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    cleanupRecording();
+
+  }
+
+}
+
+function cleanupRecording(){
+
+  if(recordingTimer){
+
+    clearTimeout(
+      recordingTimer
+    );
+
+    recordingTimer = null;
+
+  }
+
+  if(recordingStopTimeout){
+
+    clearTimeout(
+      recordingStopTimeout
+    );
+
+    recordingStopTimeout = null;
+
+  }
+
+  if(recordingStream){
+
+    recordingStream
+      .getTracks()
+      .forEach(track =>
+        track.stop()
+      );
+
+  }
+
+  recordingStream = null;
+  recording = null;
+
+  $("voiceBtn")
+    .classList.remove("active");
+
+  $("voiceBtn").textContent =
+    "🎙️ RECORD VOICE";
+
+}
+
+function handleVoiceBlob(blob){
+
+  if(!blob || !blob.size){
+
+    showToast(
+      "No voice recording captured."
+    );
+
+    return;
+
+  }
+
+  /*
+   * Keep blob in memory until publishing.
+   */
+  window.seenVoiceBlob = blob;
+
+  $("voiceStatus")
+    .classList.remove("hidden");
+
+  $("voiceStatus").textContent =
+    "✓ Voice recording ready";
+
+}
+
+/* =========================================================
+   PUBLISH
+========================================================= */
+
+$("postBody").addEventListener(
+  "input",
+  () => {
+
+    $("charCount").textContent =
+      $("postBody").value.length;
+
+  }
+);
+
+$("publishBtn").onclick =
+  publishPost;
+
+async function publishPost(){
+
+  if(!currentUser){
+
+    showToast(
+      "Still connecting..."
+    );
+
+    return;
+
+  }
+
+  if(!profile){
+
+    openProfileModal();
+
+    return;
+
+  }
+
+  const body =
+    $("postBody").value.trim();
+
+  const voiceBlob =
+    window.seenVoiceBlob || null;
+
+  if(!body && !selectedPhoto && !voiceBlob){
+
+    showToast(
+      "Write something or add media first."
+    );
+
+    return;
+
+  }
+
+  const btn =
+    $("publishBtn");
+
+  btn.disabled = true;
+  btn.textContent =
+    "POSTING...";
+
+  let uploadedImagePath = null;
+  let uploadedAudioPath = null;
+
+  try{
+
+    let imageUrl = null;
+    let audioUrl = null;
+
+    /* IMAGE */
+
+    if(selectedPhoto){
+
+      const extension =
+        "jpg";
+
+      uploadedImagePath =
+        `${currentUser.id}/${crypto.randomUUID()}.${extension}`;
+
+      const { error } =
+        await supabaseClient
+          .storage
+          .from("images")
+          .upload(
+            uploadedImagePath,
+            selectedPhoto,
+            {
+              contentType:"image/jpeg",
+              upsert:false
+            }
+          );
+
+      if(error) throw error;
+
+      const { data } =
+        supabaseClient
+          .storage
+          .from("images")
+          .getPublicUrl(
+            uploadedImagePath
+          );
+
+      imageUrl =
+        data.publicUrl;
+
+    }
+
+    /* AUDIO */
+
+    if(voiceBlob){
+
+      const mime =
+        voiceBlob.type ||
+        "audio/webm";
+
+      let extension =
+        "webm";
+
+      if(
+        mime.includes("ogg")
+      ){
+
+        extension = "ogg";
+
+      }else if(
+        mime.includes("mp4")
+      ){
+
+        extension = "mp4";
+
+      }
+
+      uploadedAudioPath =
+        `${currentUser.id}/${crypto.randomUUID()}.${extension}`;
+
+      const { error } =
+        await supabaseClient
+          .storage
+          .from("audio")
+          .upload(
+            uploadedAudioPath,
+            voiceBlob,
+            {
+              contentType:mime,
+              upsert:false
+            }
+          );
+
+      if(error) throw error;
+
+      const { data } =
+        supabaseClient
+          .storage
+          .from("audio")
+          .getPublicUrl(
+            uploadedAudioPath
+          );
+
+      audioUrl =
+        data.publicUrl;
+
+    }
+
+    /* DATABASE */
+
+    const { data,error } =
+      await supabaseClient
+        .from("posts")
+        .insert({
+          author_id:currentUser.id,
+          body,
+          vibe:createVibe,
+          image_url:imageUrl,
+          audio_url:audioUrl
+        })
+        .select(`
+          id,
+          author_id,
+          body,
+          vibe,
+          image_url,
+          audio_url,
+          created_at,
+          profiles!posts_author_id_fkey(
+            nickname,
+            city,
+            about
+          )
+        `)
+        .single();
+
+    if(error) throw error;
+
+    /*
+     * Realtime will normally add this post.
+     * We add it ourselves only if realtime hasn't
+     * already inserted it.
+     */
+    if(data?.id && !loadedPostIds.has(data.id)){
+
+      loadedPostIds.add(data.id);
+
+      const empty =
+        $("feed").querySelector(".empty");
+
+      if(empty){
+        empty.remove();
+      }
+
+      $("feed").insertAdjacentHTML(
+        "afterbegin",
+        postElement(data)
+      );
+
+    }
+
+    /* RESET COMPOSER */
+
+    $("postBody").value = "";
+    $("charCount").textContent = "0";
+
+    selectedPhoto = null;
+
+    $("photoPreview").innerHTML = "";
+
+    $("photoPreview")
+      .classList.add("hidden");
+
+    window.seenVoiceBlob = null;
+
+    $("voiceStatus")
+      .classList.add("hidden");
+
+    showToast(
+      "Posted. You're SEEN. 🔥"
+    );
+
+    switchView("home");
+
+  }catch(error){
+
+    console.error(
+      "Publish error:",
+      error
+    );
+
+    /*
+     * CLEAN UP STORAGE IF DATABASE INSERT FAILED
+     */
+    if(uploadedImagePath){
+
+      try{
+
+        await supabaseClient
+          .storage
+          .from("images")
+          .remove([
+            uploadedImagePath
+          ]);
+
+      }catch(cleanError){
+
+        console.warn(
+          "Image cleanup failed:",
+          cleanError
+        );
+
+      }
+
+    }
+
+    if(uploadedAudioPath){
+
+      try{
+
+        await supabaseClient
+          .storage
+          .from("audio")
+          .remove([
+            uploadedAudioPath
+          ]);
+
+      }catch(cleanError){
+
+        console.warn(
+          "Audio cleanup failed:",
+          cleanError
+        );
+
+      }
+
+    }
+
+    showToast(
+      "Post failed. Check Supabase permissions."
+    );
+
+  }finally{
+
+    btn.disabled = false;
+    btn.textContent =
+      "POST TO SEEN";
+
+  }
+
+}
+
+/* =========================================================
+   REPORTING
+========================================================= */
+
+$("cancelReportBtn").onclick = () => {
+
+  reportPostId = null;
+
+  $("reportModal")
+    .classList.add("hidden");
+
+};
+
+$("submitReportBtn").onclick =
+  submitReport;
+
+async function submitReport(){
+
+  if(!currentUser || !reportPostId){
+
+    showToast(
+      "Could not submit report."
+    );
+
+    return;
+
+  }
+
+  const reason =
+    $("reportReason").value.trim();
+
+  if(!reason){
+
+    showToast(
+      "Please enter a reason."
+    );
+
+    return;
+
+  }
+
+  const btn =
+    $("submitReportBtn");
+
+  btn.disabled = true;
+  btn.textContent = "SENDING...";
+
+  try{
+
+    const { error } =
+      await supabaseClient
+        .from("reports")
+        .insert({
+          reporter_id:currentUser.id,
+          post_id:reportPostId,
+          reason
+        });
+
+    if(error) throw error;
+
+    $("reportModal")
+      .classList.add("hidden");
+
+    showToast(
+      "Report submitted. Thank you."
+    );
+
+  }catch(error){
+
+    console.error(
+      "Report error:",
+      error
+    );
+
+    showToast(
+      "Could not submit report."
+    );
+
+  }finally{
+
+    btn.disabled = false;
+    btn.textContent = "REPORT";
+
+    reportPostId = null;
+
+  }
+
+}
+
+/* =========================================================
+   SIGN OUT / RESET
+========================================================= */
+
+$("signOutBtn").onclick =
+  async () => {
+
+    try{
+
+      /*
+       * FIX:
+       * Don't use localStorage.clear().
+       */
+      await supabaseClient.auth.signOut();
+
+    }catch(error){
+
+      console.error(
+        "Sign out:",
+        error
+      );
+
+    }
+
+    currentUser = null;
+    profile = null;
+
+    /*
+     * Supabase handles its own session.
+     * Reload to start a new anonymous session.
+     */
+    location.reload();
+
+  };
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+async function initAuth(){
+
+  setStatus(
+    false,
+    "CONNECTING"
+  );
+
+  try{
+
+    const {
+      data:{
+        session
+      }
+    } =
+      await supabaseClient
+        .auth
+        .getSession();
+
+    if(session?.user){
+
+      currentUser =
+        session.user;
+
+    }else{
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+          .auth
+          .signInAnonymously();
+
+      if(error) throw error;
+
+      currentUser =
+        data.user;
+
+    }
+
+    if(!currentUser){
+
+      throw new Error(
+        "No authenticated user."
+      );
+
+    }
+
+    setStatus(
+      true,
+      "LIVE"
+    );
+
+    await loadProfile();
+
+    await loadFeed(true);
+
+    await subscribeRealtime();
+
+  }catch(error){
+
+    console.error(
+      "Authentication failed:",
+      error
+    );
+
+    setStatus(
+      false,
+      "OFFLINE"
+    );
+
+    $("feed").innerHTML = `
+      <div class="card empty">
+
+        <strong>
+          SEEN couldn't connect.
+        </strong>
+
+        Make sure Anonymous Sign-Ins
+        are enabled in Supabase.
+
+        <button
+          class="btn"
+          style="margin-top:15px;"
+          onclick="location.reload()"
+        >
+          TRY AGAIN
+        </button>
+
+      </div>
+    `;
+
+  }
+
+}
+
+/* =========================================================
+   AUTH STATE CHANGES
+========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+  async (_event,session) => {
+
+    if(session?.user){
+
+      currentUser =
+        session.user;
+
+    }
+
+  }
+);
+
+/* =========================================================
+   START APP
+========================================================= */
+
+initAuth();
+
 </script>
+
 </body>
 </html>
-
