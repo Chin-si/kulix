@@ -1,11 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#080812">
-  <meta name="description" content="SEEN — You don't need followers to be heard.">
-  <title>SEEN — Zambia</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08090d">
+<meta name="description" content="SEEN — a low-data social space for teens in Zambia. No likes. No followers. Just real replies.">
+<title>SEEN — Zambia</title>
+
+
  <!-- Vercel Web Analytics -->
   <script>
     window.va = window.va || function () {
@@ -19,358 +21,575 @@
   </script>
    
 
+
   
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root{--bg:#080812;--panel:#111121;--panel2:#17172b;--text:#f7f7fb;--muted:#9292aa;--line:#282842;--accent:#8b5cf6;--accent2:#ec4899;--good:#34d399;--danger:#fb7185;--max:760px}
-    *{box-sizing:border-box}html{background:var(--bg);color-scheme:dark}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at 20% 0%,#17132e 0,#080812 38%);color:var(--text);min-height:100vh}
-    button,input,textarea,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.app{max-width:var(--max);margin:auto;padding:14px 14px 90px}
-    .top{position:sticky;top:0;z-index:20;background:rgba(8,8,18,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.06);padding:10px 0;margin-bottom:12px}
-    .topin{display:flex;align-items:center;justify-content:space-between}.brand{font-weight:950;letter-spacing:.22em;font-size:20px}.tag{font-size:11px;color:var(--muted);margin-top:2px}
-    .pill{border:1px solid var(--line);background:#101022;border-radius:999px;padding:7px 10px;color:#bcbcdf;font-size:12px}
-    .hero{padding:22px 4px 12px}.hero h1{font-size:clamp(34px,9vw,58px);line-height:.95;margin:0 0 12px;letter-spacing:-.05em}.hero p{color:#b8b8c9;line-height:1.5;margin:0;max-width:560px}
-    .card{background:linear-gradient(145deg,rgba(23,23,43,.96),rgba(13,13,27,.96));border:1px solid var(--line);border-radius:22px;padding:16px;margin:12px 0;box-shadow:0 14px 45px rgba(0,0,0,.18)}
-    .btn{border:1px solid var(--line);background:#18182b;color:var(--text);border-radius:14px;padding:12px 14px;font-weight:800;transition:.15s}.btn:hover{transform:translateY(-1px);border-color:#494967}.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:0}.wide{width:100%}
-    .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.vibe{padding:12px 6px;border-radius:15px;border:1px solid var(--line);background:#111123;text-align:center;color:#ddd;font-size:12px}.vibe.active{border-color:var(--accent);background:#211a3b;box-shadow:0 0 0 1px var(--accent) inset}
-    .emoji{display:block;font-size:22px;margin-bottom:5px}.field{margin:12px 0}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.input,.textarea{width:100%;background:#0d0d1a;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:13px;outline:0}.textarea{min-height:110px;resize:vertical}.input:focus,.textarea:focus{border-color:#6250a4}
-    .row{display:flex;gap:8px;align-items:center}.between{justify-content:space-between}.muted{color:var(--muted)}.tiny{font-size:11px}.count{text-align:right;color:var(--muted);font-size:11px;margin-top:5px}
-    .posthead{display:flex;justify-content:space-between;gap:12px}.name{font-weight:850}.meta{color:var(--muted);font-size:12px;margin-top:2px}.vibeTag{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:5px 8px;color:#c7bfff}
-    .postbody{font-size:17px;line-height:1.55;margin:14px 0;white-space:pre-wrap;overflow-wrap:anywhere}.postimg{width:100%;max-height:420px;object-fit:cover;border-radius:15px;border:1px solid var(--line);margin-top:6px}.audio{width:100%;margin-top:8px}.seenline{color:#a9a9bd;font-size:12px;margin-bottom:10px}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}.action{padding:10px 6px;border-radius:12px;border:1px solid var(--line);background:#101021;color:#ddd;font-size:12px}.action.selected{border-color:var(--accent);background:#211a3b}
-    .reply{border-top:1px solid #24243a;padding:10px 0}.reply:last-child{border-bottom:0}.reply p{margin:5px 0 0;color:#d5d5df;line-height:1.45;font-size:14px}
-    .bottom{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(8,8,18,.94);backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.08)}.bottomin{max-width:var(--max);margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:7px 10px calc(7px + env(safe-area-inset-bottom))}.nav{border:0;background:transparent;color:#8f8fa7;padding:8px 3px;font-size:11px}.nav strong{display:block;font-size:18px;margin-bottom:2px}.nav.active{color:#fff}
-    .toast{position:fixed;left:50%;bottom:85px;transform:translateX(-50%);background:#222238;border:1px solid #41415e;padding:11px 14px;border-radius:13px;font-size:13px;z-index:100;max-width:90%;text-align:center}
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:80;display:grid;place-items:center;padding:18px}.modalbox{width:min(520px,100%);max-height:90vh;overflow:auto;background:#101020;border:1px solid var(--line);border-radius:22px;padding:18px}.close{float:right;border:0;background:transparent;color:#aaa;font-size:24px}
-    .empty{text-align:center;padding:40px 16px;color:var(--muted)}.notice{padding:11px 13px;border-radius:13px;background:#15152a;border:1px solid #292944;color:#bdbdd0;font-size:12px;line-height:1.5}
-    .profileStat{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#0e0e1c;border:1px solid var(--line);border-radius:16px;padding:15px}.stat b{font-size:22px;display:block}.stat span{color:var(--muted);font-size:11px}
-    @media(max-width:520px){.grid{grid-template-columns:repeat(5,1fr)}.vibe{padding:9px 2px}.actions{grid-template-columns:1fr 1fr}.actions .action:last-child{grid-column:1/-1}}
-  </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#07070b;--panel:#101018;--panel2:#171722;--text:#fafaff;--muted:#9292a7;
+  --line:#292936;--lime:#c8ff2c;--pink:#ff4fd8;--cyan:#55e6ff;--orange:#ff9f43;
+  --danger:#ff5874;--radius:24px;--shadow:0 20px 70px rgba(0,0,0,.45)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 15% -5%,rgba(200,255,44,.13),transparent 28%),
+    radial-gradient(circle at 95% 8%,rgba(255,79,216,.12),transparent 25%),
+    #07070b;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hidden{display:none!important}
+.app{min-height:100vh;max-width:820px;margin:auto;padding-bottom:96px}
+.top{
+  position:sticky;top:0;z-index:20;padding:13px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(7,7,11,.78);backdrop-filter:blur(22px);
+  border-bottom:1px solid rgba(255,255,255,.07)
+}
+.logo{font-size:22px;font-weight:1000;letter-spacing:.18em}
+.logo::after{content:".";color:var(--pink)}
+.status{
+  font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--lime);padding:7px 10px;border:1px solid rgba(200,255,44,.2);
+  border-radius:99px;background:rgba(200,255,44,.07)
+}
+main{padding:14px 16px}
+.hero{padding:28px 3px 18px}
+.hero h1{
+  margin:0 0 12px;font-size:clamp(42px,11vw,72px);line-height:.9;letter-spacing:-.065em;
+  font-weight:1000;
+}
+.hero p{margin:0;color:var(--muted);line-height:1.6;max-width:620px;font-size:14px}
+.hero h1::selection{background:var(--pink)}
+.card{
+  position:relative;overflow:hidden;margin-bottom:14px;padding:17px;
+  background:linear-gradient(145deg,rgba(23,23,34,.96),rgba(12,12,19,.96));
+  border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);box-shadow:var(--shadow)
+}
+.card::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(120deg,rgba(200,255,44,.025),transparent 45%,rgba(255,79,216,.025))
+}
+.section-title{
+  margin:2px 0 12px;color:#77778b;font-size:10px;font-weight:1000;
+  letter-spacing:.16em;text-transform:uppercase
+}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}
+.vibes{display:flex;gap:8px;flex-wrap:wrap}
+.vibe{
+  border:1px solid rgba(255,255,255,.09);background:#0c0c13;color:#ddddec;
+  padding:10px 13px;border-radius:999px;font-size:12px;font-weight:850;transition:.18s ease;
+}
+.vibe:hover{transform:translateY(-1px);border-color:rgba(200,255,44,.4)}
+.vibe.active{
+  border-color:var(--lime);background:var(--lime);color:#0b0c08;
+  box-shadow:0 0 22px rgba(200,255,44,.14)
+}
+.field{margin:12px 0}
+.field label{display:block;margin:0 0 7px;color:#8c8c9e;font-size:10px;font-weight:900;letter-spacing:.1em}
+input,textarea,select{
+  width:100%;border:1px solid rgba(255,255,255,.09);background:#09090f;color:var(--text);
+  border-radius:15px;padding:13px 14px;outline:none;transition:.18s
+}
+input:focus,textarea:focus,select:focus{border-color:var(--lime);box-shadow:0 0 0 3px rgba(200,255,44,.07)}
+textarea{min-height:112px;resize:vertical}
+.btn{
+  border:0;border-radius:15px;padding:13px 16px;font-weight:1000;
+  background:var(--lime);color:#0a0b08;transition:.18s ease
+}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.04)}
+.btn.secondary{background:#191923;color:var(--text);border:1px solid rgba(255,255,255,.09)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.small{font-size:12px;color:var(--muted);line-height:1.55}
+.post{padding:17px}
+.post-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.identity{display:flex;gap:11px;align-items:center;min-width:0}
+.avatar{
+  flex:0 0 43px;width:43px;height:43px;border-radius:15px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--lime),var(--cyan));color:#090b08;font-weight:1000;
+  box-shadow:0 8px 28px rgba(85,230,255,.1)
+}
+.nick{font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px}
+.meta{font-size:10px;color:#7d7d90;margin-top:3px}
+.tag{
+  flex:0 0 auto;font-size:10px;font-weight:900;padding:7px 9px;border-radius:999px;
+  background:#191923;color:var(--pink);border:1px solid rgba(255,79,216,.18)
+}
+.post-body{font-size:16px;line-height:1.6;margin:16px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.post-media{
+  width:100%;border-radius:18px;display:block;margin-top:10px;max-height:430px;object-fit:cover;
+  border:1px solid rgba(255,255,255,.07)
+}
+.audio{width:100%;margin-top:10px}
+.actions{display:flex;gap:7px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.07);padding-top:12px}
+.action{
+  border:1px solid rgba(255,255,255,.08);background:#0b0b11;color:#eeeef8;
+  padding:9px 11px;border-radius:13px;font-size:11px;font-weight:900;transition:.15s
+}
+.action:hover{border-color:rgba(200,255,44,.35);transform:translateY(-1px)}
+.action:disabled{opacity:.5}
+.count{color:#77778a;font-size:10px;margin-left:auto;align-self:center}
+.replybox{display:flex;gap:7px;margin-top:10px}
+.replybox input{padding:10px}
+.replybox button{flex:0 0 auto}
+.replies{margin-top:10px;padding-top:8px;border-top:1px dashed #292936}
+.reply{font-size:12px;line-height:1.5;padding:7px 0}.reply b{color:var(--lime)}
+.empty{text-align:center;padding:46px 18px;color:var(--muted);line-height:1.6}
+.loader{text-align:center;padding:28px;color:var(--muted);font-size:12px}
+.nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:30;
+  background:rgba(8,8,12,.88);backdrop-filter:blur(22px);border-top:1px solid rgba(255,255,255,.08);
+}
+.nav-inner{width:min(820px,100%);margin:auto;display:flex;gap:6px;padding:8px 12px env(safe-area-inset-bottom)}
+.nav button{
+  flex:1;background:transparent;border:0;color:#77778a;padding:9px 5px;border-radius:15px;
+  font-size:10px;font-weight:950;line-height:1.45;transition:.18s
+}
+.nav button.active{background:#181821;color:var(--lime);box-shadow:inset 0 0 0 1px rgba(200,255,44,.08)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:50;display:grid;place-items:center;padding:16px}
+.modal-box{
+  width:min(570px,100%);max-height:91vh;overflow:auto;background:#111119;
+  border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:21px;box-shadow:0 30px 100px rgba(0,0,0,.6)
+}
+.modal-box h2{margin:8px 0 7px;font-size:28px;letter-spacing:-.04em}
+.notice{padding:11px 12px;border-radius:14px;background:#15151f;border:1px solid rgba(255,255,255,.08);font-size:11px;color:var(--muted);margin:10px 0}
+.error{color:#ff92a4;background:#241019;border-color:#54202d}
+.success{color:#d9ff8d;background:#162008;border-color:#385500}
+.counter{text-align:right;font-size:10px;color:#707083;margin-top:5px}
+.room{
+  display:flex;align-items:center;justify-content:space-between;padding:15px;
+  border:1px solid rgba(255,255,255,.08);border-radius:17px;background:#0d0d14;margin-bottom:8px
+}
+.room strong{display:block;font-size:13px}.room span{font-size:10px;color:#77778a}
+footer{padding:20px 5px;text-align:center;color:#5e5e70;font-size:10px}
+@media(max-width:520px){
+  main{padding:11px 12px}.hero{padding-top:24px}.card{border-radius:20px}
+  .hero h1{font-size:48px}.count{width:100%;margin-left:0}.actions .count{order:9}
+}
+</style>
 </head>
 <body>
-<div id="app"></div>
-<div id="toast" class="toast hidden"></div>
-<div id="modal" class="modal hidden"><div class="modalbox" id="modalBox"></div></div>
+<div class="app">
+<header class="top">
+  <div class="logo">SEEN</div>
+  <div class="status" id="connectionStatus">CONNECTING…</div>
+</header>
+
+<main>
+<section id="homeView">
+  <div class="hero">
+    <h1>Say it.<br>Feel seen.</h1>
+    <p>No likes. No followers. No fake popularity. Just real people in Zambia finding the feeling behind the post.</p>
+  </div>
+
+  <div class="card" style="padding:12px 14px;background:linear-gradient(90deg,rgba(200,255,44,.08),rgba(255,79,216,.06));">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+      <div><strong style="font-size:12px;">⚡ THE REAL-TIME FEELING FEED</strong><div class="small">Fresh thoughts. Local vibes. No clout chase.</div></div>
+      <span style="font-size:18px;">👀</span>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="btn" id="feedTab">FEED</button>
+    <button class="btn secondary" id="roomsTab">VIBE ROOMS</button>
+  </div>
+
+  <div id="feedArea">
+    <div class="card">
+      <div class="section-title">Filter by vibe</div>
+      <div class="vibes" id="feedVibes"></div>
+    </div>
+    <div id="feed"></div>
+    <button class="btn secondary" id="loadMore" style="width:100%">TAP TO LOAD 10 MORE</button>
+  </div>
+
+  <div id="roomsArea" class="hidden">
+    <div class="card">
+      <div class="section-title">20 people max · resets daily</div>
+      <div id="rooms"></div>
+    </div>
+  </div>
+</section>
+
+<section id="createView" class="hidden">
+  <div class="hero"><h1>Say something<br>real.</h1><p>One thought. One feeling. One chance to be heard.</p></div>
+  <div class="card">
+    <div class="field">
+      <label>WHAT YOU MAKING?</label>
+      <select id="making">
+        <option>Song</option><option>Art</option><option>Fit</option><option>Edit</option><option>Nothing</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>WHAT YOU FEELING?</label>
+      <div class="vibes" id="createVibes"></div>
+    </div>
+    <div class="field">
+      <label>WHAT DO YOU NEED?</label>
+      <select id="need"><option>Hype</option><option>Advice</option><option>Listen</option><option>Collab</option></select>
+    </div>
+    <div class="field">
+      <label>YOUR MESSAGE</label>
+      <textarea id="postText" maxlength="280" placeholder="What's on your mind?"></textarea>
+      <div class="counter"><span id="charCount">0</span>/280</div>
+    </div>
+    <div class="row">
+      <button class="btn secondary" id="photoBtn">📷 Photo</button>
+      <button class="btn secondary" id="voiceBtn">🎤 Voice</button>
+    </div>
+    <input id="photoInput" type="file" accept="image/*" class="hidden">
+    <div id="mediaPreview"></div>
+    <div class="notice">Data Saver is ON. Photos are compressed before upload. No video autoplay.</div>
+    <button class="btn" id="publishBtn" style="width:100%">POST TO SEEN</button>
+    <div id="publishMsg" class="notice hidden"></div>
+  </div>
+</section>
+
+<section id="profileView" class="hidden">
+  <div class="hero"><h1>Your SEEN<br>profile.</h1><p>No follower count. No popularity score. Just you.</p></div>
+  <div class="card">
+    <div class="field"><label>NICKNAME</label><input id="profileNick" maxlength="24"></div>
+    <div class="field"><label>CITY</label>
+      <select id="profileCity"><option>Kitwe</option><option>Lusaka</option><option>Other</option></select>
+    </div>
+    <div class="field"><label>YOUR VIBE</label><div class="vibes" id="profileVibes"></div></div>
+    <div class="field"><label>WHAT YOU ABOUT?</label><input id="profileAbout" maxlength="100" placeholder="One line about you"></div>
+    <button class="btn" id="saveProfile" style="width:100%">SAVE PROFILE</button>
+    <div id="profileMsg" class="notice hidden"></div>
+  </div>
+  <div class="card">
+    <div class="section-title">Privacy</div>
+    <p class="small">SEEN only displays the city you choose. Don't post your school, phone number, home address, passwords, or other private information.</p>
+    <button class="btn danger" id="signOutBtn">RESET THIS DEVICE SESSION</button>
+  </div>
+</section>
+
+<footer>SEEN · Zambia · Built for real conversation</footer>
+</main>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="active" data-view="homeView">👀<br>SEEN</button>
+    <button data-view="createView">＋<br>POST</button>
+    <button data-view="profileView">◉<br>ME</button>
+  </div>
+</nav>
+</div>
+
+<div id="onboarding" class="modal hidden">
+  <div class="modal-box">
+    <div class="logo">SEEN</div>
+    <h2>You're here. 👀</h2>
+    <p class="small">30 seconds. Pick a nickname and vibe. No email or phone number required.</p>
+    <div class="field"><label>NICKNAME</label><input id="onNick" maxlength="24" placeholder="e.g. StarBoy"></div>
+    <div class="field"><label>CITY</label><select id="onCity"><option>Kitwe</option><option>Lusaka</option><option>Other</option></select></div>
+    <div class="field"><label>WHAT YOU FEELING TODAY?</label><div class="vibes" id="onVibes"></div></div>
+    <div class="field"><label>WHAT YOU ABOUT?</label><input id="onAbout" maxlength="100" placeholder="Music, art, school, life…"></div>
+    <button class="btn" id="joinBtn" style="width:100%">JOIN SEEN</button>
+    <div id="onMsg" class="notice hidden"></div>
+  </div>
+</div>
 
 <script>
-(() => {
-  "use strict";
+/* =========================================================
+   ONLY EDIT THESE TWO VALUES
+   ========================================================= */
 
-  // =========================
-  // 1) PUT YOUR SUPABASE KEYS HERE
-  // =========================
- const SUPABASE_URL =
+const SUPABASE_URL =
   "https://jfzypvnlbrmpbuxmlhgp.supabase.co";
 
 
 const SUPABASE_ANON_KEY =
   "sb_publishable_uT8ky5GdL-0LQ3O5cJlJZw_EfP6IHCM";
-  
-  const configured = !SUPABASE_URL.includes("YOUR-PROJECT") && !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
-  const sb = configured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+/* ========================================================= */
 
-  const VIBES = {
-    hype:["🔥","Hype"], crush:["❤️","Crush"], heartbreak:["💔","Heartbreak"],
-    healing:["🌱","Healing"], stressed:["🧠","Stressed"]
-  };
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  let state = {
-    session:null, profile:null, tab:"home", posts:[], replies:{}, reactions:{},
-    selectedVibe:null, loading:false, feedLimit:10
-  };
+const VIBES = [
+  ["hype","🔥 Hype"],["crush","💚 Crush"],["heartbreak","💔 Heartbreak"],
+  ["healing","🌱 Healing"],["stressed","🫠 Stressed"]
+];
+let currentUser = null, profile = null, selectedVibe = "hype";
+let feedVibe = "all", page = 0, recording = null, chunks = [], voiceBlob = null, photoBlob = null;
+const $ = id => document.getElementById(id);
 
-  const $ = id => document.getElementById(id);
-  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const timeAgo = d => {
-    const sec = Math.max(1, (Date.now()-new Date(d).getTime())/1000);
-    if(sec<60) return `${Math.floor(sec)}s`;
-    if(sec<3600) return `${Math.floor(sec/60)}m`;
-    if(sec<86400) return `${Math.floor(sec/3600)}h`;
-    return `${Math.floor(sec/86400)}d`;
-  };
-  function toast(msg){ $("toast").textContent=msg; $("toast").classList.remove("hidden"); setTimeout(()=>$("toast").classList.add("hidden"),2600); }
-  function modal(html){ $("modalBox").innerHTML=html; $("modal").classList.remove("hidden"); }
-  function closeModal(){ $("modal").classList.add("hidden"); }
-  $("modal").addEventListener("click", e=>{if(e.target.id==="modal") closeModal();});
+function vibeButtons(container, initial, onChange){
+  container.innerHTML = "";
+  VIBES.forEach(([value,label])=>{
+    const b=document.createElement("button");
+    b.className="vibe"+(value===initial?" active":"");
+    b.textContent=label;
+    b.onclick=()=>{container.querySelectorAll(".vibe").forEach(x=>x.classList.remove("active"));b.classList.add("active");onChange(value)};
+    container.appendChild(b);
+  });
+}
+vibeButtons($("feedVibes"), "hype", v=>{feedVibe=v;page=0;loadFeed(true)});
+const allBtn=document.createElement("button"); allBtn.className="vibe active"; allBtn.textContent="🌍 All";
+allBtn.onclick=()=>{ $("feedVibes").querySelectorAll(".vibe").forEach(x=>x.classList.remove("active"));allBtn.classList.add("active");feedVibe="all";page=0;loadFeed(true)};
+$("feedVibes").prepend(allBtn);
+vibeButtons($("createVibes"), selectedVibe, v=>selectedVibe=v);
+vibeButtons($("profileVibes"), "hype", v=>profileVibe=v);
+vibeButtons($("onVibes"), "hype", v=>onVibe=v);
+let profileVibe="hype", onVibe="hype";
 
-  function localProfile(){ try{return JSON.parse(localStorage.getItem("seen_profile")||"null")}catch{return null} }
-  function saveLocal(p){ localStorage.setItem("seen_profile",JSON.stringify(p)); }
+function showView(id){
+  ["homeView","createView","profileView"].forEach(x=>$(x).classList.toggle("hidden",x!==id));
+  window.scrollTo({top:0,behavior:"smooth"});
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
+  if(id==="homeView") loadFeed(true);
+  if(id==="profileView") fillProfile();
+}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>showView(b.dataset.view));
+$("feedTab").onclick=()=>{$("feedArea").classList.remove("hidden");$("roomsArea").classList.add("hidden");$("feedTab").className="btn";$("roomsTab").className="btn secondary"};
+$("roomsTab").onclick=()=>{$("feedArea").classList.add("hidden");$("roomsArea").classList.remove("hidden");$("feedTab").className="btn secondary";$("roomsTab").className="btn";loadRooms()};
 
-  async function boot(){
-    render();
-    if(!configured){
-      toast("Demo mode: add your Supabase URL + anon key to connect the database.");
-      return;
-    }
-    try{
-      let {data:{session}} = await sb.auth.getSession();
-      if(!session){
-        const r = await sb.auth.signInAnonymously();
-        if(r.error) throw r.error;
-        session = r.data.session;
-      }
-      state.session=session;
-      const {data:profile} = await sb.from("profiles").select("*").eq("id",session.user.id).maybeSingle();
-      state.profile = profile || localProfile();
-      render();
-      if(state.profile) await loadFeed();
-      sb.channel("seen-live").on("postgres_changes",{event:"*",schema:"public",table:"posts"},()=>loadFeed(false)).subscribe();
-    }catch(err){
-      console.error(err); toast("Could not connect to SEEN. Check your Supabase setup.");
-    }
+$("postText").addEventListener("input",()=>$("charCount").textContent=$("postText").value.length);
+$("photoBtn").onclick=()=>$("photoInput").click();
+$("photoInput").onchange=async e=>{
+  const f=e.target.files[0]; if(!f)return;
+  try{photoBlob=await compressImage(f,100*1024);$("mediaPreview").innerHTML='<div class="notice success">📷 Photo ready — compressed for Data Saver.</div>'}
+  catch(err){showMsg($("publishMsg"),err.message,true)}
+};
+
+async function compressImage(file,maxBytes){
+  const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error("Could not read image."));i.src=URL.createObjectURL(file)});
+  let scale=Math.min(1,900/Math.max(img.width,img.height));
+  for(let attempt=0;attempt<8;attempt++){
+    const c=document.createElement("canvas");c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",Math.max(.35,.82-attempt*.07)));
+    if(blob.size<=maxBytes)return blob;
+    scale*=.78;
   }
+  throw new Error("That photo is too large to compress under 100KB.");
+}
 
-  function render(){
-    if(!state.profile){ renderWelcome(); return; }
-    $("app").innerHTML = `
-      <div class="app">
-        <header class="top"><div class="topin">
-          <div><div class="brand">SEEN</div><div class="tag">You don't need followers to be heard.</div></div>
-          <button class="pill" onclick="openProfile()">👤 ${esc(state.profile.nickname)}</button>
-        </div></header>
-        <main id="main">${state.tab==="home"?homeView():state.tab==="rooms"?roomsView():state.tab==="create"?createView():profileView()}</main>
-      </div>
-      <nav class="bottom"><div class="bottomin">
-        <button class="nav ${state.tab==="home"?"active":""}" onclick="go('home')"><strong>👀</strong>SEEN</button>
-        <button class="nav ${state.tab==="rooms"?"active":""}" onclick="go('rooms')"><strong>🌎</strong>ROOMS</button>
-        <button class="nav ${state.tab==="create"?"active":""}" onclick="go('create')"><strong>＋</strong>SAY IT</button>
-        <button class="nav ${state.tab==="profile"?"active":""}" onclick="go('profile')"><strong>⚙</strong>ME</button>
-      </div></nav>`;
+$("voiceBtn").onclick=async()=>{
+  if(recording){recording.stop();return}
+  if(!navigator.mediaDevices?.getUserMedia){showMsg($("publishMsg"),"Voice recording is not supported in this browser.",true);return}
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    chunks=[]; recording=new MediaRecorder(stream);
+    recording.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+    recording.onstop=()=>{stream.getTracks().forEach(t=>t.stop());voiceBlob=new Blob(chunks,{type:recording.mimeType||"audio/webm"});recording=null;$("voiceBtn").textContent="🎤 Voice ready";showMsg($("publishMsg"),"15-second voice note ready.",false)};
+    recording.start(); $("voiceBtn").textContent="⏹ Stop recording (15s)";
+    setTimeout(()=>{if(recording)recording.stop()},15000);
+  }catch(e){showMsg($("publishMsg"),"Microphone permission was denied.",true)}
+};
+
+async function init(){
+  if(SUPABASE_URL.includes("PASTE-")||SUPABASE_ANON_KEY.includes("PASTE-")){
+    $("connectionStatus").textContent="ADD KEYS"; return;
   }
-
-  function renderWelcome(){
-    $("app").innerHTML = `
-      <div class="app">
-        <section class="hero">
-          <div class="brand">SEEN</div>
-          <h1>You don't need followers to be heard.</h1>
-          <p>No likes. No clout. No endless scrolling. Just people who actually see you.</p>
-        </section>
-        <div class="card">
-          <div class="notice">SEEN V2 is designed for young people in Zambia. Keep your profile private, don't share exact locations, and report/block anything unsafe.</div>
-          <div class="field"><label>YOUR NICKNAME</label><input id="nickname" class="input" maxlength="24" placeholder="e.g. Kay"></div>
-          <div class="field"><label>YOUR VIBE</label><div class="grid" id="vibes">${Object.entries(VIBES).map(([k,v])=>`<button class="vibe" data-vibe="${k}" onclick="pickVibe('${k}')"><span class="emoji">${v[0]}</span>${v[1]}</button>`).join("")}</div></div>
-          <label class="row tiny" style="margin:12px 0;color:#bbb"><input id="ageok" type="checkbox"> I am 14–19 and agree to use SEEN respectfully.</label>
-          <button class="btn primary wide" onclick="join()">ENTER SEEN →</button>
-          ${!configured?'<p class="tiny muted" style="margin-top:12px">Demo mode is active until you add your Supabase credentials in this file.</p>':''}
-        </div>
-      </div>`;
-  }
-
-  window.pickVibe = k => {
-    state.selectedVibe=k;
-    document.querySelectorAll(".vibe").forEach(x=>x.classList.toggle("active",x.dataset.vibe===k));
-  };
-
-  async function join(){
-    const nickname=$("nickname")?.value.trim();
-    if(!nickname) return toast("Choose a nickname first.");
-    if(!state.selectedVibe) return toast("Choose your vibe.");
-    if(!$("ageok")?.checked) return toast("SEEN V1 is for ages 14–19.");
-    if(!configured){
-      state.profile={id:"demo",nickname,vibe:state.selectedVibe,about:"",created_at:new Date().toISOString()};
-      saveLocal(state.profile); render(); return;
-    }
-    try{
-      if(!state.session){
-        const r=await sb.auth.signInAnonymously();
-        if(r.error) throw r.error;
-        state.session=r.data.session;
-      }
-      const p={id:state.session.user.id,nickname,vibe:state.selectedVibe,about:""};
-      const {data,error}=await sb.from("profiles").upsert(p).select().single();
-      if(error) throw error;
-      state.profile=data; saveLocal(data); render(); await loadFeed();
-    }catch(e){console.error(e);toast(e.message||"Could not create profile.");}
-  }
-
-  function homeView(){
-    const vibeButtons=Object.entries(VIBES).map(([k,v])=>`<button class="vibe ${state.selectedVibe===k?"active":""}" onclick="filterVibe('${k}')"><span class="emoji">${v[0]}</span>${v[1]}</button>`).join("");
-    return `<section class="hero"><h1>RIGHT NOW.</h1><p>Small posts. Real replies. Take your time.</p></section>
-      <div class="card"><div class="row between"><b>FILTER BY VIBE</b><button class="pill" onclick="filterVibe(null)">All</button></div><div class="grid" style="margin-top:10px">${vibeButtons}</div></div>
-      <div id="feed">${state.loading?'<div class="empty">Loading SEEN…</div>':feedHTML()}</div>`;
-  }
-
-  function feedHTML(){
-    if(!state.posts.length) return `<div class="card empty"><div style="font-size:36px">👀</div><b>No posts yet.</b><p>Be the first person to say something real.</p><button class="btn primary" onclick="go('create')">SAY SOMETHING</button></div>`;
-    return state.posts.slice(0,state.feedLimit).map(postHTML).join("")+
-      (state.posts.length>state.feedLimit?`<button class="btn wide" onclick="state.feedLimit+=10;render()">LOAD 10 MORE</button>`:"");
-  }
-
-  function postHTML(p){
-    const r=state.reactions[p.id]||null;
-    const v=VIBES[p.vibe]||["•","Vibe"];
-    return `<article class="card" id="post-${p.id}">
-      <div class="posthead"><div><div class="name">${esc(p.profile?.nickname||"Someone")}</div><div class="meta">🇿🇲 Zambia · ${timeAgo(p.created_at)}</div></div><span class="vibeTag">${v[0]} ${v[1]}</span></div>
-      <div class="postbody">${esc(p.body)}</div>
-      ${p.image_url?`<img class="postimg" loading="lazy" src="${esc(p.image_url)}" alt="Post image">`:""}
-      ${p.audio_url?`<audio class="audio" controls preload="none" src="${esc(p.audio_url)}"></audio>`:""}
-      <div class="seenline">👀 ${p.seen_count||0} people have seen this</div>
-      <div class="actions">
-        <button class="action ${r==="seen"?"selected":""}" onclick="react('${p.id}','seen')">👀 I SEE YOU</button>
-        <button class="action ${r==="same"?"selected":""}" onclick="react('${p.id}','same')">🤝 SAME</button>
-        <button class="action" onclick="replyBox('${p.id}')">💬 REPLY</button>
-      </div>
-      <div id="replies-${p.id}">${replyHTML(p.id)}</div>
-      <button class="tiny" style="margin-top:9px;background:none;border:0;color:#777" onclick="reportPost('${p.id}')">Report / Block</button>
-    </article>`;
-  }
-
-  function replyHTML(id){
-    const rs=state.replies[id]||[];
-    if(!rs.length)return "";
-    return rs.slice(0,3).map(x=>`<div class="reply"><div class="tiny muted"><b>${esc(x.profile?.nickname||"Someone")}</b> · ${timeAgo(x.created_at)}</div><p>${esc(x.body)}</p></div>`).join("");
-  }
-
-  async function loadFeed(show=true){
-    if(!configured){ state.posts=[]; render(); return; }
-    if(show){state.loading=true;render();}
-    try{
-      let q=sb.from("posts").select("*,profile:profiles!posts_author_id_fkey(nickname,vibe)").eq("status","active").order("created_at",{ascending:false}).limit(50);
-      if(state.selectedVibe) q=q.eq("vibe",state.selectedVibe);
-      const {data,error}=await q;
-      if(error) throw error;
-      state.posts=data||[];
-      const ids=state.posts.map(p=>p.id);
-      if(ids.length){
-        const {data:rr}=await sb.from("reactions").select("post_id,reaction").eq("user_id",state.session.user.id).in("post_id",ids);
-        state.reactions={}; (rr||[]).forEach(x=>state.reactions[x.post_id]=x.reaction);
-        const {data:rep}=await sb.from("replies").select("*,profile:profiles!replies_author_id_fkey(nickname)").in("post_id",ids).order("created_at",{ascending:true});
-        state.replies={}; (rep||[]).forEach(x=>(state.replies[x.post_id]??=[]).push(x));
-      }
-    }catch(e){console.error(e);toast("Could not load the feed.");}
-    state.loading=false;render();
-  }
-
-  window.filterVibe = async k => {state.selectedVibe=k;state.feedLimit=10;await loadFeed();};
-
-  window.react = async (postId,reaction) => {
-    if(!configured) return toast("Connect Supabase to save reactions.");
-    try{
-      const {error}=await sb.from("reactions").upsert({post_id:postId,user_id:state.session.user.id,reaction},{onConflict:"post_id,user_id"});
-      if(error) throw error;
-      const {error:e2}=await sb.rpc("record_reaction",{p_post_id:postId,p_user_id:state.session.user.id,p_reaction:reaction});
-      // RPC may be unavailable if SQL wasn't run; the upsert is still valid.
-      if(e2) console.warn(e2);
-      state.reactions[postId]=reaction; render();
-    }catch(e){toast(e.message||"Reaction failed.");}
-  };
-
-  window.replyBox = id => {
-    modal(`<button class="close" onclick="closeModal()">×</button><h2>Reply to this person</h2><p class="muted">Keep it respectful. Real people are on the other side.</p>
-      <textarea id="replyText" class="textarea" maxlength="280" placeholder="Say something helpful…"></textarea>
-      <div class="count"><span id="replyCount">0</span>/280</div>
-      <button class="btn primary wide" onclick="sendReply('${id}')">SEND REPLY</button>`);
-    setTimeout(()=>{const t=$("replyText");t?.addEventListener("input",()=>$("replyCount").textContent=t.value.length)},0);
-  };
-
-  window.sendReply = async id => {
-    const body=$("replyText")?.value.trim(); if(!body)return toast("Write a reply first.");
-    if(!configured)return toast("Connect Supabase to save replies.");
-    try{
-      const {error}=await sb.from("replies").insert({post_id:id,author_id:state.session.user.id,body});
-      if(error) throw error;
-      closeModal(); toast("Reply sent 👀"); await loadFeed(false);
-    }catch(e){toast(e.message||"Could not send reply.");}
-  };
-
-  function createView(){
-    return `<section class="hero"><h1>SAY IT.</h1><p>You don't have to sound perfect. Just be real.</p></section>
-      <div class="card">
-        <div class="field"><label>WHAT'S ON YOUR MIND?</label><textarea id="postBody" class="textarea" maxlength="280" placeholder="Say something real…"></textarea><div class="count"><span id="postCount">0</span>/280</div></div>
-        <div class="field"><label>VIBE</label><div class="grid">${Object.entries(VIBES).map(([k,v])=>`<button class="vibe ${state.selectedVibe===k?"active":""}" onclick="pickVibe('${k}')"><span class="emoji">${v[0]}</span>${v[1]}</button>`).join("")}</div></div>
-        <div class="notice">V1 keeps media optional. Images should be small and voice notes should be 15 seconds or less. Never share your exact address, school location, phone number or private information.</div>
-        <div class="field"><label>OPTIONAL PHOTO</label><input id="imageFile" class="input" type="file" accept="image/*"></div>
-        <div class="field"><label>OPTIONAL VOICE (MAX 15 SEC)</label><input id="audioFile" class="input" type="file" accept="audio/*"></div>
-        <button class="btn primary wide" onclick="createPost()">POST TO SEEN 👀</button>
-      </div>
-      <script>setTimeout(()=>{const t=document.getElementById('postBody');t?.addEventListener('input',()=>document.getElementById('postCount').textContent=t.value.length)},0)<\/script>`;
-  }
-
-  async function uploadFile(file,folder){
-    if(!file)return null;
-    const max=folder==="images"?100*1024:2*1024*1024;
-    if(file.size>max) throw new Error(folder==="images"?"Photo must be under 100KB.":"Audio file is too large.");
-    const ext=(file.name.split(".").pop()||"bin").replace(/[^a-z0-9]/gi,"").toLowerCase();
-    const path=`${state.session.user.id}/${crypto.randomUUID()}.${ext}`;
-    const {error}=await sb.storage.from(folder).upload(path,file,{upsert:false,contentType:file.type});
+  try{
+    const {data,error}=await supabaseClient.auth.getSession();
     if(error)throw error;
-    const {data}=sb.storage.from(folder).getPublicUrl(path);
-    return data.publicUrl;
+    if(data.session)currentUser=data.session.user;
+    else{
+      const r=await supabaseClient.auth.signInAnonymously();
+      if(r.error)throw r.error;
+      currentUser=r.data.user;
+    }
+    $("connectionStatus").textContent="ONLINE";
+    $("connectionStatus").style.color="var(--accent)";
+    await loadProfile();
+    subscribeRealtime();
+    await loadFeed(true);
+  }catch(e){
+    console.error(e);$("connectionStatus").textContent="OFFLINE";$("connectionStatus").style.color="#ff8b9b";
+    showMsg($("onMsg"),"Could not connect. Check your Supabase URL, public key, and Anonymous Sign-Ins.",true);
+    $("onboarding").classList.remove("hidden");
   }
+}
+async function ensureCityColumn(){
+  // The current SEEN SQL includes city. This function is intentionally harmless
+  // and simply keeps the frontend logic clear.
+  return true;
+}
+async function loadProfile(){
+  const {data,error}=await supabaseClient.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
+  if(error)throw error;
+  profile=data;
+  if(!profile)$("onboarding").classList.remove("hidden"); else fillProfile();
+}
+function fillProfile(){
+  if(!profile)return;
+  $("profileNick").value=profile.nickname||"";
+  $("profileCity").value=profile.city||"Other";
+  $("profileAbout").value=profile.about||"";
+  profileVibe=profile.vibe||"hype";
+  vibeButtons($("profileVibes"),profileVibe,v=>profileVibe=v);
+}
+function showMsg(el,msg,error=false){el.textContent=msg;el.className="notice "+(error?"error":"success");el.classList.remove("hidden")}
 
-  window.createPost = async () => {
-    const body=$("postBody")?.value.trim(); if(!body)return toast("Write something first.");
-    if(!state.selectedVibe)return toast("Choose a vibe.");
-    if(!configured)return toast("Connect Supabase to publish.");
-    const img=$("imageFile")?.files?.[0], aud=$("audioFile")?.files?.[0];
-    try{
-      if(img && img.size>100*1024) throw new Error("Photo must be under 100KB.");
-      if(aud && aud.size>2*1024*1024) throw new Error("Voice file is too large.");
-      let image_url=null,audio_url=null;
-      if(img) image_url=await uploadFile(img,"images");
-      if(aud) audio_url=await uploadFile(aud,"audio");
-      const {error}=await sb.from("posts").insert({author_id:state.session.user.id,body,vibe:state.selectedVibe,image_url,audio_url});
-      if(error)throw error;
-      toast("You're SEEN 👀"); state.tab="home"; await loadFeed();
-    }catch(e){console.error(e);toast(e.message||"Could not publish.");}
-  };
+$("joinBtn").onclick=async()=>{
+  const nickname=$("onNick").value.trim(), city=$("onCity").value, about=$("onAbout").value.trim();
+  if(nickname.length<2)return showMsg($("onMsg"),"Choose a nickname with at least 2 characters.",true);
+  $("joinBtn").disabled=true;
+  const {data,error}=await supabaseClient.from("profiles").insert({id:currentUser.id,nickname,city,vibe:onVibe,about}).select().single();
+  $("joinBtn").disabled=false;
+  if(error){showMsg($("onMsg"),error.message,true);return}
+  profile=data;$("onboarding").classList.add("hidden");fillProfile();loadFeed(true);
+};
 
-  function roomsView(){
-    return `<section class="hero"><h1>VIBE ROOMS.</h1><p>Small spaces. No follower counts. Join the feeling.</p></section>
-      ${Object.entries(VIBES).map(([k,v])=>`<div class="card row between"><div><div style="font-size:25px">${v[0]}</div><b>${v[1]}</b><div class="tiny muted">Text + short replies · temporary room</div></div><button class="btn" onclick="joinRoom('${k}')">ENTER →</button></div>`).join("")}
-      <div class="notice">Rooms are intentionally simple in V1. Don't share private contact details or arrange unsafe meetups.</div>`;
+$("saveProfile").onclick=async()=>{
+  if(!profile)return;
+  const nickname=$("profileNick").value.trim();
+  if(nickname.length<2)return showMsg($("profileMsg"),"Nickname is too short.",true);
+  const {data,error}=await supabaseClient.from("profiles").update({
+    nickname,city:$("profileCity").value,vibe:profileVibe,about:$("profileAbout").value.trim()
+  }).eq("id",currentUser.id).select().single();
+  if(error)return showMsg($("profileMsg"),error.message,true);
+  profile=data;showMsg($("profileMsg"),"Profile saved.");
+};
+
+$("publishBtn").onclick=async()=>{
+  if(!profile)return $("onboarding").classList.remove("hidden");
+  const body=$("postText").value.trim();
+  if(!body)return showMsg($("publishMsg"),"Write something first.",true);
+  $("publishBtn").disabled=true;$("publishBtn").textContent="POSTING…";
+  try{
+    let image_url=null,audio_url=null;
+    if(photoBlob){
+      const path=`${currentUser.id}/${crypto.randomUUID()}.jpg`;
+      const up=await supabaseClient.storage.from("images").upload(path,photoBlob,{contentType:"image/jpeg",upsert:false});
+      if(up.error)throw up.error;
+      image_url=supabaseClient.storage.from("images").getPublicUrl(path).data.publicUrl;
+    }
+    if(voiceBlob){
+      const ext=voiceBlob.type.includes("ogg")?"ogg":"webm";
+      const path=`${currentUser.id}/${crypto.randomUUID()}.${ext}`;
+      const up=await supabaseClient.storage.from("audio").upload(path,voiceBlob,{contentType:voiceBlob.type,upsert:false});
+      if(up.error)throw up.error;
+      audio_url=supabaseClient.storage.from("audio").getPublicUrl(path).data.publicUrl;
+    }
+    const {error}=await supabaseClient.from("posts").insert({author_id:currentUser.id,body,vibe:selectedVibe,image_url,audio_url});
+    if(error)throw error;
+    $("postText").value="";$("charCount").textContent="0";photoBlob=null;voiceBlob=null;$("mediaPreview").innerHTML="";
+    showMsg($("publishMsg"),"Posted. Someone will see you. 👀");
+    showView("homeView");
+  }catch(e){console.error(e);showMsg($("publishMsg"),e.message||"Could not publish.",true)}
+  finally{$("publishBtn").disabled=false;$("publishBtn").textContent="POST TO SEEN"}
+};
+
+async function loadFeed(reset=false){
+  if(!currentUser||!profile)return;
+  if(reset){page=0;$("feed").innerHTML='<div class="loader">Loading SEEN…</div>'}
+  const from=page*10,to=from+9;
+  let q=supabaseClient.from("posts").select(`
+    id,author_id,body,vibe,image_url,audio_url,seen_count,created_at,
+    profiles!posts_author_id_fkey(nickname,city,about)
+  `).eq("status","active").order("created_at",{ascending:false}).range(from,to);
+  if(feedVibe!=="all")q=q.eq("vibe",feedVibe);
+  const {data,error}=await q;
+  if(error){
+    // fallback for projects where the generated relationship name differs
+    const q2=await supabaseClient.from("posts").select("id,author_id,body,vibe,image_url,audio_url,seen_count,created_at").eq("status","active").order("created_at",{ascending:false}).range(from,to);
+    if(q2.error){$("feed").innerHTML='<div class="card notice error">'+escapeHtml(q2.error.message)+'</div>';return}
+    renderPosts(q2.data||[],reset);return;
   }
+  renderPosts(data||[],reset);
+  $("loadMore").disabled=(data||[]).length<10;
+  page++;
+}
+$("loadMore").onclick=()=>loadFeed(false);
 
-  window.joinRoom = k => {
-    const v=VIBES[k];
-    modal(`<button class="close" onclick="closeModal()">×</button><h2>${v[0]} ${v[1]}</h2><div class="notice">Room chat is the next backend module. For this V1 build, use the ${esc(v[1])} filter on the SEEN feed to keep the community small and focused.</div><button class="btn primary wide" style="margin-top:12px" onclick="closeModal();filterVibe('${k}')">VIEW ${v[1].toUpperCase()} POSTS</button>`);
-  };
-
-  function profileView(){
-    return `<section class="hero"><h1>ME.</h1><p>Your profile stays simple. No followers. No likes.</p></section>
-      <div class="card"><div class="row between"><div><div style="font-size:24px">👤</div><h2 style="margin:5px 0">${esc(state.profile.nickname)}</h2><div class="muted">🇿🇲 Zambia · ${VIBES[state.profile.vibe]?.[0]||"•"} ${VIBES[state.profile.vibe]?.[1]||"Vibe"}</div></div><button class="btn" onclick="editProfile()">EDIT</button></div></div>
-      <div class="card profileStat"><div class="stat"><b>${state.posts.filter(x=>x.author_id===state.profile.id).length}</b><span>POSTS IN CURRENT FEED</span></div><div class="stat"><b>0</b><span>FOLLOWERS — intentionally</span></div></div>
-      <div class="card"><h3>SAFETY</h3><p class="muted tiny">Block/report users who make you uncomfortable. Never share your exact location, school address, phone number, passwords or private photos.</p><button class="btn wide" onclick="toast('Safety center: report + block tools are available on posts.')">OPEN SAFETY CENTER</button></div>`;
+function renderPosts(posts,reset){
+  if(reset)$("feed").innerHTML="";
+  if(!posts.length&&reset){$("feed").innerHTML='<div class="card empty">Nothing here yet.<br><br>Be the first person to say something real. 👀</div>';return}
+  posts.forEach(p=>$("feed").appendChild(postElement(p)));
+}
+function postElement(p){
+  const d=document.createElement("article");d.className="card post";d.dataset.id=p.id;
+  const pr=p.profiles||{};
+  const label=VIBES.find(x=>x[0]===p.vibe)?.[1]||p.vibe;
+  d.innerHTML=`
+    <div class="post-head">
+      <div class="identity"><div class="avatar">${escapeHtml((pr.nickname||"?").slice(0,1).toUpperCase())}</div>
+      <div><div class="nick">${escapeHtml(pr.nickname||"Someone")}</div><div class="meta">${escapeHtml(pr.city||"Zambia")} · ${timeAgo(p.created_at)}</div></div></div>
+      <div class="tag">${escapeHtml(label)}</div>
+    </div>
+    <div class="post-body">${escapeHtml(p.body)}</div>
+    ${p.image_url?`<img class="post-media" src="${escapeAttr(p.image_url)}" loading="lazy" alt="Shared photo">`:""}
+    ${p.audio_url?`<audio class="audio" controls preload="none" src="${escapeAttr(p.audio_url)}"></audio>`:""}
+    <div class="actions">
+      <button class="action" data-act="seen">👀 I SEE YOU</button>
+      <button class="action" data-act="same">✊ SAME</button>
+      <button class="action" data-act="reply">💬 REPLY</button>
+      <button class="action" data-act="report">⚠ REPORT</button>
+      <span class="count">Seen by ${Number(p.seen_count||0)}</span>
+    </div>
+    <div class="replybox hidden"><input maxlength="280" placeholder="Say something kind…"><button class="btn">SEND</button></div>
+    <div class="replies"></div>`;
+  d.querySelector('[data-act="seen"]').onclick=()=>react(p.id,"seen",d);
+  d.querySelector('[data-act="same"]').onclick=()=>react(p.id,"same",d);
+  d.querySelector('[data-act="reply"]').onclick=()=>d.querySelector(".replybox").classList.toggle("hidden");
+  d.querySelector('[data-act="report"]').onclick=()=>reportPost(p.id);
+  d.querySelector(".replybox button").onclick=()=>sendReply(p.id,d);
+  d.addEventListener("dblclick",()=>react(p.id,"seen",d));
+  d.querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>{btn.style.transform="scale(.97)";setTimeout(()=>btn.style.transform="",120)}));
+  loadReplies(p.id,d);
+  return d;
+}
+async function react(postId,reaction,d){
+  if(!currentUser)return;
+  const {error}=await supabaseClient.rpc("record_reaction",{p_post_id:postId,p_user_id:currentUser.id,p_reaction:reaction});
+  if(error){
+    // fallback direct upsert if RPC is unavailable
+    const r=await supabaseClient.from("reactions").upsert({post_id:postId,user_id:currentUser.id,reaction},{onConflict:"post_id,user_id"});
+    if(r.error){alert(r.error.message);return}
   }
-
-  window.editProfile = () => {
-    modal(`<button class="close" onclick="closeModal()">×</button><h2>Edit profile</h2><div class="field"><label>NICKNAME</label><input id="editNick" class="input" maxlength="24" value="${esc(state.profile.nickname)}"></div><div class="field"><label>ABOUT (OPTIONAL)</label><input id="editAbout" class="input" maxlength="80" value="${esc(state.profile.about||"")}"></div><button class="btn primary wide" onclick="saveProfile()">SAVE</button>`);
-  };
-
-  window.saveProfile = async()=>{
-    const nickname=$("editNick").value.trim(); const about=$("editAbout").value.trim();
-    if(!nickname)return toast("Nickname can't be empty.");
-    if(!configured)return toast("Connect Supabase to save.");
-    const {data,error}=await sb.from("profiles").update({nickname,about}).eq("id",state.profile.id).select().single();
-    if(error)return toast(error.message); state.profile=data; saveLocal(data); closeModal();render();
-  };
-
-  window.reportPost = id => {
-    modal(`<button class="close" onclick="closeModal()">×</button><h2>Report this post</h2><p class="muted">Choose a reason. Reports help keep SEEN safe.</p>
-      ${["Bullying / harassment","Sexual or unsafe content","Spam / scam","Threats","Something else"].map(r=>`<button class="btn wide" style="margin:5px 0;text-align:left" onclick="submitReport('${id}',${JSON.stringify(r)})">${esc(r)}</button>`).join("")}
-      <button class="tiny" style="margin-top:12px;background:none;border:0;color:#aaa" onclick="closeModal()">Cancel</button>`);
-  };
-
-  window.submitReport = async(id,reason)=>{
-    if(!configured)return toast("Connect Supabase to submit reports.");
-    const {error}=await sb.from("reports").insert({reporter_id:state.session.user.id,post_id:id,reason});
-    if(error)return toast(error.message); closeModal(); toast("Report received. Thank you.");
-  };
-
-  window.openProfile=()=>{state.tab="profile";render()};
-  window.go=t=>{state.tab=t;render(); if(t==="home")loadFeed(false)};
-
-  // Basic local demo fallback so the UI can be tested before Supabase.
-  if(!configured){
-    const demoPosts=[
-      {id:"d1",author_id:"demo2",profile:{nickname:"Kay"},vibe:"hype",body:"I finally started making music. Lowkey scared nobody will listen 😭",seen_count:7,created_at:new Date(Date.now()-3600000).toISOString()},
-      {id:"d2",author_id:"demo3",profile:{nickname:"Sky"},vibe:"heartbreak",body:"Sometimes you miss the old version of someone more than the person they are now.",seen_count:12,created_at:new Date(Date.now()-7200000).toISOString()},
-      {id:"d3",author_id:"demo4",profile:{nickname:"Melo"},vibe:"stressed",body:"School pressure is actually crazy. Just trying to keep going.",seen_count:4,created_at:new Date(Date.now()-9000000).toISOString()}
-    ];
-    state.posts=demoPosts;
+  const btn=d.querySelector(`[data-act="${reaction}"]`);
+  btn.textContent=reaction==="seen"?"👀 SEEN ✓":"✊ SAME ✓";
+  btn.disabled=true;
+  if(reaction==="seen"){
+    const c=d.querySelector(".count");c.textContent="Seen by "+(Number((c.textContent.match(/\d+/)||[0])[0])+1);
   }
+}
+async function sendReply(postId,d){
+  const input=d.querySelector(".replybox input"),body=input.value.trim();
+  if(!body)return;
+  const {error}=await supabaseClient.from("replies").insert({post_id:postId,author_id:currentUser.id,body});
+  if(error){alert(error.message);return}
+  input.value="";loadReplies(postId,d);
+}
+async function loadReplies(postId,d){
+  const {data,error}=await supabaseClient.from("replies").select("id,body,created_at,profiles(nickname)").eq("post_id",postId).order("created_at",{ascending:true}).limit(10);
+  if(error||!data?.length)return;
+  d.querySelector(".replies").innerHTML=data.map(r=>`<div class="reply"><b>${escapeHtml(r.profiles?.nickname||"Someone")}:</b> ${escapeHtml(r.body)}</div>`).join("");
+}
+async function reportPost(postId){
+  const reason=prompt("Why are you reporting this post? (Keep it short)");
+  if(!reason)return;
+  const {error}=await supabaseClient.from("reports").insert({reporter_id:currentUser.id,post_id:postId,reason:reason.slice(0,200)});
+  alert(error?"Could not send report.":"Report sent. Thanks for helping keep SEEN safe.");
+}
+async function loadRooms(){
+  const counts={};
+  for(const [v,label] of VIBES)counts[v]=0;
+  const {data}=await supabaseClient.from("posts").select("vibe").eq("status","active").gte("created_at",new Date(Date.now()-86400000).toISOString());
+  (data||[]).forEach(x=>{if(counts[x.vibe]!=null)counts[x.vibe]++});
+  $("rooms").innerHTML=VIBES.map(([v,label])=>`<div class="room"><div><strong>${label}</strong><span>${Math.min(20,counts[v]||0)}/20 active voices</span></div><button class="action" onclick="filterRoom('${v}')">ENTER</button></div>`).join("");
+}
+window.filterRoom=v=>{feedVibe=v;$("feedTab").click();$("feedVibes").querySelectorAll(".vibe").forEach(x=>x.classList.remove("active"));[...$("feedVibes").children].find(x=>x.textContent.includes(VIBES.find(y=>y[0]===v)[1].slice(2)))?.classList.add("active");loadFeed(true)};
 
-  boot();
-})();
+function subscribeRealtime(){
+  supabaseClient.channel("seen-live").on("postgres_changes",{event:"INSERT",schema:"public",table:"posts"},()=>{if(!$("homeView").classList.contains("hidden"))loadFeed(true)})
+  .on("postgres_changes",{event:"INSERT",schema:"public",table:"replies"},()=>{}).subscribe();
+}
+function timeAgo(s){const n=(Date.now()-new Date(s).getTime())/1000;if(n<60)return"now";if(n<3600)return Math.floor(n/60)+"m";if(n<86400)return Math.floor(n/3600)+"h";return Math.floor(n/86400)+"d"}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function escapeAttr(s){return escapeHtml(s).replace(/`/g,"&#096;")}
+
+$("signOutBtn").onclick=async()=>{
+  if(!confirm("Reset this device's SEEN session? Your profile and posts remain in the database."))return;
+  await supabaseClient.auth.signOut();localStorage.clear();location.reload();
+};
+
+init();
 </script>
 </body>
 </html>
+
