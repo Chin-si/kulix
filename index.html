@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>M.G.Y TENSION</title> 
+  <title>M.G.Y TENSION</title>  
+  
    <!-- Vercel Web Analytics -->
   <script>
     window.va = window.va || function () {
@@ -15,7 +17,6 @@
     defer
     src="/_vercel/insights/script.js">
   </script>
-  
   <!-- CDN Dependencies -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -51,10 +52,10 @@
         supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       }
     } catch (e) {
-      console.warn("Supabase client running in offline demo mode.");
+      console.warn("Supabase client running in offline preview mode.");
     }
 
-    // Pure React Inline SVG Icons (Prevents Lucide script crash)
+    // Pure React Inline SVG Icons
     const Icons = {
       Radio: () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18.5a6.5 6.5 0 100-13 6.5 6.5 0 000 13z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>,
       Upload: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>,
@@ -80,14 +81,18 @@
       const [isPlaying, setIsPlaying] = useState(false);
       const [isUploading, setIsUploading] = useState(false);
       
-      const [artistName, setArtistName] = useState('Artist_' + Math.floor(Math.random() * 8999 + 1000));
+      // PERSISTENT ARTIST HANDLE (Saved in browser localStorage)
+      const [artistName, setArtistName] = useState(() => {
+        return localStorage.getItem('mgy_artist_name') || 'Artist_' + Math.floor(Math.random() * 8999 + 1000);
+      });
+
       const [searchQuery, setSearchQuery] = useState('');
       const [activeChatUser, setActiveChatUser] = useState('VIBE MASTER M.G.Y');
       const [newMessage, setNewMessage] = useState('');
 
       const audioRef = useRef(null);
 
-      // Demo fallback tracks
+      // Demo fallback tracks for offline preview
       const INITIAL_DEMO_TRACKS = [
         {
           id: 'demo-1',
@@ -519,7 +524,11 @@
                       <input 
                         type="text" 
                         value={artistName}
-                        onChange={(e) => setArtistName(e.target.value)}
+                        onChange={(e) => {
+                          const newName = e.target.value;
+                          setArtistName(newName);
+                          localStorage.setItem('mgy_artist_name', newName);
+                        }}
                         className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-fuchsia-500"
                       />
                     </div>
